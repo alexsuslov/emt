@@ -1,5 +1,5 @@
-EMT = require( '../emt')
-emt = new EMT.EMTLib()
+EMTLib = require( '../libs/emt_lib').EMTLib
+emt = new EMTLib()
 
 console.log 'Test 0 clear_special_chars'
 str = emt.clear_special_chars('your text', 'utf8')

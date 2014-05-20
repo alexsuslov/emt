@@ -5,47 +5,48 @@ class EMTLib
   LAYOUT_CLASS: 2
   INTERNAL_BLOCK_OPEN: '%%%INTBLOCKO235978%%%'
   INTERNAL_BLOCK_CLOSE: '%%%INTBLOCKC235978%%%'
-  #static (TO BE DONE: protected)
+  # static (TO BE DONE: protected)
   _typographSpecificTagId: false
+
   isInt: (n)->
     return n is +n and n is (n|0)
 
   ###
-  #  Метод, осуществляющий декодирование информации
-  #
-  # @param     string $text
-  # @return     string
-  #/
-  # TEST ok
+    Метод, осуществляющий декодирование информации
+
+   @param     string $text
+   @return     string
+
+   TEST ok
   ###
   decrypt_tag:(text)->
     new Buffer(text, 'base64').toString()
 
 
   ###
-  #  Метод, осуществляющий кодирование (сохранение) информации
-  # с целью невозможности типографировать ее
-  #
-  # @param     string $text
-  # @return     string
-  #/
-  # TEST ok
+  Метод, осуществляющий кодирование (сохранение) информации
+  с целью невозможности типографировать ее
+
+  @param     string $text
+  @return     string
+
+  TEST ok
   ###
   encrypt_tag: (text)->
     new Buffer(text).toString('base64')
 
 
   ###
-  #  Сохраняем содержимое тегов HTML
-  #
-  # Тег 'a' кодируется со специальным префиксом для дальнейшей
-  # возможности выносить за него кавычки.
-  #
-  # @param     string $text
-  # @param     bool $safe
-  # @return  string
-  #/
-  # TEST ok
+    Сохраняем содержимое тегов HTML
+
+   Тег 'a' кодируется со специальным префиксом для дальнейшей
+   возможности выносить за него кавычки.
+
+   @param     string $text
+   @param     bool $safe
+   @return  string
+
+   TEST ok
   ###
   safe_tag_chars:(text, way)->
     self = @
@@ -109,7 +110,7 @@ class EMTLib
   #
   # @param     string $text
   # @return  string
-  #/
+  #
   # TEST
   ###
   encode_internal_blocks:(text)->
@@ -197,8 +198,8 @@ class EMTLib
 
     "<" + @encrypt_tag(htmlTag) + ">" + content + "</" + @encrypt_tag(tag) + ">"
 
-  isArray:(o)->
-    Object.prototype.toString.call(o) is '[object Array]'
+  # isArray:(o)->
+  #   Object.prototype.toString.call(o) is '[object Array]'
 
   ###
   # Метод, осуществляющий декодирование информации
@@ -242,7 +243,7 @@ class EMTLib
     string.toLowerCase()
 
   ###
-  @todo getUnicodeChar()
+  # @todo getUnicodeChar()
   ###
 
   ###
@@ -250,7 +251,6 @@ class EMTLib
   #
   # @param string $entity
   # @return string
-  #/
   ###
   html_char_entity_to_unicode:( entity)->
     if entity in @html4_char_ents
@@ -259,4 +259,3 @@ class EMTLib
 
 
 exports.EMTLib = EMTLib
-

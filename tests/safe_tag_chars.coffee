@@ -1,5 +1,5 @@
-EMT = require( '../emt')
-emt = new EMT.EMTLib()
+EMTLib = require( '../libs/emt_lib').EMTLib
+emt = new EMTLib()
 
 console.log 'Test 0 safe_tag_chars'
 text = '<a href="http://mdash.ru">test</a><p>test</p>'
