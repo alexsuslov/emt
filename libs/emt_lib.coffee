@@ -201,6 +201,9 @@ class EMTLib
   isArray:(o)->
     Object.prototype.toString.call(o) is '[object Array]'
 
+  isObject:(o)->
+    Object.prototype.toString.call(o) is '"[object Object]"'
+
   ###
   Метод, осуществляющий декодирование информации
 

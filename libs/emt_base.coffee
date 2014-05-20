@@ -466,3 +466,4 @@ class EMTBase
     @todo
     ###
 
+exports.EMTBase = EMTBase
