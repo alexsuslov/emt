@@ -1,0 +1,14 @@
+{
+  "name": "emt",
+  "version": "0.0.0",
+  "description": "tipograf",
+  "main": "emt.coffee",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "alex suslov",
+  "license": "Public Domain",
+  "dependencies": {
+    "js-base64": "^2.1.5"
+  }
+}
