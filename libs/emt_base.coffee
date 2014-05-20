@@ -13,31 +13,31 @@ Authors: Evgeny Muravjev & Alexander Drutsa
 ###
 class EMTBase
   Lib: new require( './emt_lib').EMTLib
-    _text : ""
-    inited : false
-    #
-    # Список Трэтов, которые надо применить к типогрфированию
-    #
-    # @var array
-    #
-    trets_index: []
-    trets: []
-    tret_objects: {}
+  _text : ""
+  inited : false
+  #
+  # Список Трэтов, которые надо применить к типогрфированию
+  #
+  # @var array
+  #
+  trets_index: []
+  trets: []
+  tret_objects: {}
 
-    ok             : false
-    debug_enabled  : false
-    logging        : false
-    logs           : []
-    errors         : []
-    debug_info     : []
+  ok             : false
+  debug_enabled  : false
+  logging        : false
+  logs           : []
+  errors         : []
+  debug_info     : []
 
-    use_layout : false
-    class_layout_prefix : false
-    use_layout_set : false
-    disable_notg_replace : false
-    remove_notg : false
-    settings : {}
-    _safe_blocks : {}
+  use_layout : false
+  class_layout_prefix : false
+  use_layout_set : false
+  disable_notg_replace : false
+  remove_notg : false
+  settings : {}
+  _safe_blocks : {}
 
   log: (xstr, data)->
     return unless @logging
@@ -238,6 +238,8 @@ class EMTBase
         '<span class="_notg_end"></span>'
         )
     @inited = true
+
+
   ###
   Добавить Трэт,
   @param [array] $class - имя класса трета, или сам объект
@@ -245,7 +247,7 @@ class EMTBase
   если хотим например иметь два одинаоковых терта в обработке
   @return [unknown]
   ###
-  add_tret:( xclass, altname)->
+  add_tret:(xclass, altname)->
     altname ?= false
     if typeof xclass is 'string'
       obj = @create_object xclass
@@ -256,8 +258,211 @@ class EMTBase
       @tret_objects[idx] = obj
       @trets.push idx
       return true
+      ###
+      @todo
+      try
+        unless issubclass(xclass, EMT_Tret):
+          self.error("You are adding Tret that doesn't inherit
+          base class EMT_Tret", xclass.__class__.__name__)
+          return False
+          xclass.EMT     = self
+          xclass.logging = self.logging
+          self.tret_objects[ altname
+            if altname else xclass.__class__.__name__] = xclass
+          self.trets.append(altname if altname else xclass.__class__.__name__)
+          return True
+      except:
+          self.error("Чтобы добавить трэт необходимо передать имя или объект")
+      ###
+      return false
+  ###
+  Получаем ТРЕТ по идентивикатору, т.е. заванию класса
+  @param unknown_type $name
+  ###
+  get_tret:(name)->
+    return @tret_objects[name] if @tret_objects[name]
+    @error("Трэт с идентификатором #{name} не найден")
+    return false
+    ###
+    @todo
+    for tret in @trets
+      if tret is name
+
+        @todo
+        ```
+        self._init()
+        @tret_objects[name]
+        ```
+    ###
+
+  ###
+  Задаём текст для применения типографа
+  @param string $text
+  ###
+  set_text:(@_text)->
+
+  ###
+  Запустить типограф на выполнение
+  ###
+  apply:(trets)->
+    @ok = false
+    atrets = @trets
+    if typeof trets is 'string'
+      atrets = [trets]
+    else if @Lib.isArray trets
+      atrets = trets
+
+    # self.debug(self, 'init', self._text)
+
+    # self._text = self.safe_blocks(self._text, True)
+
+    # self.debug(self, 'safe_blocks', self._text)
+
+    # self._text = EMT_Lib.safe_tag_chars(self._text, True)
+    # self.debug(self, 'safe_tag_chars', self._text)
+
+    # self._text = EMT_Lib.clear_special_chars(self._text)
+    # self.debug(self, 'clear_special_chars', self._text)
+    ###
+    @current
+    ###
 
 
+  ###
+  Получить содержимое <style></style> при использовании классов
+  @param [bool] $list False - вернуть в виде строки для style или как массив
+  @param [bool] $compact не выводить пустые классы
+  @return [string]|[array]
+  ###
+  get_style:( xlist, compact)->
+    res = {}
+    for tret in @trets
+      arr = @tret_objects[tret].classes
+      continue unless @Lib.isArray arr
+      # for classname in arr
+      ###
+      @todo
+      ###
 
 
+  ###
+  Установить режим разметки,
+    EMT_Lib::LAYOUT_STYLE - с помощью стилей
+    EMT_Lib::LAYOUT_CLASS - с помощью классов
+    EMT_Lib::LAYOUT_STYLE|EMT_Lib::LAYOUT_CLASS - оба метода
+
+  @param [int] $layout
+  ###
+  set_tag_layout:(layout)->
+    layout ?= @Lib.LAYOUT_STYLE
+    @use_layout = layout
+    @use_layout_set = true
+
+
+  ###
+  Установить префикс для классов
+  @param [string]|bool $prefix
+  если True то префикс 'emt_', иначе то, что передали
+  ###
+  set_class_layout_prefix:(prefix)->
+    prefix = "emt_" if prefix is true
+    @class_layout_prefix = prefix || "emt_"
+
+  ###
+  Включить/отключить правила, согласно карте
+  Формат карты:
+     'Название трэта 1' => array ( 'правило1', 'правило2' , ...  )
+     'Название трэта 2' => array ( 'правило1', 'правило2' , ...  )
+  # *
+  @param array $map
+  @param boolean $disable если ложно,
+  то $map соотвествует тем правилам,
+  которые надо включить иначе это список правил,
+  которые надо выключить
+  @param boolean $strict строго, т.е. те
+  которые не в списку будут тоже обработаны
+  ###
+  set_enable_map:(xmap, disable, xstrict)->
+    return unless @Lib.isArray xmaps
+    xstrict ?= true
+    trets = []
+    for tret in xmap
+      xlist = tret
+      ###
+      @todo
+      ###
+
+  ###
+  Установлена ли настройка
+  @param string $key
+  ###
+  is_on:(key)->
+    return false unless @settings[key]
+    kk = @settings[key]
+    return true if kk.lower() is "on"
+    return true if kk is "1"
+    return true if kk is 1
+    return true if kk is true
+    return false
+
+
+  ###
+  Установить настройку
+  @param mixed $selector
+  @param string $setting
+  @param mixed $value
+  ###
+  doset:(selector, key, value)->
+    rule_pattern = tret_pattern = false
+    if typeof selector is 'string'
+      if selector.find(".") is -1
+        tret_pattern = selector
+      else
+        pa = selector.split(".")
+        tret_pattern = pa[0]
+    ###
+    @todo
+    ###
+
+
+  ###
+  Установить настройки для тертов и правил
+  1. если селектор является массивом,
+    то тогда утсановка правил будет выполнена для каждого
+    элемента этого массива, как отдельного селектора.
+  2. Если $key не является массивом, то эта настрока будет проставлена
+  согласно селектору
+  3. Если $key массив
+  - то будет задана группа настроек
+  - если $value массив , то настройки определяются по ключам из массива
+  $key, а значения из $value
+  - иначе, $key содержит ключ-значение как массив
+  @param mixed $selector
+  @param mixed $key
+  @param mixed $value
+  ###
+  set:(self, selector, key , value)->
+    if @Lib.isArray selector
+      for val in selector
+        @set val, key, value
+      return
+    ###
+    @todo
+    if selector is object
+    ###
+
+  ###
+  Возвращает список текущих третов, которые установлены
+  ###
+  get_trets_list:->
+    @trets
+
+  ###
+  Установить настройки
+  @param [array] $setupmap
+  ###
+  setup:(setupmap)->
+    ###
+    @todo
+    ###
 
