@@ -1,4 +1,10 @@
-emt
-===
+# TODO
+## Работало
+### Объекты
+- EMTLib
+- Typograph
+- EMTBase
+  + _add_safe_block 
+### Тесты
 
-emt
+### Функции
