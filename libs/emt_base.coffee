@@ -13,34 +13,31 @@ Authors: Evgeny Muravjev & Alexander Drutsa
 ###
 class EMTBase
   Lib: new require( './emt_lib').EMTLib
-  constructor:->
-    @_text = ""
-    @inited = False
+    _text : ""
+    inited : false
     #
     # Список Трэтов, которые надо применить к типогрфированию
     #
     # @var array
     #
-    trets_index = []
-    @trets = []
-    @trets_index = []
-    @tret_objects = {}
+    trets_index: []
+    trets: []
+    tret_objects: {}
 
-    @ok             = False
-    @debug_enabled  = False
-    @logging        = False
-    @logs           = []
-    @errors         = []
-    @debug_info     = []
+    ok             : false
+    debug_enabled  : false
+    logging        : false
+    logs           : []
+    errors         : []
+    debug_info     : []
 
-    @use_layout = False
-    @class_layout_prefix = False
-    @use_layout_set = False
-    @disable_notg_replace = False
-    @remove_notg = False
-
-    @settings = {}
-    @_safe_blocks = {}
+    use_layout : false
+    class_layout_prefix : false
+    use_layout_set : false
+    disable_notg_replace : false
+    remove_notg : false
+    settings : {}
+    _safe_blocks : {}
 
   log: (xstr, data)->
     return unless @logging
@@ -210,6 +207,57 @@ class EMTBase
     # если класса нет, попытаемся его прогрузить, например, если стандартный
     ###
     @todo
+
     ###
+
+  get_short_tret:(tretname)->
+    m = tretname.match '^EMT_Tret_([a-zA-Z0-9_]+)$'
+    return m[1] if m
+    return tretname
+
+  ###
+  Инициализация класса, используется чтобы задать список третов или
+  спсиок защищённых блоков, которые можно использовать.
+  Также здесь можно отменить защищённые блоки по умлочнаию
+  ###
+
+  constructor:->
+    for tret in @trets
+      continue if @tret_objects[tret]
+
+      obj = @create_object(tret)
+      continue unless obj
+
+      @tret_objects[tret] = obj
+    unless @inited
+      @add_safe_tag('pre')
+      @add_safe_tag('script')
+      @add_safe_tag('style')
+      @add_safe_tag('notg')
+      @add_safe_block( 'span-notg', '<span class="_notg_start"></span>',
+        '<span class="_notg_end"></span>'
+        )
+    @inited = true
+  ###
+  Добавить Трэт,
+  @param [array] $class - имя класса трета, или сам объект
+  @param [string] $altname - альтернативное имя,
+  если хотим например иметь два одинаоковых терта в обработке
+  @return [unknown]
+  ###
+  add_tret:( xclass, altname)->
+    altname ?= false
+    if typeof xclass is 'string'
+      obj = @create_object xclass
+      return false unless obj
+      idx = xclass
+      idx = altname if altname
+
+      @tret_objects[idx] = obj
+      @trets.push idx
+      return true
+
+
+
 
 
