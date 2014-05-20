@@ -29,7 +29,7 @@ module.exports = (grunt)->
     codo: options:
       # undocumented: true
       title: "Emt"
-      output: "gh-pages"
+      output: "../emt_pages"
       inputs: [
         "libs/"
       ]
