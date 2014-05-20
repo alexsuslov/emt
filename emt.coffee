@@ -1,2 +1,4 @@
-EMTLib = require './libs/emt_lib'
+class EMTypograph
+  constructor:->
+
 

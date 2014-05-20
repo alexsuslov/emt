@@ -7,17 +7,19 @@ class EMTLib
   INTERNAL_BLOCK_CLOSE: '%%%INTBLOCKC235978%%%'
   # static (TO BE DONE: protected)
   _typographSpecificTagId: false
-
+  ###
+  Проверка на целое
+  @param [Number] число
+  @return [boolean]
+  ###
   isInt: (n)->
     return n is +n and n is (n|0)
 
   ###
-    Метод, осуществляющий декодирование информации
-
-   @param     string $text
-   @return     string
-
-   TEST ok
+  Метод, осуществляющий декодирование информации
+  @param     [String] text
+  @return    [String]
+  TEST ok
   ###
   decrypt_tag:(text)->
     new Buffer(text, 'base64').toString()
@@ -26,10 +28,8 @@ class EMTLib
   ###
   Метод, осуществляющий кодирование (сохранение) информации
   с целью невозможности типографировать ее
-
-  @param     string $text
-  @return     string
-
+  @param     [String] text
+  @return    [String]
   TEST ok
   ###
   encrypt_tag: (text)->
@@ -42,9 +42,9 @@ class EMTLib
    Тег 'a' кодируется со специальным префиксом для дальнейшей
    возможности выносить за него кавычки.
 
-   @param     string $text
-   @param     bool $safe
-   @return  string
+   @param  [String] $text
+   @param  [boolean] $safe
+   @return [String]
 
    TEST ok
   ###
@@ -52,7 +52,7 @@ class EMTLib
     self = @
 
     process = (str)->
-      # console.log
+
       match = str.match new RegExp '(\</?)(.+?)(\>)'
       atag =''
       atag = "%%___" if match[2][0] is 'a'
@@ -64,21 +64,21 @@ class EMTLib
     text.replace /\<.+?\>/gm, process
 
   ###
-  #  Удаление кодов HTML из текста
-  #
-  # <code>
-  #  // Remove UTF-8 chars:
-  #     $str = EMT_Lib::clear_special_chars('your text', 'utf8');
-  #  // ... or HTML codes only:
-  #     $str = EMT_Lib::clear_special_chars('your text', 'html');
-  #     // ... or combo:
-  #  $str = EMT_Lib::clear_special_chars('your text');
-  # </code>
-  #
-  # @param     string $text
-  # @param   mixed $mode
-  # @return     string|bool
-  # TEST
+  Удаление кодов HTML из текста
+  ```
+  <code>
+   // Remove UTF-8 chars:
+      $str = EMT_Lib::clear_special_chars('your text', 'utf8');
+   // ... or HTML codes only:
+      $str = EMT_Lib::clear_special_chars('your text', 'html');
+      // ... or combo:
+   $str = EMT_Lib::clear_special_chars('your text');
+  </code>
+  ```
+  @param   [String] $text
+  @param   [Array] $mode
+  @return  [String]|[boolean]
+  TEST
   ###
   clear_special_chars:( text, mode)->
 
@@ -106,12 +106,12 @@ class EMTLib
             text = text.replace v, char
     text
   ###
-  # Кодирует спец блок
-  #
-  # @param     string $text
-  # @return  string
-  #
-  # TEST
+   Кодирует спец блок
+
+   @param   [String] $text
+   @return  [String]
+
+   TEST
   ###
   encode_internal_blocks:(text)->
     text = @encrypt_tag text
@@ -122,12 +122,12 @@ class EMTLib
 
 
   ###
-  #  Декодриует спец блоки
-  #
-  # @param     string $text
-  # @return  string
-  # /
-  # TEST
+  Декодриует спец блоки
+
+  @param   [String] $text
+  @return  [String]
+
+  TEST
   ###
   decode_internal_blocks:(text)->
     decrypt_tag = @decrypt_tag
@@ -153,12 +153,12 @@ class EMTLib
 
 
   ### Создание тега с защищенным содержимым
-  #
-  # @param     string $content текст, который будет обрамлен тегом
-  # @param     string $tag тэг
-  # @param     array $attribute список атрибутов,
-  # где ключ - имя атрибута, а значение - само значение данного атрибута
-  # @return     string
+
+  @param     [String] $content текст, который будет обрамлен тегом
+  @param     [String] $tag тэг
+  @param     [array] $attribute список атрибутов,
+  где ключ - имя атрибута, а значение - само значение данного атрибута
+  @return    [String]
   ###
   build_safe_tag:(content, tag, attribute, layout)->
     tag ?= 'span'
@@ -198,15 +198,15 @@ class EMTLib
 
     "<" + @encrypt_tag(htmlTag) + ">" + content + "</" + @encrypt_tag(tag) + ">"
 
-  # isArray:(o)->
-  #   Object.prototype.toString.call(o) is '[object Array]'
+  isArray:(o)->
+    Object.prototype.toString.call(o) is '[object Array]'
 
   ###
-  # Метод, осуществляющий декодирование информации
-  #
-  # @param     string $text
-  # @return     string
-  #
+  Метод, осуществляющий декодирование информации
+
+  @param   [String] $text
+  @return  [String]
+
   ###
   strpos_ex:( haystack, needle, offset)->
     #TODO: &$haystack - '&' couldn't work
@@ -243,14 +243,14 @@ class EMTLib
     string.toLowerCase()
 
   ###
-  # @todo getUnicodeChar()
+  @todo getUnicodeChar()
   ###
 
   ###
-  # Вернуть уникод символ по html entinty
-  #
-  # @param string $entity
-  # @return string
+  Вернуть уникод символ по html entinty
+
+  @param [String] $entity
+  @return [String]
   ###
   html_char_entity_to_unicode:( entity)->
     if entity in @html4_char_ents
