@@ -1,4 +1,4 @@
-class EMTTret
+class EMTret
   Lib: new require( './emt_lib').EMTLib
   rules : {}
   rule_order : []
@@ -319,7 +319,7 @@ class EMTTret
   ###
   post_parse:->
 
-exports.EMTTret = EMTTret
+exports.EMTret = EMTret
 
 
 
