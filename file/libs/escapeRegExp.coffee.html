@@ -21,45 +21,77 @@
     &raquo;
     <span class='title'>libs</span>
     &raquo;
-    <span class='title'>emt_base.coffee</span>
+    <span class='title'>escapeRegExp.coffee</span>
   </div>
 </div>
     <div id='content'>
       <h1>
         File:
-        emt_base.coffee
+        escapeRegExp.coffee
       </h1>
       <table class='box'>
         <tr>
           <td>Defined in:</td>
           <td>libs</td>
         </tr>
-        <tr>
-          <td>
-            Classes:
-          </td>
-          <td>
-            <a href='../../class/EMTBase.html'>
-              EMTBase
-            </a>
-          </td>
-        </tr>
       </table>
       <h2>Variables Summary</h2>
       <dl class='constants'>
-  <dt id='exports.EMTBase-variable'>
-    exports.EMTBase
+  <dt id='specials-variable'>
+    specials
     =
   </dt>
   <dd>
-    <pre><code class='coffeescript'>EMTBase</code></pre>
+    <pre><code class='coffeescript'>[&quot;-&quot;, &quot;[&quot;, &quot;]&quot;, &quot;&#47;&quot;, &quot;{&quot;, &quot;}&quot;, &quot;(&quot;, &quot;)&quot;, &quot;*&quot;, &quot;+&quot;, &quot;?&quot;, &quot;.&quot;, &quot;\\&quot;, &quot;^&quot;, &quot;$&quot;, &quot;|&quot;, &quot;&lt;&quot;, &quot;&gt;&quot;]</code></pre>
     <div class='docstring'>
-  <p>@todo</p>
+  <p>Referring to the table here:
+<a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/regexp">https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/regexp</a>
+these characters should be escaped
+\ ^ $ <em> + ? . ( ) | { } [ ]
+These characters only have special meaning inside of brackets
+they do not need to be escaped, but they MAY be escaped
+without any adverse effects (to the best of my knowledge and casual testing)
+: ! , =
+my test &quot;~!@#$%^&amp;</em>(){}[]`/=?+|-_;:&#39;\&quot;,&lt;.&gt;&quot;.match(/[#]/g)</p>
 </div>
 <div class='tags'>
 </div>
   </dd>
+  <dt id='exports.reEscape-variable'>
+    exports.reEscape
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>reEscape</code></pre>
+    
+  </dd>
 </dl>
+      <h2>Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#reEscape-'>
+        ~
+(void)
+<b>reEscape</b><span>(str)</span>
+      </a>
+    </span>
+    <span class='desc'>
+    </span>
+  </li>
+</ul>
+      <h2>Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='reEscape-'>
+      ~
+(void)
+<b>reEscape</b><span>(str)</span>
+      <br>
+    </p>
+    
+  </div>
+</div>
     </div>
     <div id='footer'>
   May 21, 14 08:59:49 by
