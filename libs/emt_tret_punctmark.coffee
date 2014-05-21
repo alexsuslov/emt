@@ -1,4 +1,4 @@
-EMTret = require( './emt_base').EMTret
+EMTret = require( './emt_tret').EMTret
 ###
 EMT_Tret_Punctmark
 ###
@@ -79,3 +79,5 @@ class EMTretPunctmark extends EMTret
     "fix_brackets_space",
     "dot_on_end"
     ]
+
+exports.EMTretPunctmark = EMTretPunctmark

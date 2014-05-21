@@ -1,4 +1,4 @@
-EMTret = require( './emt_base').EMTret
+EMTret = require( './emt_tret').EMTret
 ###
 EMT_Tret_Symbol
 ###
@@ -74,3 +74,5 @@ class EMTretSymbol extends EMTret
     ]
   classes:
     nowrap: "word-spacing:nowrap;"
+
+exports.EMTretSymbol = EMTretSymbol

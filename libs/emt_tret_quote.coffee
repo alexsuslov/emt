@@ -1,4 +1,6 @@
-class EMTTretQuote extends EMTTret
+EMTret = require( './emt_tret').EMTret
+
+class EMTretQuote extends EMTret
   title: "Кавычки"
   rules:
     quotes_outside_a:
@@ -116,7 +118,7 @@ class EMTTretQuote extends EMTTret
             ###
             # if @__ax
 
-
+exports.EMTretQuote = EMTretQuote
 
 
 

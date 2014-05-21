@@ -293,8 +293,8 @@ class EMTret
   ###
   Применить к тексту
 
-  @param string $text - текст к которому применить
-  @param mixed $list - список правил, null - все правила
+  @param [string] $text - текст к которому применить
+  @param [array] $list - список правил, null - все правила
   @return string
   ###
   apply:(xlist)->

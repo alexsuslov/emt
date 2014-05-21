@@ -11,9 +11,19 @@ class EMTLib
   Проверка на целое
   @param [Number] число
   @return [boolean]
+  TEST ok
   ###
   isInt: (n)->
     return n is +n and n is (n|0)
+
+  isArray:(o)->
+    Object.prototype.toString.call(o) is '[object Array]'
+
+  isObject:(o)->
+    Object.prototype.toString.call(o) is '[object Object]'
+
+  trim:(str)->
+    str.replace( /^\s+/, '').replace( /\s+$/, '')
 
   ###
   Метод, осуществляющий декодирование информации
@@ -39,14 +49,14 @@ class EMTLib
   ###
     Сохраняем содержимое тегов HTML
 
-   Тег 'a' кодируется со специальным префиксом для дальнейшей
-   возможности выносить за него кавычки.
+  Тег 'a' кодируется со специальным префиксом для дальнейшей
+  возможности выносить за него кавычки.
 
    @param  [String] $text
    @param  [boolean] $safe
    @return [String]
 
-   TEST ok
+  TEST ok
   ###
   safe_tag_chars:(text, way)->
     self = @
@@ -111,7 +121,7 @@ class EMTLib
    @param   [String] $text
    @return  [String]
 
-   TEST
+  TEST ok
   ###
   encode_internal_blocks:(text)->
     text = @encrypt_tag text
@@ -127,7 +137,7 @@ class EMTLib
   @param   [String] $text
   @return  [String]
 
-  TEST
+  TEST ok
   ###
   decode_internal_blocks:(text)->
     decrypt_tag = @decrypt_tag
@@ -147,10 +157,6 @@ class EMTLib
     min ?= 0
     max ?= 1
     Math.random() * (max - min) + min
-
-  trim:(str)->
-    str.replace( /^\s+/, '').replace( /\s+$/, '')
-
 
   ### Создание тега с защищенным содержимым
 
@@ -198,11 +204,7 @@ class EMTLib
 
     "<" + @encrypt_tag(htmlTag) + ">" + content + "</" + @encrypt_tag(tag) + ">"
 
-  isArray:(o)->
-    Object.prototype.toString.call(o) is '[object Array]'
 
-  isObject:(o)->
-    Object.prototype.toString.call(o) is '"[object Object]"'
 
   ###
   Метод, осуществляющий декодирование информации

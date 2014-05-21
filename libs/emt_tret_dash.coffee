@@ -1,9 +1,9 @@
-EMTret = require( './emt_base').EMTret
+EMTret = require( './emt_tret').EMTret
 ###
 EMT_Tret_Dash
 ###
 
-class EMTTretDash extends EMTret
+class EMTretDash extends EMTret
   title: "Дефисы и тире"
   rules:
     mdash_symbol_to_html_mdash:
@@ -107,4 +107,4 @@ class EMTTretDash extends EMTret
     "ka_de_kas"
     ]
 
-
+exports.EMTretDash = EMTretDash

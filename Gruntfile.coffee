@@ -33,6 +33,12 @@ module.exports = (grunt)->
       inputs: [
         "libs/"
       ]
+    mochaTest:
+      test:
+        options:
+          reporter: 'spec',
+          require: 'coffee-script/register'
+        src: ['test/**/*.coffee']
 
     # uglify:
     #   translate:
@@ -61,11 +67,12 @@ module.exports = (grunt)->
         tasks: ['coffeelint']
       tests:
         files: ['test/*.coffee']
-        tasks: ['coffeelint']
+        tasks: ['coffeelint','mochaTest']
       app:
         files: ['libs/*.coffee']
         tasks: [
           'coffeelint'
+          'mochaTest'
           # 'coffee'
           'codo'
           # 'uglify'
@@ -74,6 +81,7 @@ module.exports = (grunt)->
 
   grunt.registerTask('default', [
     'coffeelint'
+    'mochaTest'
     # 'coffee'
     'codo'
     # 'uglify'

@@ -1,4 +1,4 @@
-EMTret = require( './emt_base').EMTret
+EMTret = require( './emt_tret').EMTret
 ###
 EMT_Tret_Number
 ###
@@ -103,3 +103,5 @@ class EMTretNumber extends EMTret
     "thinsp_between_no_and_number",
     "thinsp_between_sect_and_number"
     ]
+
+exports.EMTretNumber = EMTretNumber
