@@ -1,3 +1,4 @@
+
 ###
 Evgeny Muravjev Typograph, http://mdash.ru
 Version: 3.0 Gold Master
@@ -123,7 +124,7 @@ class EMTBase
     @_safe_blocks.splice xid, 1
 
   reEscape: (str)->
-    require('./escapeRegExp')(str)
+    require('./escapeRegExp').reEscape str
 
   ###
   Добавление защищенного блока
@@ -134,6 +135,7 @@ class EMTBase
   add_safe_tag:(tag)->
     xopen = @reEscape("<") + tag + "[^>]*?" + @reEscape(">")
     close = @reEscape("</" + tag + ">")
+    console.log xopen
     @_add_safe_block(tag, xopen, close, tag)
     return true
 
@@ -217,14 +219,14 @@ class EMTBase
 
   ###
   Инициализация класса, используется чтобы задать список третов или
-  спсиок защищённых блоков, которые можно использовать.
+  список защищённых блоков, которые можно использовать.
   Также здесь можно отменить защищённые блоки по умлочнаию
   ###
 
   constructor:->
     for tret in @trets
       continue if @tret_objects[tret]
-
+      # @todo
       obj = @create_object(tret)
       continue unless obj
 
