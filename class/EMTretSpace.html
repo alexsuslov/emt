@@ -19,18 +19,18 @@
       Index
     </a>
     &raquo;
-    <span class='title'>EMTTretDash</span>
+    <span class='title'>EMTretSpace</span>
   </div>
 </div>
     <div id='content'>
       <h1>
         Class:
-        EMTTretDash
+        EMTretSpace
       </h1>
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>libs&#47;emt_tret_dash.coffee</td>
+          <td>libs&#47;emt_tret_space.coffee</td>
         </tr>
         <tr>
           <td>Inherits:</td>
@@ -41,7 +41,7 @@
       </table>
       <h2>Overview</h2>
       <div class='docstring'>
-  <p>EMT_Tret_Dash</p>
+  <p>EMT_Tret_Space</p>
 </div>
 <div class='tags'>
 </div>
@@ -52,7 +52,7 @@
     =
   </dt>
   <dd>
-    <pre><code class='coffeescript'>&quot;Дефисы и тире&quot;</code></pre>
+    <pre><code class='coffeescript'>&quot;Расстановка и удаление пробелов&quot;</code></pre>
     
   </dd>
   <dt id='rules-variable'>
@@ -61,58 +61,72 @@
   </dt>
   <dd>
     <pre><code class='coffeescript'>{
-  mdash_symbol_to_html_mdash: {
-    description: &quot;Замена символа тире на html конструкцию&quot;,
-    pattern: &quot;&#47;—&#47;i&quot;,
-    replacement: &quot;&amp;mdash;&quot;
+  nobr_twosym_abbr: {
+    description: &quot;Неразрывный перед 2х символьной аббревиатурой&quot;,
+    pattern: [&quot;&#47;([a-zA-Zа-яёА-ЯЁ])(\\040|\\t)+([A-ZА-ЯЁ]2})&quot;, &quot;([\\s\\;\\.\\?\\!\\:\\(\\\&quot;]|\\&amp;(ra|ld)quo\\;|$)&#47;&quot;].join(&#39;&#39;),
+    replacement: &quot;\\1&amp;nbsp;\\3\\4&quot;
   },
-  mdash: {
-    description: &quot;Тире после кавычек, скобочек, пунктуации&quot;,
-    pattern: [[&quot;&#47;([a-zа-яё0-9]+|\\,|\\:|\\)|\\&amp;(ra|ld)quo\\;|\\|\\\&quot;|\\&gt;)&quot;, &quot;(\\040|\\t)(—|\\-|\\&amp;mdash\\;)(\\s|$|\\&lt;)&#47;ui&quot;].join(&#39;&#39;), &quot;&#47;(\\,|\\:|\\)|\\\&quot;)(—|\\-|\\&amp;mdash\\;)(\\s|$|\\&lt;)&#47;ui&quot;],
-    replacement: [&quot;\\1&amp;nbsp;&amp;mdash;\\5&quot;, &quot;\\1&amp;nbsp;&amp;mdash;\\3&quot;]
+  remove_space_before_punctuationmarks: {
+    description: &quot;Удаление пробела перед точкой, запятой, \      двоеточием, точкой с запятой&quot;,
+    pattern: &quot;&#47;((\\040|\\t|\\&amp;nbsp\\;)+)([\\,\\:\\.\\;\\?])(\\s+|$)&#47;&quot;,
+    replacement: &quot;\\3\\4&quot;
   },
-  mdash_2: {
-    description: &quot;Тире после переноса строки&quot;,
-    pattern: &quot;&#47;(\\n|\\r|^|\\&gt;)(\\-|\\&amp;mdash\\;)(\\t|\\040)&#47;&quot;,
-    replacement: &quot;\\1&amp;mdash;&amp;nbsp;&quot;
+  autospace_after_comma: {
+    description: &quot;Пробел после запятой&quot;,
+    pattern: [&quot;&#47;(\\040|\\t|\\&amp;nbsp\\;)\\,([а-яёa-z0-9])&#47;i&quot;, &quot;&#47;([^0-9])\\,([а-яёa-z0-9])&#47;i&quot;],
+    replacement: [&quot;, \\2&quot;, &quot;\\1, \\2&quot;]
   },
-  mdash_3: {
-    description: &quot;Тире после знаков восклицания, троеточия и прочее&quot;,
-    pattern: [&quot;&#47;(\\.|\\!|\\?|\\&amp;hellip\\;)(\\040|\\t|\\&amp;nbsp\\;)&quot;, &quot;(\\-|\\&amp;mdash\\;)(\\040|\\t|\\&amp;nbsp\\;)&#47;&quot;].join(&#39;&#39;),
-    replacement: &quot;\\1 &amp;mdash;&amp;nbsp;&quot;
+  autospace_after_pmarks: {
+    description: &quot;Пробел после знаков пунктуации, кроме точки&quot;,
+    pattern: [&quot;&#47;(\\040|\\t|\\&amp;nbsp\\;|^|\\n)([a-zа-яё0-9]+)(\\040|\\t|\\&amp;nbsp\\;)&quot;, &quot;?(\\:|\\)|\\,|\\&amp;hellip\\;|(?:\\!|\\?)+)([а-яёa-z])&#47;i&quot;].join(&#39;&#39;),
+    replacement: &quot;\\1\\2\\4 \\5&quot;
   },
-  iz_za_pod: {
-    description: &quot;Расстановка дефисов между из-за, из-под&quot;,
-    pattern: [&quot;&#47;(\\s|\\&amp;nbsp\\;|\\&gt;|^)(из)(\\040|\\t|\\&amp;nbsp\\;)&quot;, &quot;\\-?(за|под)([\\.\\,\\!\\?\\:\\;]|\\040|\\&amp;nbsp\\;)&#47;uie&quot;].join(&#39;&#39;),
-    replacement: [&quot;(( u\&quot; \&quot;  if m.group(1) == u\&quot;&amp;nbsp;\&quot;  else  m.group(1))) &quot;, &quot;+ m.group(2)+u\&quot;-\&quot;+m.group(4) &quot;, &quot;+ (( u\&quot; \&quot;  if m.group(5) == u\&quot;&amp;nbsp;\&quot; else  m.group(5)))&quot;].join(&#39;&#39;)
+  &quot;autospace_after_dot&quot;: {
+    description: &quot;Пробел после точки&quot;,
+    pattern: [[&quot;&#47;(\\040|\\t|\\&amp;nbsp\\;|^)([a-zа-яё0-9]+)(\\040|\\t|\\&amp;nbsp\\;)&quot;, &quot;?\\.([а-яёa-z]4,})&#47;i&quot;].join(&#39;&#39;), &quot;&#47;(\\040|\\t|\\&amp;nbsp\\;|^)([a-zа-яё0-9]+)\\.([а-яёa-z]1,3})&#47;iue&quot;],
+    replacement: [&quot;\\1\\2. \\4&quot;, [&quot;m.group(1)+m.group(2)+u\&quot;.\&quot; +(( u\&quot;\&quot; &quot;, &quot;if this.Lib.strtolower(m.group(3)) in ( self.domain_zones) &quot;, &quot;else u\&quot; \&quot;))+ m.group(3)&quot;].join(&#39;&#39;)]
   },
-  to_libo_nibud: {
-    description: &quot;Автоматическая простановка дефисов в обезличенных\       местоимениях и междометиях&quot;,
-    cycled: true,
-    pattern: [&quot;&#47;(\\s|^|\\&amp;nbsp\\;|\\&gt;)&quot;, &quot;(кто|кем|когда|зачем|почему|как|что|чем|где|чего|кого)&quot;, &quot;\\-?(\\040|\\t|\\&amp;nbsp\\;)\\-?(то|либо|нибудь)&quot;, &quot;([\\.\\,\\!\\?\\;]|\\040|\\&amp;nbsp\\;|$)&#47;uie&quot;].join(&#39;&#39;),
-    replacement: [&quot;(( u\&quot; \&quot;  if m.group(1) == u\&quot;&amp;nbsp;\&quot;  else  m.group(1))) &quot;, &quot;+ m.group(2)+u\&quot;-\&quot;+m.group(4) + (( u\&quot; \&quot; &quot;, &quot; if m.group(5) == u\&quot;&amp;nbsp;\&quot; else  m.group(5)))&quot;].join(&#39;&#39;)
+  &quot;autospace_after_hellips&quot;: {
+    description: &quot;Пробел после знаков троеточий с вопросительным \      или восклицательными знаками&quot;,
+    pattern: &quot;&#47;([\\?\\!]\\.\\.)([а-яёa-z])&#47;i&quot;,
+    replacement: &quot;\\1 \\2&quot;
   },
-  koe_kak: {
-    description: &quot;Кое-как, кой-кого, все-таки&quot;,
-    &quot;cycled&quot;: true,
-    pattern: [&quot;&#47;(\\s|^|\\&amp;nbsp\\;|\\&gt;)(кое)\\-?(\\040|\\t|\\&amp;nbsp\\;)\        \\-?(как)([\\.\\,\\!\\?\\;]|\\040|\\&amp;nbsp\\;|$)&#47;uie&quot;, &quot;&#47;(\\s|^|\\&amp;nbsp\\;|\\&gt;)(кой)\\-?(\\040|\\t|\\&amp;nbsp\\;)\        \\-?(кого)([\\.\\,\\!\\?\\;]|\\040|\\&amp;nbsp\\;|$)&#47;uie&quot;, &quot;&#47;(\\s|^|\\&amp;nbsp\\;|\\&gt;)(вс[её])\\-?(\\040|\\t|\\&amp;nbsp\\;)\        \\-?(таки)([\\.\\,\\!\\?\\;]|\\040|\\&amp;nbsp\\;|$)&#47;uie&quot;],
-    replacement: [&quot;(( u\&quot; \&quot;  if m.group(1) == u\&quot;&amp;nbsp;\&quot;  else  m.group(1)))&quot;, &quot; + m.group(2)+u\&quot;-\&quot;+m.group(4) + (( u\&quot; \&quot;  &quot;, &quot;if m.group(5) == u\&quot;&amp;nbsp;\&quot; else  m.group(5)))&quot;].join(&#39;&#39;)
+  &quot;many_spaces_to_one&quot;: {
+    description: &quot;Удаление лишних пробельных символов и табуляций&quot;,
+    pattern: &quot;&#47;(\\040|\\t)+&#47;&quot;,
+    replacement: &quot; &quot;
   },
-  ka_de_kas: {
-    description: &quot;Расстановка дефисов с частицами ка, де, кась&quot;,
-    &quot;disabled&quot;: true,
-    pattern: [&quot;&#47;(\\s|^|\\&amp;nbsp\\;|\\&gt;)([а-яё]+)(\\040|\\t|\\&amp;nbsp\\;)(ка)\        ([\\.\\,\\!\\?\\;]|\\040|\\&amp;nbsp\\;|$)&#47;uie&quot;, &quot;&#47;(\\s|^|\\&amp;nbsp\\;|\\&gt;)([а-яё]+)(\\040|\\t|\\&amp;nbsp\\;)(де)\        ([\\.\\,\\!\\?\\;]|\\040|\\&amp;nbsp\\;|$)&#47;uie&quot;, &quot;&#47;(\\s|^|\\&amp;nbsp\\;|\\&gt;)([а-яё]+)(\\040|\\t|\\&amp;nbsp\\;)(кась)\        ([\\.\\,\\!\\?\\;]|\\040|\\&amp;nbsp\\;|$)&#47;uie&quot;],
-    replacement: [&quot;(( u\&quot; \&quot;  if m.group(1) == u\&quot;&amp;nbsp;\&quot;  else  m.group(1)))&quot;, &quot; + m.group(2)+u\&quot;-\&quot;+m.group(4) + (( u\&quot; \&quot; &quot;, &quot; if m.group(5) == u\&quot;&amp;nbsp;\&quot; else  m.group(5)))&quot;].join(&#39;&#39;)
+  &quot;clear_percent&quot;: {
+    description: &quot;Удаление пробела перед символом процента&quot;,
+    pattern: &quot;&#47;(\\d+)([\\t\\040]+)\\%&#47;&quot;,
+    replacement: &quot;\\1%&quot;
+  },
+  &quot;nbsp_before_open_quote&quot;: {
+    description: &quot;Неразрывный пробел перед открывающей скобкой&quot;,
+    pattern: &quot;&#47;(^|\\040|\\t|&gt;)([a-zа-яё]1,2})\\040(\\&amp;laquo\\;|\\&amp;bdquo\\;)&#47;&quot;,
+    replacement: &quot;\\1\\2&amp;nbsp;\\3&quot;
+  },
+  &quot;nbsp_before_month&quot;: {
+    description: &quot;Неразрывный пробел в датах перед числом и месяцем&quot;,
+    pattern: [&quot;&#47;(\\d)(\\s)+&quot;, &quot;(января|февраля|марта|апреля|мая|июня|июля|августа|сентября|&quot;, &quot;          октября|ноября|декабря)([^\\&lt;]|$)&#47;i&quot;].join(&#39;&#39;),
+    replacement: &quot;\\1&amp;nbsp;\\3\\4&quot;
+  },
+  &quot;spaces_on_end&quot;: {
+    description: &quot;Удаление пробелов в конце текста&quot;,
+    pattern: &quot;&#47; +$&#47;&quot;,
+    replacement: &quot;&quot;
+  },
+  no_space_posle_hellip: {
+    description: &quot;Отсутстввие пробела после троеточия после \      открывающей кавычки&quot;,
+    pattern: [&quot;&#47;(\\&amp;laquo\\;|\\&amp;bdquo\\;)( |\\&amp;nbsp\\;)?\\&amp;hellip\\;&quot;, &quot;( |\\&amp;nbsp\\;)?([a-zа-яё])&#47;ui&quot;].join(&#39;&#39;),
+    replacement: &quot;\\1&amp;hellip;\\4&quot;
+  },
+  &quot;space_posle_goda&quot;: {
+    description: &quot;Пробел после года&quot;,
+    pattern: [&quot;&#47;(^|\\040|\\&amp;nbsp\\;)([0-9]3,4})(год([ауе]|ом)?)([^a-zа-яё]|$)&#47;ui&quot;].join(&#39;&#39;),
+    replacement: &quot;\\1\\2 \\3\\5&quot;
   }
 }</code></pre>
-    
-  </dd>
-  <dt id='rule_order-variable'>
-    rule_order
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>[&quot;mdash_symbol_to_html_mdash&quot;, &quot;mdash&quot;, &quot;mdash_2&quot;, &quot;mdash_3&quot;, &quot;iz_za_pod&quot;, &quot;to_libo_nibud&quot;, &quot;koe_kak&quot;, &quot;ka_de_kas&quot;]</code></pre>
     
   </dd>
 </dl>
