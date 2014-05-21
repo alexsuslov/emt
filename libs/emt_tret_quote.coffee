@@ -1,0 +1,3 @@
+class EMTTretQuote extends EMTTret
+
+

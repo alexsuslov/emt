@@ -135,7 +135,6 @@ class EMTBase
   add_safe_tag:(tag)->
     xopen = @reEscape("<") + tag + "[^>]*?" + @reEscape(">")
     close = @reEscape("</" + tag + ">")
-    console.log xopen
     @_add_safe_block(tag, xopen, close, tag)
     return true
 
