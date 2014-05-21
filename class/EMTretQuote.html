@@ -19,18 +19,18 @@
       Index
     </a>
     &raquo;
-    <span class='title'>EMTretSymbol</span>
+    <span class='title'>EMTretQuote</span>
   </div>
 </div>
     <div id='content'>
       <h1>
         Class:
-        EMTretSymbol
+        EMTretQuote
       </h1>
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>libs&#47;emt_tret_symbol.coffee</td>
+          <td>libs&#47;emt_tret_quote.coffee</td>
         </tr>
         <tr>
           <td>Inherits:</td>
@@ -39,12 +39,6 @@
           </td>
         </tr>
       </table>
-      <h2>Overview</h2>
-      <div class='docstring'>
-  <p>EMT_Tret_Symbol</p>
-</div>
-<div class='tags'>
-</div>
       <h2>Variables Summary</h2>
       <dl class='constants'>
   <dt id='title-variable'>
@@ -52,7 +46,7 @@
     =
   </dt>
   <dd>
-    <pre><code class='coffeescript'>&quot;Специальные символы&quot;</code></pre>
+    <pre><code class='coffeescript'>&quot;Кавычки&quot;</code></pre>
     
   </dd>
   <dt id='rules-variable'>
@@ -61,42 +55,34 @@
   </dt>
   <dd>
     <pre><code class='coffeescript'>{
-  tm_replace: {
-    description: &quot;Замена (tm) на символ торговой марки&quot;,
-    pattern: &quot;&#47;([\\040\\t])?\\(tm\\)&#47;i&quot;,
-    replacement: &quot;&amp;trade;&quot;
+  quotes_outside_a: {
+    description: &quot;Кавычки вне тэга &lt;a&gt;&quot;,
+    pattern: [&quot;&#47;(\\&lt;%%\\_\\_[^\\&gt;]+\\&gt;)&quot;, &quot;\\\&quot;(.+?)\\\&quot;&quot;, &quot;(\\&lt;\\&#47;%%\\_\\_[^\\&gt;]+\\&gt;)&#47;s&quot;].join(&#39;&#39;),
+    replacement: &quot;\&quot;\\1\\2\\3\&quot;&quot;
   },
-  r_sign_replace: {
-    description: &quot;Замена (R) на символ зарегистрированной торговой марки&quot;,
-    pattern: [&quot;&#47;(.|^)\\(r\\)(.|$)&#47;ie&quot;],
-    replacement: [&quot;m.group(1)+u\&quot;&amp;reg;\&quot;+m.group(2)&quot;]
+  open_quote: {
+    description: &quot;Открывающая кавычка&quot;,
+    pattern: &quot;&#47;(^|\\(|\\s|\\&gt;|-)(\\\&quot;|\\\\\&quot;)(\\S+)&#47;iue&quot;,
+    replacement: &quot;m[1] + QUOTE_FIRS_OPEN + m[3]&quot;
   },
-  copy_replace: {
-    description: &quot;Замена (c) на символ копирайт&quot;,
-    pattern: [&quot;&#47;\\((c|с)\\)\\s+&#47;i&quot;, &quot;&#47;\\((c|с)\\)($|\\.|,|!|\\?)&#47;i&quot;],
-    replacement: [&quot;&amp;copy;&amp;nbsp;&quot;, &quot;&amp;copy;\\2&quot;]
+  close_quote: {
+    description: &quot;Закрывающая кавычка&quot;,
+    pattern: [&quot;&#47;([a-zа-яё0-9]|\\.|\\&amp;hellip\\;|\\!|\\?|\\&gt;|\\)&quot;, &quot;|\\:)((\\\&quot;|\\\\\&quot;)+)(\\.|\\&amp;hellip\\;|\\;|\\:|\\?|\\!|\\,|\\s|\\)&quot;, &quot;|\\&lt;\\&#47;|$)&#47;uie&quot;].join(&#39;&#39;),
+    replacement: &quot;m[1] + QUOTE_FIRS_CLOSE * ( m[2].count(u\&quot;\\\&quot;\&quot;) ) + m[4]&quot;
   },
-  apostrophe: {
-    description: &quot;Расстановка правильного апострофа в текстах&quot;,
-    pattern: &quot;&#47;(\\s|^|\\&gt;|\\&amp;rsquo\\;)([a-zа-яё]{1,})\&#39;([a-zа-яё]+)&#47;ui&quot;,
-    replacement: &quot;\\1\\2&amp;rsquo;\\3&quot;,
-    cycled: true
+  close_quote_adv: {
+    description: &quot;Закрывающая кавычка особые случаи&quot;,
+    pattern: [[&quot;&#47;([a-zа-яё0-9]|\\.|\\&amp;hellip\\;|\\!|\\?|\\&gt;|\\)&quot;, &quot;|\\:)((\\\&quot;|\\\\\&quot;|\\&amp;laquo\\;)+)(\\&lt;[^\\&gt;]+\\&gt;)&quot;, &quot;(\\.|\\&amp;hellip\\;|\\;|\\:|\\?|\\!|\\,|\\)|\\&lt;\\&#47;|$| )&#47;uie&quot;].join(&#39;&#39;), [&quot;&#47;([a-zа-яё0-9]|\\.|\\&amp;hellip\\;|\\!|\\?|\\&gt;|\\)&quot;, &quot;|\\:)(\\s+)((\\\&quot;|\\\\\&quot;)+)(\\s+)&quot;, &quot;(\\.|\\&amp;hellip\\;|\\;|\\:|\\?|\\!|\\,|\\)|\\&lt;\\&#47;|$| )&#47;uie&quot;].join(&#39;&#39;), &quot;&#47;\\&gt;(\\&amp;laquo\\;)\\.($|\\s|\\&lt;)&#47;ui&quot;, &quot;&#47;\\&gt;(\\&amp;laquo\\;),($|\\s|\\&lt;|\\S)&#47;ui&quot;],
+    replacement: [[&quot;m[1] + QUOTE_FIRS_CLOSE * ( m[2].count(u\&quot;\\\&quot;\&quot;)&quot;, &quot;+m[2].count(u\&quot;&amp;laquo;\&quot;) ) + m[4]+ m[5]&quot;].join(&#39;&#39;), [&quot;m[1] +m[2]+ QUOTE_FIRS_CLOSE * ( m[3].count(u\&quot;\\\&quot;\&quot;)&quot;, &quot;+m[3].count(u\&quot;&amp;laquo;\&quot;) ) + m[5]+ m[6]&quot;].join(&#39;&#39;), &quot;&gt;&amp;raquo;.\\2&quot;, &quot;&gt;&amp;raquo;,\\2&quot;]
   },
-  degree_f: {
-    description: &quot;Градусы по Фаренгейту&quot;,
-    pattern: &quot;&#47;([0-9]+)F($|\\s|\\.|\\,|\\;|\\:|\\&amp;nbsp\\;|\\?|\\!)&#47;e&quot;,
-    replacement: [&quot;u\&quot;\&quot;+self.tag(m.group(1)+u\&quot; &amp;deg;F\&quot;,u\&quot;span\&quot;, &quot;, &quot;{u\&quot;class\&quot;:u\&quot;nowrap\&quot;}) +m.group(2)&quot;].join(&#39;&#39;)
+  open_quote_adv: {
+    description: &quot;Открывающая кавычка особые случаи&quot;,
+    pattern: &quot;&#47;(^|\\(|\\s|\\&gt;)(\\\&quot;|\\\\\&quot;)(\\s)(\\S+)&#47;iue&quot;,
+    replacement: &quot;m.group(1) + QUOTE_FIRS_OPEN +m.group(4)&quot;
   },
-  euro_symbol: {
-    description: &quot;Символ евро&quot;,
-    simple_replace: true,
-    pattern: &quot;€&quot;,
-    replacement: &quot;&amp;euro;&quot;
-  },
-  arrows_symbols: {
-    description: &quot;Замена стрелок вправо-влево на html коды&quot;,
-    pattern: [&quot;&#47;(\\s|\\&gt;|\\&amp;nbsp\\;|^)\\-\\&gt;($|\\s|\\&amp;nbsp\\;|\\&lt;)&#47;&quot;, &quot;&#47;(\\s|\\&gt;|\\&amp;nbsp\\;|^|;)\\&lt;\\-(\\s|\\&amp;nbsp\\;|$)&#47;&quot;, &quot;&#47;→&#47;&quot;, &quot;&#47;←&#47;&quot;],
-    replacement: [&quot;\\1&amp;rarr;\\2&quot;, &quot;\\1&amp;larr;\\2&quot;, &quot;&amp;rarr;&quot;, &quot;&amp;larr;&quot;]
+  quotation: {
+    description: &quot;Внутренние кавычки-лапки и дюймы&quot;,
+    &quot;function&quot;: &quot;build_sub_quotations&quot;
   }
 }</code></pre>
     
@@ -106,17 +92,7 @@
     =
   </dt>
   <dd>
-    <pre><code class='coffeescript'>[&quot;tm_replace&quot;, &quot;r_sign_replace&quot;, &quot;copy_replace&quot;, &quot;apostrophe&quot;, &quot;degree_f&quot;, &quot;euro_symbol&quot;, &quot;arrows_symbols&quot;]</code></pre>
-    
-  </dd>
-  <dt id='classes-variable'>
-    classes
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>{
-  nowrap: &quot;word-spacing:nowrap;&quot;
-}</code></pre>
+    <pre><code class='coffeescript'>[&quot;quotes_outside_a&quot;, &quot;open_quote&quot;, &quot;close_quote&quot;, &quot;close_quote_adv&quot;, &quot;open_quote_adv&quot;, &quot;quotation&quot;]</code></pre>
     
   </dd>
 </dl>
@@ -144,6 +120,31 @@
         <a href='../class/EMTret.html#settings-variable'>settings</a>
         <a href='../class/EMTret.html#intrep-variable'>intrep</a>
       </p>
+      <h2>Instance Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#inject_in-dynamic'>
+        #
+(void)
+<b>inject_in</b><span>(pos, text)</span>
+      </a>
+    </span>
+    <span class='desc'>
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#build_sub_quotations-dynamic'>
+        #
+(void)
+<b>build_sub_quotations</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+    </span>
+  </li>
+</ul>
       <h2>
         <small>Inherited Method Summary</small>
         <h3 class='inherited'>
@@ -181,6 +182,27 @@
           <a href='../class/EMTret.html#post_parse-dynamic'>#post_parse</a>
         </p>
       </h2>
+      <h2>Instance Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='inject_in-dynamic'>
+      #
+(void)
+<b>inject_in</b><span>(pos, text)</span>
+      <br>
+    </p>
+    
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='build_sub_quotations-dynamic'>
+      #
+(void)
+<b>build_sub_quotations</b><span>()</span>
+      <br>
+    </p>
+    
+  </div>
+</div>
     </div>
     <div id='footer'>
   May 21, 14 19:28:14 by

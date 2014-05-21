@@ -87,7 +87,7 @@
     replacement: [&quot;(( u\&quot; \&quot;  if m.group(1) == u\&quot;&amp;nbsp;\&quot;  else  m.group(1))) &quot;, &quot;+ m.group(2)+u\&quot;-\&quot;+m.group(4) &quot;, &quot;+ (( u\&quot; \&quot;  if m.group(5) == u\&quot;&amp;nbsp;\&quot; else  m.group(5)))&quot;].join(&#39;&#39;)
   },
   to_libo_nibud: {
-    description: &quot;Автоматическая простановка дефисов в обезличенных\       местоимениях и междометиях&quot;,
+    description: &quot;Автоматическая простановка дефисов в обезличенныхместоимениях и междометиях&quot;,
     cycled: true,
     pattern: [&quot;&#47;(\\s|^|\\&amp;nbsp\\;|\\&gt;)&quot;, &quot;(кто|кем|когда|зачем|почему|как|что|чем|где|чего|кого)&quot;, &quot;\\-?(\\040|\\t|\\&amp;nbsp\\;)\\-?(то|либо|нибудь)&quot;, &quot;([\\.\\,\\!\\?\\;]|\\040|\\&amp;nbsp\\;|$)&#47;uie&quot;].join(&#39;&#39;),
     replacement: [&quot;(( u\&quot; \&quot;  if m.group(1) == u\&quot;&amp;nbsp;\&quot;  else  m.group(1))) &quot;, &quot;+ m.group(2)+u\&quot;-\&quot;+m.group(4) + (( u\&quot; \&quot; &quot;, &quot; if m.group(5) == u\&quot;&amp;nbsp;\&quot; else  m.group(5)))&quot;].join(&#39;&#39;)
@@ -95,13 +95,13 @@
   koe_kak: {
     description: &quot;Кое-как, кой-кого, все-таки&quot;,
     &quot;cycled&quot;: true,
-    pattern: [&quot;&#47;(\\s|^|\\&amp;nbsp\\;|\\&gt;)(кое)\\-?(\\040|\\t|\\&amp;nbsp\\;)\        \\-?(как)([\\.\\,\\!\\?\\;]|\\040|\\&amp;nbsp\\;|$)&#47;uie&quot;, &quot;&#47;(\\s|^|\\&amp;nbsp\\;|\\&gt;)(кой)\\-?(\\040|\\t|\\&amp;nbsp\\;)\        \\-?(кого)([\\.\\,\\!\\?\\;]|\\040|\\&amp;nbsp\\;|$)&#47;uie&quot;, &quot;&#47;(\\s|^|\\&amp;nbsp\\;|\\&gt;)(вс[её])\\-?(\\040|\\t|\\&amp;nbsp\\;)\        \\-?(таки)([\\.\\,\\!\\?\\;]|\\040|\\&amp;nbsp\\;|$)&#47;uie&quot;],
+    pattern: [&quot;&#47;(\\s|^|\\&amp;nbsp\\;|\\&gt;)(кое)\\-?(\\040|\\t|\\&amp;nbsp\\;)\\-?(как)([\\.\\,\\!\\?\\;]|\\040|\\&amp;nbsp\\;|$)&#47;uie&quot;, &quot;&#47;(\\s|^|\\&amp;nbsp\\;|\\&gt;)(кой)\\-?(\\040|\\t|\\&amp;nbsp\\;)\\-?(кого)([\\.\\,\\!\\?\\;]|\\040|\\&amp;nbsp\\;|$)&#47;uie&quot;, &quot;&#47;(\\s|^|\\&amp;nbsp\\;|\\&gt;)(вс[её])\\-?(\\040|\\t|\\&amp;nbsp\\;)\\-?(таки)([\\.\\,\\!\\?\\;]|\\040|\\&amp;nbsp\\;|$)&#47;uie&quot;],
     replacement: [&quot;(( u\&quot; \&quot;  if m.group(1) == u\&quot;&amp;nbsp;\&quot;  else  m.group(1)))&quot;, &quot; + m.group(2)+u\&quot;-\&quot;+m.group(4) + (( u\&quot; \&quot;  &quot;, &quot;if m.group(5) == u\&quot;&amp;nbsp;\&quot; else  m.group(5)))&quot;].join(&#39;&#39;)
   },
   ka_de_kas: {
     description: &quot;Расстановка дефисов с частицами ка, де, кась&quot;,
     &quot;disabled&quot;: true,
-    pattern: [&quot;&#47;(\\s|^|\\&amp;nbsp\\;|\\&gt;)([а-яё]+)(\\040|\\t|\\&amp;nbsp\\;)(ка)\        ([\\.\\,\\!\\?\\;]|\\040|\\&amp;nbsp\\;|$)&#47;uie&quot;, &quot;&#47;(\\s|^|\\&amp;nbsp\\;|\\&gt;)([а-яё]+)(\\040|\\t|\\&amp;nbsp\\;)(де)\        ([\\.\\,\\!\\?\\;]|\\040|\\&amp;nbsp\\;|$)&#47;uie&quot;, &quot;&#47;(\\s|^|\\&amp;nbsp\\;|\\&gt;)([а-яё]+)(\\040|\\t|\\&amp;nbsp\\;)(кась)\        ([\\.\\,\\!\\?\\;]|\\040|\\&amp;nbsp\\;|$)&#47;uie&quot;],
+    pattern: [&quot;&#47;(\\s|^|\\&amp;nbsp\\;|\\&gt;)([а-яё]+)(\\040|\\t|\\&amp;nbsp\\;)(ка)([\\.\\,\\!\\?\\;]|\\040|\\&amp;nbsp\\;|$)&#47;uie&quot;, &quot;&#47;(\\s|^|\\&amp;nbsp\\;|\\&gt;)([а-яё]+)(\\040|\\t|\\&amp;nbsp\\;)(де)([\\.\\,\\!\\?\\;]|\\040|\\&amp;nbsp\\;|$)&#47;uie&quot;, &quot;&#47;(\\s|^|\\&amp;nbsp\\;|\\&gt;)([а-яё]+)(\\040|\\t|\\&amp;nbsp\\;)(кась)([\\.\\,\\!\\?\\;]|\\040|\\&amp;nbsp\\;|$)&#47;uie&quot;],
     replacement: [&quot;(( u\&quot; \&quot;  if m.group(1) == u\&quot;&amp;nbsp;\&quot;  else  m.group(1)))&quot;, &quot; + m.group(2)+u\&quot;-\&quot;+m.group(4) + (( u\&quot; \&quot; &quot;, &quot; if m.group(5) == u\&quot;&amp;nbsp;\&quot; else  m.group(5)))&quot;].join(&#39;&#39;)
   }
 }</code></pre>
@@ -179,7 +179,7 @@
       </h2>
     </div>
     <div id='footer'>
-  May 21, 14 10:58:07 by
+  May 21, 14 18:56:39 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>

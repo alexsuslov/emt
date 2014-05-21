@@ -101,10 +101,10 @@
   &quot;thinsp_between_number_triads&quot;: {
     description: &quot;Объединение триад чисел полупробелом&quot;,
     pattern: &quot;&#47;([0-9]1,3}( [0-9]3})1,})(.|$)&#47;ue&quot;,
+
     &#47;*
     @todo
-    *&#47;
-
+     *&#47;
     replacement: [&quot;(( m.group(0) if m.group(3)==u\&quot;-\&quot; else &quot;, &quot;this.Lib.str_replace(u\&quot; \&quot;,u\&quot;&amp;thinsp;\&quot;,m.group(1))+m.group(3)))&quot;].join(&#39;&#39;)
   },
   &quot;thinsp_between_no_and_number&quot;: {
@@ -192,7 +192,7 @@
       </h2>
     </div>
     <div id='footer'>
-  May 21, 14 10:58:07 by
+  May 21, 14 19:28:14 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>

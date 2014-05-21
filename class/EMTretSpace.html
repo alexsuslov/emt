@@ -67,7 +67,7 @@
     replacement: &quot;\\1&amp;nbsp;\\3\\4&quot;
   },
   remove_space_before_punctuationmarks: {
-    description: &quot;Удаление пробела перед точкой, запятой, \      двоеточием, точкой с запятой&quot;,
+    description: &quot;Удаление пробела перед точкой, запятой, двоеточием, точкой с запятой&quot;,
     pattern: &quot;&#47;((\\040|\\t|\\&amp;nbsp\\;)+)([\\,\\:\\.\\;\\?])(\\s+|$)&#47;&quot;,
     replacement: &quot;\\3\\4&quot;
   },
@@ -87,7 +87,7 @@
     replacement: [&quot;\\1\\2. \\4&quot;, [&quot;m.group(1)+m.group(2)+u\&quot;.\&quot; +(( u\&quot;\&quot; &quot;, &quot;if this.Lib.strtolower(m.group(3)) in ( self.domain_zones) &quot;, &quot;else u\&quot; \&quot;))+ m.group(3)&quot;].join(&#39;&#39;)]
   },
   &quot;autospace_after_hellips&quot;: {
-    description: &quot;Пробел после знаков троеточий с вопросительным \      или восклицательными знаками&quot;,
+    description: &quot;Пробел после знаков троеточий с вопросительным или восклицательными знаками&quot;,
     pattern: &quot;&#47;([\\?\\!]\\.\\.)([а-яёa-z])&#47;i&quot;,
     replacement: &quot;\\1 \\2&quot;
   },
@@ -108,7 +108,7 @@
   },
   &quot;nbsp_before_month&quot;: {
     description: &quot;Неразрывный пробел в датах перед числом и месяцем&quot;,
-    pattern: [&quot;&#47;(\\d)(\\s)+&quot;, &quot;(января|февраля|марта|апреля|мая|июня|июля|августа|сентября|&quot;, &quot;          октября|ноября|декабря)([^\\&lt;]|$)&#47;i&quot;].join(&#39;&#39;),
+    pattern: [&quot;&#47;(\\d)(\\s)+&quot;, &quot;(января|февраля|марта|апреля|мая|июня|июля|августа|сентября|&quot;, &quot;октября|ноября|декабря)([^\\&lt;]|$)&#47;i&quot;].join(&#39;&#39;),
     replacement: &quot;\\1&amp;nbsp;\\3\\4&quot;
   },
   &quot;spaces_on_end&quot;: {
@@ -117,7 +117,7 @@
     replacement: &quot;&quot;
   },
   no_space_posle_hellip: {
-    description: &quot;Отсутстввие пробела после троеточия после \      открывающей кавычки&quot;,
+    description: &quot;Отсутстввие пробела после троеточия после открывающей кавычки&quot;,
     pattern: [&quot;&#47;(\\&amp;laquo\\;|\\&amp;bdquo\\;)( |\\&amp;nbsp\\;)?\\&amp;hellip\\;&quot;, &quot;( |\\&amp;nbsp\\;)?([a-zа-яё])&#47;ui&quot;].join(&#39;&#39;),
     replacement: &quot;\\1&amp;hellip;\\4&quot;
   },
@@ -193,7 +193,7 @@
       </h2>
     </div>
     <div id='footer'>
-  May 21, 14 10:58:07 by
+  May 21, 14 19:28:14 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>

@@ -91,7 +91,41 @@
       </a>
     </span>
     <span class='desc'>
-      Проверка на целое 
+      Проверка на целое TEST ok
+
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#isArray-dynamic'>
+        #
+(void)
+<b>isArray</b><span>(o)</span>
+      </a>
+    </span>
+    <span class='desc'>
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#isObject-dynamic'>
+        #
+(void)
+<b>isObject</b><span>(o)</span>
+      </a>
+    </span>
+    <span class='desc'>
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#trim-dynamic'>
+        #
+(void)
+<b>trim</b><span>(str)</span>
+      </a>
+    </span>
+    <span class='desc'>
     </span>
   </li>
   <li>
@@ -124,7 +158,7 @@ TEST ok</p>
     <span class='signature'>
       <a href='#safe_tag_chars-dynamic'>
         #
-(String)
+(void)
 <b>safe_tag_chars</b><span>(text, way)</span>
       </a>
     </span>
@@ -153,12 +187,13 @@ TEST ok</p>
     <span class='signature'>
       <a href='#encode_internal_blocks-dynamic'>
         #
-(String)
+(void)
 <b>encode_internal_blocks</b><span>(text)</span>
       </a>
     </span>
     <span class='desc'>
-      Кодирует спец блок <p>TEST</p>
+      Кодирует спец блок <p> @param   [String] $text
+ @return  [String]</p><p>TEST ok</p>
     </span>
   </li>
   <li>
@@ -181,7 +216,7 @@ TEST ok</p>
       </a>
     </span>
     <span class='desc'>
-      Декодриует спец блоки <p>TEST</p>
+      Декодриует спец блоки <p>TEST ok</p>
     </span>
   </li>
   <li>
@@ -197,17 +232,6 @@ TEST ok</p>
   </li>
   <li>
     <span class='signature'>
-      <a href='#trim-dynamic'>
-        #
-(void)
-<b>trim</b><span>(str)</span>
-      </a>
-    </span>
-    <span class='desc'>
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
       <a href='#build_safe_tag-dynamic'>
         #
 (String)
@@ -216,28 +240,6 @@ TEST ok</p>
     </span>
     <span class='desc'>
       Создание тега с защищенным содержимым <p>где ключ - имя атрибута, а значение - само значение данного атрибута</p>
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#isArray-dynamic'>
-        #
-(void)
-<b>isArray</b><span>(o)</span>
-      </a>
-    </span>
-    <span class='desc'>
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#isObject-dynamic'>
-        #
-(void)
-<b>isObject</b><span>(o)</span>
-      </a>
-    </span>
-    <span class='desc'>
     </span>
   </li>
   <li>
@@ -308,7 +310,8 @@ TEST ok</p>
       <br>
     </p>
     <div class='docstring'>
-  <p>Проверка на целое</p>
+  <p>Проверка на целое
+TEST ok</p>
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
@@ -330,6 +333,33 @@ TEST ok</p>
     </li>
   </ul>
 </div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='isArray-dynamic'>
+      #
+(void)
+<b>isArray</b><span>(o)</span>
+      <br>
+    </p>
+    
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='isObject-dynamic'>
+      #
+(void)
+<b>isObject</b><span>(o)</span>
+      <br>
+    </p>
+    
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='trim-dynamic'>
+      #
+(void)
+<b>trim</b><span>(str)</span>
+      <br>
+    </p>
+    
   </div>
   <div class='method_details'>
     <p class='signature' id='decrypt_tag-dynamic'>
@@ -399,41 +429,17 @@ TEST ok</p>
   <div class='method_details'>
     <p class='signature' id='safe_tag_chars-dynamic'>
       #
-(String)
+(void)
 <b>safe_tag_chars</b><span>(text, way)</span>
       <br>
     </p>
     <div class='docstring'>
   <p>Сохраняем содержимое тегов HTML</p><p>Тег &#39;a&#39; кодируется со специальным префиксом для дальнейшей
-возможности выносить за него кавычки.</p><p>TEST ok</p>
+возможности выносить за него кавычки.</p><p> @param  [String] $text
+ @param  [boolean] $safe
+ @return [String]</p><p>TEST ok</p>
 </div>
 <div class='tags'>
-  <h3>Parameters:</h3>
-  <ul class='param'>
-    <li>
-      <span class='name'>$text</span>
-      <span class='type'>
-        (
-          <tt>String</tt>
-        )
-      </span>
-    </li>
-    <li>
-      <span class='name'>$safe</span>
-      <span class='type'>
-        (
-          <tt>boolean</tt>
-        )
-      </span>
-    </li>
-  </ul>
-  <h3>Returns:</h3>
-  <ul class='return'>
-    <li>
-      <span class='type'></span>
-      <tt>String</tt>
-    </li>
-  </ul>
 </div>
   </div>
   <div class='method_details'>
@@ -486,32 +492,15 @@ TEST ok</p>
   <div class='method_details'>
     <p class='signature' id='encode_internal_blocks-dynamic'>
       #
-(String)
+(void)
 <b>encode_internal_blocks</b><span>(text)</span>
       <br>
     </p>
     <div class='docstring'>
-  <p>Кодирует спец блок</p><p>TEST</p>
+  <p>Кодирует спец блок</p><p> @param   [String] $text
+ @return  [String]</p><p>TEST ok</p>
 </div>
 <div class='tags'>
-  <h3>Parameters:</h3>
-  <ul class='param'>
-    <li>
-      <span class='name'>$text</span>
-      <span class='type'>
-        (
-          <tt>String</tt>
-        )
-      </span>
-    </li>
-  </ul>
-  <h3>Returns:</h3>
-  <ul class='return'>
-    <li>
-      <span class='type'></span>
-      <tt>String</tt>
-    </li>
-  </ul>
 </div>
   </div>
   <div class='method_details'>
@@ -531,7 +520,7 @@ TEST ok</p>
       <br>
     </p>
     <div class='docstring'>
-  <p>Декодриует спец блоки</p><p>TEST</p>
+  <p>Декодриует спец блоки</p><p>TEST ok</p>
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
@@ -559,15 +548,6 @@ TEST ok</p>
       #
 (void)
 <b>rand</b><span>(min, max)</span>
-      <br>
-    </p>
-    
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='trim-dynamic'>
-      #
-(void)
-<b>trim</b><span>(str)</span>
       <br>
     </p>
     
@@ -624,24 +604,6 @@ TEST ok</p>
     </li>
   </ul>
 </div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='isArray-dynamic'>
-      #
-(void)
-<b>isArray</b><span>(o)</span>
-      <br>
-    </p>
-    
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='isObject-dynamic'>
-      #
-(void)
-<b>isObject</b><span>(o)</span>
-      <br>
-    </p>
-    
   </div>
   <div class='method_details'>
     <p class='signature' id='strpos_ex-dynamic'>
@@ -735,7 +697,7 @@ TEST ok</p>
 </div>
     </div>
     <div id='footer'>
-  May 21, 14 10:58:07 by
+  May 21, 14 19:28:14 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>
