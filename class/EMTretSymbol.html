@@ -19,18 +19,18 @@
       Index
     </a>
     &raquo;
-    <span class='title'>EMTTretDash</span>
+    <span class='title'>EMTretSymbol</span>
   </div>
 </div>
     <div id='content'>
       <h1>
         Class:
-        EMTTretDash
+        EMTretSymbol
       </h1>
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>libs&#47;emt_tret_dash.coffee</td>
+          <td>libs&#47;emt_tret_symbol.coffee</td>
         </tr>
         <tr>
           <td>Inherits:</td>
@@ -41,7 +41,7 @@
       </table>
       <h2>Overview</h2>
       <div class='docstring'>
-  <p>EMT_Tret_Dash</p>
+  <p>EMT_Tret_Symbol</p>
 </div>
 <div class='tags'>
 </div>
@@ -52,7 +52,7 @@
     =
   </dt>
   <dd>
-    <pre><code class='coffeescript'>&quot;Дефисы и тире&quot;</code></pre>
+    <pre><code class='coffeescript'>&quot;Специальные символы&quot;</code></pre>
     
   </dd>
   <dt id='rules-variable'>
@@ -61,48 +61,42 @@
   </dt>
   <dd>
     <pre><code class='coffeescript'>{
-  mdash_symbol_to_html_mdash: {
-    description: &quot;Замена символа тире на html конструкцию&quot;,
-    pattern: &quot;&#47;—&#47;i&quot;,
-    replacement: &quot;&amp;mdash;&quot;
+  tm_replace: {
+    description: &quot;Замена (tm) на символ торговой марки&quot;,
+    pattern: &quot;&#47;([\\040\\t])?\\(tm\\)&#47;i&quot;,
+    replacement: &quot;&amp;trade;&quot;
   },
-  mdash: {
-    description: &quot;Тире после кавычек, скобочек, пунктуации&quot;,
-    pattern: [[&quot;&#47;([a-zа-яё0-9]+|\\,|\\:|\\)|\\&amp;(ra|ld)quo\\;|\\|\\\&quot;|\\&gt;)&quot;, &quot;(\\040|\\t)(—|\\-|\\&amp;mdash\\;)(\\s|$|\\&lt;)&#47;ui&quot;].join(&#39;&#39;), &quot;&#47;(\\,|\\:|\\)|\\\&quot;)(—|\\-|\\&amp;mdash\\;)(\\s|$|\\&lt;)&#47;ui&quot;],
-    replacement: [&quot;\\1&amp;nbsp;&amp;mdash;\\5&quot;, &quot;\\1&amp;nbsp;&amp;mdash;\\3&quot;]
+  r_sign_replace: {
+    description: &quot;Замена (R) на символ зарегистрированной торговой марки&quot;,
+    pattern: [&quot;&#47;(.|^)\\(r\\)(.|$)&#47;ie&quot;],
+    replacement: [&quot;m.group(1)+u\&quot;&amp;reg;\&quot;+m.group(2)&quot;]
   },
-  mdash_2: {
-    description: &quot;Тире после переноса строки&quot;,
-    pattern: &quot;&#47;(\\n|\\r|^|\\&gt;)(\\-|\\&amp;mdash\\;)(\\t|\\040)&#47;&quot;,
-    replacement: &quot;\\1&amp;mdash;&amp;nbsp;&quot;
+  copy_replace: {
+    description: &quot;Замена (c) на символ копирайт&quot;,
+    pattern: [&quot;&#47;\\((c|с)\\)\\s+&#47;i&quot;, &quot;&#47;\\((c|с)\\)($|\\.|,|!|\\?)&#47;i&quot;],
+    replacement: [&quot;&amp;copy;&amp;nbsp;&quot;, &quot;&amp;copy;\\2&quot;]
   },
-  mdash_3: {
-    description: &quot;Тире после знаков восклицания, троеточия и прочее&quot;,
-    pattern: [&quot;&#47;(\\.|\\!|\\?|\\&amp;hellip\\;)(\\040|\\t|\\&amp;nbsp\\;)&quot;, &quot;(\\-|\\&amp;mdash\\;)(\\040|\\t|\\&amp;nbsp\\;)&#47;&quot;].join(&#39;&#39;),
-    replacement: &quot;\\1 &amp;mdash;&amp;nbsp;&quot;
+  apostrophe: {
+    description: &quot;Расстановка правильного апострофа в текстах&quot;,
+    pattern: &quot;&#47;(\\s|^|\\&gt;|\\&amp;rsquo\\;)([a-zа-яё]{1,})\&#39;([a-zа-яё]+)&#47;ui&quot;,
+    replacement: &quot;\\1\\2&amp;rsquo;\\3&quot;,
+    cycled: true
   },
-  iz_za_pod: {
-    description: &quot;Расстановка дефисов между из-за, из-под&quot;,
-    pattern: [&quot;&#47;(\\s|\\&amp;nbsp\\;|\\&gt;|^)(из)(\\040|\\t|\\&amp;nbsp\\;)&quot;, &quot;\\-?(за|под)([\\.\\,\\!\\?\\:\\;]|\\040|\\&amp;nbsp\\;)&#47;uie&quot;].join(&#39;&#39;),
-    replacement: [&quot;(( u\&quot; \&quot;  if m.group(1) == u\&quot;&amp;nbsp;\&quot;  else  m.group(1))) &quot;, &quot;+ m.group(2)+u\&quot;-\&quot;+m.group(4) &quot;, &quot;+ (( u\&quot; \&quot;  if m.group(5) == u\&quot;&amp;nbsp;\&quot; else  m.group(5)))&quot;].join(&#39;&#39;)
+  degree_f: {
+    description: &quot;Градусы по Фаренгейту&quot;,
+    pattern: &quot;&#47;([0-9]+)F($|\\s|\\.|\\,|\\;|\\:|\\&amp;nbsp\\;|\\?|\\!)&#47;e&quot;,
+    replacement: [&quot;u\&quot;\&quot;+self.tag(m.group(1)+u\&quot; &amp;deg;F\&quot;,u\&quot;span\&quot;, &quot;, &quot;{u\&quot;class\&quot;:u\&quot;nowrap\&quot;}) +m.group(2)&quot;].join(&#39;&#39;)
   },
-  to_libo_nibud: {
-    description: &quot;Автоматическая простановка дефисов в обезличенных\       местоимениях и междометиях&quot;,
-    cycled: true,
-    pattern: [&quot;&#47;(\\s|^|\\&amp;nbsp\\;|\\&gt;)&quot;, &quot;(кто|кем|когда|зачем|почему|как|что|чем|где|чего|кого)&quot;, &quot;\\-?(\\040|\\t|\\&amp;nbsp\\;)\\-?(то|либо|нибудь)&quot;, &quot;([\\.\\,\\!\\?\\;]|\\040|\\&amp;nbsp\\;|$)&#47;uie&quot;].join(&#39;&#39;),
-    replacement: [&quot;(( u\&quot; \&quot;  if m.group(1) == u\&quot;&amp;nbsp;\&quot;  else  m.group(1))) &quot;, &quot;+ m.group(2)+u\&quot;-\&quot;+m.group(4) + (( u\&quot; \&quot; &quot;, &quot; if m.group(5) == u\&quot;&amp;nbsp;\&quot; else  m.group(5)))&quot;].join(&#39;&#39;)
+  euro_symbol: {
+    description: &quot;Символ евро&quot;,
+    simple_replace: true,
+    pattern: &quot;€&quot;,
+    replacement: &quot;&amp;euro;&quot;
   },
-  koe_kak: {
-    description: &quot;Кое-как, кой-кого, все-таки&quot;,
-    &quot;cycled&quot;: true,
-    pattern: [&quot;&#47;(\\s|^|\\&amp;nbsp\\;|\\&gt;)(кое)\\-?(\\040|\\t|\\&amp;nbsp\\;)\        \\-?(как)([\\.\\,\\!\\?\\;]|\\040|\\&amp;nbsp\\;|$)&#47;uie&quot;, &quot;&#47;(\\s|^|\\&amp;nbsp\\;|\\&gt;)(кой)\\-?(\\040|\\t|\\&amp;nbsp\\;)\        \\-?(кого)([\\.\\,\\!\\?\\;]|\\040|\\&amp;nbsp\\;|$)&#47;uie&quot;, &quot;&#47;(\\s|^|\\&amp;nbsp\\;|\\&gt;)(вс[её])\\-?(\\040|\\t|\\&amp;nbsp\\;)\        \\-?(таки)([\\.\\,\\!\\?\\;]|\\040|\\&amp;nbsp\\;|$)&#47;uie&quot;],
-    replacement: [&quot;(( u\&quot; \&quot;  if m.group(1) == u\&quot;&amp;nbsp;\&quot;  else  m.group(1)))&quot;, &quot; + m.group(2)+u\&quot;-\&quot;+m.group(4) + (( u\&quot; \&quot;  &quot;, &quot;if m.group(5) == u\&quot;&amp;nbsp;\&quot; else  m.group(5)))&quot;].join(&#39;&#39;)
-  },
-  ka_de_kas: {
-    description: &quot;Расстановка дефисов с частицами ка, де, кась&quot;,
-    &quot;disabled&quot;: true,
-    pattern: [&quot;&#47;(\\s|^|\\&amp;nbsp\\;|\\&gt;)([а-яё]+)(\\040|\\t|\\&amp;nbsp\\;)(ка)\        ([\\.\\,\\!\\?\\;]|\\040|\\&amp;nbsp\\;|$)&#47;uie&quot;, &quot;&#47;(\\s|^|\\&amp;nbsp\\;|\\&gt;)([а-яё]+)(\\040|\\t|\\&amp;nbsp\\;)(де)\        ([\\.\\,\\!\\?\\;]|\\040|\\&amp;nbsp\\;|$)&#47;uie&quot;, &quot;&#47;(\\s|^|\\&amp;nbsp\\;|\\&gt;)([а-яё]+)(\\040|\\t|\\&amp;nbsp\\;)(кась)\        ([\\.\\,\\!\\?\\;]|\\040|\\&amp;nbsp\\;|$)&#47;uie&quot;],
-    replacement: [&quot;(( u\&quot; \&quot;  if m.group(1) == u\&quot;&amp;nbsp;\&quot;  else  m.group(1)))&quot;, &quot; + m.group(2)+u\&quot;-\&quot;+m.group(4) + (( u\&quot; \&quot; &quot;, &quot; if m.group(5) == u\&quot;&amp;nbsp;\&quot; else  m.group(5)))&quot;].join(&#39;&#39;)
+  arrows_symbols: {
+    description: &quot;Замена стрелок вправо-влево на html коды&quot;,
+    pattern: [&quot;&#47;(\\s|\\&gt;|\\&amp;nbsp\\;|^)\\-\\&gt;($|\\s|\\&amp;nbsp\\;|\\&lt;)&#47;&quot;, &quot;&#47;(\\s|\\&gt;|\\&amp;nbsp\\;|^|;)\\&lt;\\-(\\s|\\&amp;nbsp\\;|$)&#47;&quot;, &quot;&#47;→&#47;&quot;, &quot;&#47;←&#47;&quot;],
+    replacement: [&quot;\\1&amp;rarr;\\2&quot;, &quot;\\1&amp;larr;\\2&quot;, &quot;&amp;rarr;&quot;, &quot;&amp;larr;&quot;]
   }
 }</code></pre>
     
@@ -112,7 +106,17 @@
     =
   </dt>
   <dd>
-    <pre><code class='coffeescript'>[&quot;mdash_symbol_to_html_mdash&quot;, &quot;mdash&quot;, &quot;mdash_2&quot;, &quot;mdash_3&quot;, &quot;iz_za_pod&quot;, &quot;to_libo_nibud&quot;, &quot;koe_kak&quot;, &quot;ka_de_kas&quot;]</code></pre>
+    <pre><code class='coffeescript'>[&quot;tm_replace&quot;, &quot;r_sign_replace&quot;, &quot;copy_replace&quot;, &quot;apostrophe&quot;, &quot;degree_f&quot;, &quot;euro_symbol&quot;, &quot;arrows_symbols&quot;]</code></pre>
+    
+  </dd>
+  <dt id='classes-variable'>
+    classes
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>{
+  nowrap: &quot;word-spacing:nowrap;&quot;
+}</code></pre>
     
   </dd>
 </dl>
