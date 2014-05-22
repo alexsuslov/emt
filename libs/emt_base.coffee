@@ -316,26 +316,31 @@ class EMTBase
   ###
   apply:(trets)->
     @ok = false
-    atrets = @trets
-    if typeof trets is 'string'
-      atrets = [trets]
-    else if @Lib.isArray trets
-      atrets = trets
 
-    # self.debug(self, 'init', self._text)
+    # safe_blocks
+    @_text = @safe_blocks @_text, true
 
-    # self._text = self.safe_blocks(self._text, True)
+    # Lib.safe_tag_chars
+    # @_text = @Lib.safe_tag_chars @_text, true
 
-    # self.debug(self, 'safe_blocks', self._text)
+    # clear_special_chars
+    # @_text = @Lib.clear_special_chars @_text
 
-    # self._text = EMT_Lib.safe_tag_chars(self._text, True)
-    # self.debug(self, 'safe_tag_chars', self._text)
+    # EMTretQuote
+    quote = @tret_objects['EMTretQuote']
+    quote.set_text @_text
+    quote.apply()
 
-    # self._text = EMT_Lib.clear_special_chars(self._text)
-    # self.debug(self, 'clear_special_chars', self._text)
-    ###
-    @current
-    ###
+    # @_text = @Lib.decode_internal_blocks _text
+
+    # @_text = @Lib.convert_html_entities_to_unicode _text
+
+    # @_text = @Lib.safe_tag_chars @_text, false
+
+    # @_text = @safe_blocks @_text, false
+
+    @_text
+
 
 
   ###

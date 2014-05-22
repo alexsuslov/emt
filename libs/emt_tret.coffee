@@ -136,39 +136,31 @@ class EMTret
     return text
 
   apply_rule:(rule)->
-    name = rule['id']
-    disabled = @disabled.get(rule['id']) or (
-      rule.get('disabled') and not @enabled.get(rule['id'])
-      )
+    # disabled
+    # apply rule
+    # function
+    # regExp
 
-    if disabled
-      if @disabled.get rule.id
-        logMsg = "Правило отключено (по умолчанию)"
-      else
-        logMsg = ""
-      @log "Правило $name", logMsg
-      return
-    ###
-    @todo
-    ###
-    # if rule.get 'function'
-    #   unless rule.get 'pattern'
-    #     if rule['function'] of @
+
 
   _apply:(xlist)->
     @errors = []
     @_pre_parse()
-    @log "Применяется набор правил", ','.join(xlist)
-    rulelist = []
-    for k in xlist
-      rule = @rules[k]
-      rule['id'] = k
-      rule.order = 5 unless rule.order
-      rulelist.push rule
+    # @log "Применяется набор правил", xlist.join ','
 
-    for rule in rulelist
-      @apply_rule rule
-      @debug rule['id'], @._text
+    # rulelist = []
+    # for k in xlist
+    #   rule = @rules[k]
+    #   rule['id'] = k
+    #   rule.order = 5 unless rule.order
+    #   rulelist.push rule
+
+    # for rule in rulelist
+    #   @apply_rule rule
+    #   @debug rule['id'], @._text
+
+    for rule in @rule_order?
+      console.log rule
 
     @_post_parse()
 
@@ -305,13 +297,16 @@ class EMTret
   @return string
   ###
   apply:(xlist)->
-    if typeof xlist is  'string'
-      rlist = [xlist]
+    console.log xlist
+    # default
+    console.log @rule_order
+    if typeof xlist is 'string'
+      @_apply [xlist]
+
     else if @Lib.isArray xlist
-      rlist = xlist
+      @_apply xlist
     else
-      rlist = @rule_order
-    @_apply(rlist)
+      @_apply @rule_order
 
     @_text
   ###
