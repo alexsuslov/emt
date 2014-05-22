@@ -262,5 +262,8 @@ class EMTLib
       return @getUnicodeChar @html4_char_ents[entity]
     return false
 
+module.exports =
+  EMTLib:EMTLib
+  emtlib: new EMTLib()
 
-exports.EMTLib = EMTLib
+

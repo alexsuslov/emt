@@ -1,7 +1,6 @@
 assert = require("assert")
 
-EMTLib = require( '../libs/emt_lib').EMTLib
-emtlib = new EMTLib()
+emtlib = require('../libs/emt_lib').emtlib
 
 describe "EMTLib", ->
   describe "isInt", ->

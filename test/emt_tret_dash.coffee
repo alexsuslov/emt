@@ -1,7 +1,9 @@
 assert = require("assert")
 
+EMTLib = require( '../libs/emt_lib').EMTLib
 EMTretDash = require( '../libs/emt_tret_dash').EMTretDash
-emTretDash = new EMTretDash()
+emTretDash = new EMTretDash
+  Lib: EMTLib
 
 describe "EMTretDash", ->
   describe "set_text", ->

@@ -146,4 +146,5 @@ class EMTretNobr extends EMTret
 
       return triads
 
-exports.EMTretNobr = EMTretNobr
+module.exports =
+  EMTretNobr: EMTretNobr

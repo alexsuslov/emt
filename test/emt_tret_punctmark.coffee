@@ -1,8 +1,10 @@
 assert = require("assert")
 
+EMTLib = require( '../libs/emt_lib').EMTLib
 EMT = require( '../libs/emt_tret_punctmark').EMTretPunctmark
 
-emt = new EMT()
+emt = new EMT
+  Lib: EMTLib
 
 describe "EMTretPunctmark", ->
   describe "set_text", ->

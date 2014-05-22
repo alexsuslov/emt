@@ -6,14 +6,14 @@ Release Date: September 28, 2013
 Authors: Evgeny Muravjev & Alexander Drutsa
 ###
 
-
+EMTLib = require( '../libs/emt_lib').EMTLib
 
 ###
 Основной класс типографа Евгения Муравьёва
 реализует основные методы запуска и рабыоты типографа
 ###
 class EMTBase
-  Lib: new require( './emt_lib').EMTLib
+  Lib: EMTLib
   _text : ""
   inited : false
   #
@@ -467,4 +467,6 @@ class EMTBase
     @todo
     ###
 
-exports.EMTBase = EMTBase
+
+module.exports =
+  EMTBase: EMTBase

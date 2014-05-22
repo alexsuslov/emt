@@ -38,4 +38,5 @@ regex = RegExp("[" + specials.join("\\") + "]", "g")
 reEscape = (str) ->
   str.replace regex, "\\$&"
 
-exports.reEscape = reEscape
+module.exports =
+  reEscape: reEscape

@@ -118,7 +118,8 @@ class EMTretQuote extends EMTret
             ###
             # if @__ax
 
-exports.EMTretQuote = EMTretQuote
+module.exports =
+  EMTretQuote: EMTretQuote
 
 
 

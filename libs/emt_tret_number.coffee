@@ -104,4 +104,6 @@ class EMTretNumber extends EMTret
     "thinsp_between_sect_and_number"
     ]
 
-exports.EMTretNumber = EMTretNumber
+module.exports =
+  EMTretNumber: EMTretNumber
+

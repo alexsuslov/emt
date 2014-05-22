@@ -224,5 +224,7 @@ class EMTypograph extends EMTBase
 
   # constructor:->
 
+module.exports =
+  EMTypograph: EMTypograph
 
-exports.EMTypograph = EMTypograph
+

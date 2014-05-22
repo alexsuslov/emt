@@ -75,4 +75,7 @@ class EMTretSymbol extends EMTret
   classes:
     nowrap: "word-spacing:nowrap;"
 
-exports.EMTretSymbol = EMTretSymbol
+module.exports =
+  EMTretSymbol: EMTretSymbol
+
+

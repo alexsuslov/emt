@@ -193,3 +193,5 @@ class EMTretAbbr extends EMTret
   classes:
     "nowrap": "word-spacing:nowrap;"
 
+module.exports =
+  EMTretAbbr: EMTretAbbr

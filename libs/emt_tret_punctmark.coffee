@@ -80,4 +80,6 @@ class EMTretPunctmark extends EMTret
     "dot_on_end"
     ]
 
-exports.EMTretPunctmark = EMTretPunctmark
+module.exports =
+  EMTretPunctmark: EMTretPunctmark
+

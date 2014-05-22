@@ -1,7 +1,10 @@
 assert = require("assert")
 
+EMTLib = require( '../libs/emt_lib')
 EMTret = require( '../libs/emt_tret').EMTret
-emtret = new EMTret()
+
+emtret = new EMTret
+  Lib: EMTLib
 
 describe "EMTret", ->
   describe "set_text", ->

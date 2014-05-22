@@ -107,4 +107,5 @@ class EMTretDash extends EMTret
     "ka_de_kas"
     ]
 
-exports.EMTretDash = EMTretDash
+module.exports =
+  EMTretDash: EMTretDash

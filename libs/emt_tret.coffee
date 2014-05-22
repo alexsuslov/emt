@@ -1,5 +1,5 @@
 class EMTret
-  Lib: new require( './emt_lib').EMTLib
+  # Lib: new require( './emt_lib').EMTLib
   rules : {}
   rule_order : []
   title : ""
@@ -24,6 +24,13 @@ class EMTret
   settings        : {}
   intrep : ""
 
+  ###
+  Конструктор
+  @param [object] опции
+    - Lib библиотека
+  ###
+  constructor:(opt)->
+    @Lib = opt.Lib if opt?.Lib
 
   log:( str, data)->
     return unless @logging
@@ -319,7 +326,9 @@ class EMTret
   ###
   post_parse:->
 
-exports.EMTret = EMTret
+module.exports =
+  EMTret: EMTret
+
 
 
 
