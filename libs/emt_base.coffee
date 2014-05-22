@@ -6,7 +6,6 @@ Authors: Evgeny Muravjev & Alexander Drutsa
 ###
 
 EMTretQuote = require( '../libs/emt_tret_quote').EMTretQuote
-reEscape = require('./escapeRegExp').reEscape
 
 ###
 Основной класс типографа Евгения Муравьёва
@@ -67,12 +66,12 @@ class EMTBase
     #   @tret_objects[tret] = obj
     unless @inited
       @add_safe_tag('pre')
-    #   @add_safe_tag('script')
-    #   @add_safe_tag('style')
-    #   @add_safe_tag('notg')
-    #   @add_safe_block( 'span-notg', '<span class="_notg_start"></span>',
-    #     '<span class="_notg_end"></span>'
-    #     )
+      @add_safe_tag('script')
+      @add_safe_tag('style')
+      @add_safe_tag('notg')
+      # @add_safe_block( 'span-notg', '<span class="_notg_start"></span>',
+      # '<span class="_notg_end"></span>'
+      # )
     # @inited = true
 
   log: (xstr, data)->
@@ -159,7 +158,7 @@ class EMTBase
     @_safe_blocks.splice xid, 1
 
   reEscape: (str)->
-    reEscape str
+    str.replace(/([\s_"'<>.*+?^=!:${}()|\[\]\/\\])/g, "\\$1")
 
   ###
   Добавление защищенного блока
@@ -193,8 +192,8 @@ class EMTBase
 
 
     unless quoted
-      xopen = @reEscape(xopen)
-      close = @reEscape(close)
+      xopen = @reEscape xopen
+      close = @reEscape close
 
     @_add_safe_block(xid, xopen, close, "")
     return true

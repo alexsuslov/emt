@@ -3,9 +3,11 @@ assert = require("assert")
 EMTLib = require( '../libs/emt_lib').EMTLib
 EMT = require( '../libs/emt_base').EMTBase
 
+emt = new EMT
+  Lib: EMTLib
+
 describe "EMTBase", ->
-  emt = new EMT
-    Lib: EMTLib
+
 
   it "is present EMTretQuote", ->
     assert.equal "Кавычки", emt.tret_objects.EMTretQuote.title
@@ -29,7 +31,26 @@ describe "EMTBase", ->
 
     emt.add_safe_tag 'pre'
 
-  describe '_add_safe_block', ->
+  describe 'add_safe_block', ->
+    emt = new EMT
+      Lib: EMTLib
+
+    emt._add_safe_block = (xid, xopen, close, tag) ->
+      tag =
+        'close': '\\<span\\ class\\=\\"\\_notg\\_end\\"\\>\\<\\/span\\>'
+        'tag': ''
+        'open': '\\<span\\ class\\=\\"\\_notg\\_start\\"\\>\\<\\/span\\>'
+        'id': 'span-notg'
+      it 'xid', ->
+        assert.equal tag.id,  xid
+      it 'xopen', ->
+        assert.equal tag.open, xopen
+      it 'close', ->
+        assert.equal tag.close, close
+
+    emt.add_safe_block('span-notg',
+      '<span class="_notg_start"></span>',
+      '<span class="_notg_end"></span>')
 
   # it 'add_safe_block', ->
 
