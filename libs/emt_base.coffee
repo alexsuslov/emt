@@ -1,4 +1,3 @@
-
 ###
 Evgeny Muravjev Typograph, http://mdash.ru
 Version: 3.0 Gold Master
@@ -6,14 +5,14 @@ Release Date: September 28, 2013
 Authors: Evgeny Muravjev & Alexander Drutsa
 ###
 
-EMTLib = require( '../libs/emt_lib').EMTLib
+EMTretQuote = require( '../libs/emt_tret_quote').EMTretQuote
+reEscape = require('./escapeRegExp').reEscape
 
 ###
 Основной класс типографа Евгения Муравьёва
 реализует основные методы запуска и рабыоты типографа
 ###
 class EMTBase
-  Lib: EMTLib
   _text : ""
   inited : false
   #
@@ -39,6 +38,42 @@ class EMTBase
   remove_notg : false
   settings : {}
   _safe_blocks : {}
+
+  ###
+  Конструктор
+  Инициализация класса, используется чтобы задать список третов или
+  список защищённых блоков, которые можно использовать.
+  Также здесь можно отменить защищённые блоки по умлочнаию
+
+  @param [object] опции
+    - Lib библиотека
+  ###
+
+  constructor:(opt)->
+    @Lib = opt.Lib if opt?.Lib
+
+    # add EMTretQuote to tret_objects
+    @trets.push 'EMTretQuote'
+    @tret_objects['EMTretQuote'] = new EMTretQuote
+      Lib:@Lib
+
+    # for tret in @trets
+    #   unless @tret_objects[tret]
+    #     @tret_objects[tret] = new
+    #   # @todo
+    #   obj = @create_object(tret)
+    #   continue unless obj
+
+    #   @tret_objects[tret] = obj
+    unless @inited
+      @add_safe_tag('pre')
+    #   @add_safe_tag('script')
+    #   @add_safe_tag('style')
+    #   @add_safe_tag('notg')
+    #   @add_safe_block( 'span-notg', '<span class="_notg_start"></span>',
+    #     '<span class="_notg_end"></span>'
+    #     )
+    # @inited = true
 
   log: (xstr, data)->
     return unless @logging
@@ -124,7 +159,7 @@ class EMTBase
     @_safe_blocks.splice xid, 1
 
   reEscape: (str)->
-    require('./escapeRegExp').reEscape str
+    reEscape str
 
   ###
   Добавление защищенного блока
@@ -215,31 +250,6 @@ class EMTBase
     m = tretname.match '^EMT_Tret_([a-zA-Z0-9_]+)$'
     return m[1] if m
     return tretname
-
-  ###
-  Инициализация класса, используется чтобы задать список третов или
-  список защищённых блоков, которые можно использовать.
-  Также здесь можно отменить защищённые блоки по умлочнаию
-  ###
-
-  constructor:->
-    for tret in @trets
-      continue if @tret_objects[tret]
-      # @todo
-      obj = @create_object(tret)
-      continue unless obj
-
-      @tret_objects[tret] = obj
-    unless @inited
-      @add_safe_tag('pre')
-      @add_safe_tag('script')
-      @add_safe_tag('style')
-      @add_safe_tag('notg')
-      @add_safe_block( 'span-notg', '<span class="_notg_start"></span>',
-        '<span class="_notg_end"></span>'
-        )
-    @inited = true
-
 
   ###
   Добавить Трэт,

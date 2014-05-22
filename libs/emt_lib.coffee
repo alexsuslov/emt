@@ -263,7 +263,7 @@ class EMTLib
     return false
 
 module.exports =
-  EMTLib:EMTLib
+  EMTLib: EMTLib
   emtlib: new EMTLib()
 
 
