@@ -27,7 +27,7 @@ npm test
 ./test_report.bash > report.md
 ```
 
-[Ссылка на Отчет](https://github.com/alexsuslov/emt/blob/master/report.md)
+[Ссылка на последний отчет](https://github.com/alexsuslov/emt/blob/master/report.md)
 
 
 
