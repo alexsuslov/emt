@@ -24,7 +24,6 @@ describe "EMTret", ->
   describe 'set_rule', ->
     it 'rulename key value', ->
       emtret.set_rule 'rulename', 'key', 'value'
-      console.log
       assert.equal 'value', emtret.rules.rulename.key
 
   # it '_apply', ->

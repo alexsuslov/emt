@@ -1,10 +1,25 @@
 class EMTLib
+
   charsTable : require './chars_table'
+
   html4_char_ents : require './html4_char_ents'
+
+  domain_zones:[
+    "r","ру","com","ком","org","орг","уа","ua"
+    ]
+
+  # Типы кавычек
+  QUOTE_FIRS_OPEN : '&laquo;'
+  QUOTE_FIRS_CLOSE : '&raquo;'
+  QUOTE_CRAWSE_OPEN : '&bdquo;'
+  QUOTE_CRAWSE_CLOSE : '&ldquo;'
+
   LAYOUT_STYLE: 1
   LAYOUT_CLASS: 2
+
   INTERNAL_BLOCK_OPEN: '%%%INTBLOCKO235978%%%'
   INTERNAL_BLOCK_CLOSE: '%%%INTBLOCKC235978%%%'
+
   # static (TO BE DONE: protected)
   _typographSpecificTagId: false
   ###
@@ -25,6 +40,14 @@ class EMTLib
   trim:(str)->
     str.replace( /^\s+/, '').replace( /\s+$/, '')
 
+  repeat: ( input, multiplier )->
+    buf = ""
+    i = 0
+    while i < multiplier
+      buf += input
+      i++
+    buf
+
   ###
   Метод, осуществляющий декодирование информации
   @param     [String] text
@@ -32,7 +55,7 @@ class EMTLib
   TEST ok
   ###
   decrypt_tag:(text)->
-    new Buffer(text, 'base64').toString()
+    new Buffer(text.slice(0, -1), 'base64').toString()
 
 
   ###
@@ -43,7 +66,7 @@ class EMTLib
   TEST ok
   ###
   encrypt_tag: (text)->
-    new Buffer(text).toString('base64')
+    new Buffer(text).toString('base64') + '='
 
 
   ###
@@ -62,7 +85,6 @@ class EMTLib
     self = @
 
     process = (str)->
-
       match = str.match new RegExp '(\</?)(.+?)(\>)'
       atag =''
       atag = "%%___" if match[2][0] is 'a'
@@ -115,6 +137,7 @@ class EMTLib
                 v = @safe_tag_chars v, true
             text = text.replace v, char
     text
+
   ###
    Кодирует спец блок
 

@@ -321,14 +321,16 @@ class EMTBase
     @_text = @safe_blocks @_text, true
 
     # Lib.safe_tag_chars
-    # @_text = @Lib.safe_tag_chars @_text, true
+    @_text = @Lib.safe_tag_chars @_text, true
 
     # clear_special_chars
-    # @_text = @Lib.clear_special_chars @_text
+    @_text = @Lib.clear_special_chars @_text
 
     # EMTretQuote
     quote = @tret_objects['EMTretQuote']
+
     quote.set_text @_text
+
     quote.apply()
 
     # @_text = @Lib.decode_internal_blocks _text

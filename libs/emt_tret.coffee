@@ -23,6 +23,11 @@ class EMTret
   classes         : {}
   settings        : {}
   intrep : ""
+  # Типы кавычек
+  QUOTE_FIRS_OPEN : '&laquo;'
+  QUOTE_FIRS_CLOSE : '&raquo;'
+  QUOTE_CRAWSE_OPEN : '&bdquo;'
+  QUOTE_CRAWSE_CLOSE : '&ldquo;'
 
   ###
   Конструктор
@@ -139,13 +144,18 @@ class EMTret
     # disabled
     # apply rule
     # function
+    # if rule.function and typeof rule.function is 'function'
+    #   console.log 'function'
+      # unless rule.pattern
+
+
+
     # regExp
-
-
 
   _apply:(xlist)->
     @errors = []
     @_pre_parse()
+    # console.log @_text
     # @log "Применяется набор правил", xlist.join ','
 
     # rulelist = []
@@ -159,8 +169,14 @@ class EMTret
     #   @apply_rule rule
     #   @debug rule['id'], @._text
 
-    for rule in @rule_order?
-      console.log rule
+    # Add rules from xlist
+    # Sort
+    # apply
+    # apply rule
+
+
+    # for rule in @rule_order?
+    #   console.log rule
 
     @_post_parse()
 
@@ -297,9 +313,7 @@ class EMTret
   @return string
   ###
   apply:(xlist)->
-    console.log xlist
     # default
-    console.log @rule_order
     if typeof xlist is 'string'
       @_apply [xlist]
 
@@ -307,7 +321,6 @@ class EMTret
       @_apply xlist
     else
       @_apply @rule_order
-
     @_text
   ###
   Код, выполняем до того, как применить правила

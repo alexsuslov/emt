@@ -1,7 +1,10 @@
 EMTret = require( './emt_tret').EMTret
 
+open_quote = ->
+
 class EMTretQuote extends EMTret
   title: "Кавычки"
+
   rules:
     quotes_outside_a:
       description: "Кавычки вне тэга <a>"
@@ -10,17 +13,40 @@ class EMTretQuote extends EMTret
         "\\\"(.+?)\\\""
         "(\\<\\/%%\\_\\_[^\\>]+\\>)/s"].join ''
       replacement: "\"\\1\\2\\3\""
+
     open_quote:
       description: "Открывающая кавычка",
       pattern: "/(^|\\(|\\s|\\>|-)(\\\"|\\\\\")(\\S+)/iue",
       replacement: "m[1] + QUOTE_FIRS_OPEN + m[3]"
+      fn:(self)->
+        re = /(^|\(|\s|\>|-)(\"|\\\")(\S+)/i
+
+        self._text = self._text.replace re , (str)->
+          m = str.match re
+          m[1] + self.QUOTE_FIRS_OPEN + m[3]
+
     close_quote:
       description: "Закрывающая кавычка",
       pattern: [
-        "/([a-zа-яё0-9]|\\.|\\&hellip\\;|\\!|\\?|\\>|\\)"
-        "|\\:)((\\\"|\\\\\")+)(\\.|\\&hellip\\;|\\;|\\:|\\?|\\!|\\,|\\s|\\)"
+        "/([a-zа-яё0-9]|\\.|\\&hellip\\;|\\!|\\?|\\>|\\)|\\:)"
+        "((\\\"|\\\\\")+)(\\.|\\&hellip\\;|\\;|\\:|\\?|\\!|\\,|\\s|\\)"
         "|\\<\\/|$)/uie"].join ''
       replacement: "m[1] + QUOTE_FIRS_CLOSE * ( m[2].count(u\"\\\"\") ) + m[4]"
+      fn:(self)->
+        re = new RegExp [
+          "([a-zа-яё0-9]|\.|\&hellip\;|\!|\?|\>|\)|\:)"
+          "((\"|\\\")+)"
+          "(\.|\&hellip\;|\;|\:|\?|\!|\,|\s|\)|\<\/|$)"
+        ].join ''
+        , 'i'
+
+        self._text = self._text.replace re , (str)->
+          m = str.match re
+          # @todo 3 кавычки?
+          # m[1] . str_repeat(self.QUOTE_FIRS_CLOSE,
+          # substr_count($m[2],"\"") ) . m[4]
+          m[1] + self.QUOTE_FIRS_CLOSE + m[3]
+
     close_quote_adv:
       description: "Закрывающая кавычка особые случаи",
       pattern: [
