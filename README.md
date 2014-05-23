@@ -17,6 +17,13 @@ npm install
 ```
 npm test
 ```
-## Отчет о работе теста
+
+
+Отчет о тестах
+```
+./test_report.bash > report.md
+```
+
+## [Отчет о работе теста](https://github.com/alexsuslov/emt/blob/master/report.md)
 
 
