@@ -63,12 +63,30 @@
   open_quote: {
     description: &quot;Открывающая кавычка&quot;,
     pattern: &quot;&#47;(^|\\(|\\s|\\&gt;|-)(\\\&quot;|\\\\\&quot;)(\\S+)&#47;iue&quot;,
-    replacement: &quot;m[1] + QUOTE_FIRS_OPEN + m[3]&quot;
+    replacement: &quot;m[1] + QUOTE_FIRS_OPEN + m[3]&quot;,
+    fn: function(self) {
+      var re;
+      re = &#47;(^|\(|\s|\&gt;|-)(\&quot;|\\\&quot;)(\S+)&#47;i;
+      return self._text = self._text.replace(re, function(str) {
+        var m;
+        m = str.match(re);
+        return m[1] + self.QUOTE_FIRS_OPEN + m[3];
+      });
+    }
   },
   close_quote: {
     description: &quot;Закрывающая кавычка&quot;,
-    pattern: [&quot;&#47;([a-zа-яё0-9]|\\.|\\&amp;hellip\\;|\\!|\\?|\\&gt;|\\)&quot;, &quot;|\\:)((\\\&quot;|\\\\\&quot;)+)(\\.|\\&amp;hellip\\;|\\;|\\:|\\?|\\!|\\,|\\s|\\)&quot;, &quot;|\\&lt;\\&#47;|$)&#47;uie&quot;].join(&#39;&#39;),
-    replacement: &quot;m[1] + QUOTE_FIRS_CLOSE * ( m[2].count(u\&quot;\\\&quot;\&quot;) ) + m[4]&quot;
+    pattern: [&quot;&#47;([a-zа-яё0-9]|\\.|\\&amp;hellip\\;|\\!|\\?|\\&gt;|\\)|\\:)&quot;, &quot;((\\\&quot;|\\\\\&quot;)+)(\\.|\\&amp;hellip\\;|\\;|\\:|\\?|\\!|\\,|\\s|\\)&quot;, &quot;|\\&lt;\\&#47;|$)&#47;uie&quot;].join(&#39;&#39;),
+    replacement: &quot;m[1] + QUOTE_FIRS_CLOSE * ( m[2].count(u\&quot;\\\&quot;\&quot;) ) + m[4]&quot;,
+    fn: function(self) {
+      var re;
+      re = new RegExp([&quot;([a-zа-яё0-9]|\.|\&amp;hellip\;|\!|\?|\&gt;|\)|\:)&quot;, &quot;((\&quot;|\\\&quot;)+)&quot;, &quot;(\.|\&amp;hellip\;|\;|\:|\?|\!|\,|\s|\)|\&lt;\&#47;|$)&quot;].join(&#39;&#39;, &#39;i&#39;));
+      return self._text = self._text.replace(re, function(str) {
+        var m;
+        m = str.match(re);
+        return m[1] + self.QUOTE_FIRS_CLOSE + m[3];
+      });
+    }
   },
   close_quote_adv: {
     description: &quot;Закрывающая кавычка особые случаи&quot;,
@@ -119,6 +137,10 @@
         <a href='../class/EMTret.html#classes-variable'>classes</a>
         <a href='../class/EMTret.html#settings-variable'>settings</a>
         <a href='../class/EMTret.html#intrep-variable'>intrep</a>
+        <a href='../class/EMTret.html#QUOTE_FIRS_OPEN-variable'>QUOTE_FIRS_OPEN</a>
+        <a href='../class/EMTret.html#QUOTE_FIRS_CLOSE-variable'>QUOTE_FIRS_CLOSE</a>
+        <a href='../class/EMTret.html#QUOTE_CRAWSE_OPEN-variable'>QUOTE_CRAWSE_OPEN</a>
+        <a href='../class/EMTret.html#QUOTE_CRAWSE_CLOSE-variable'>QUOTE_CRAWSE_CLOSE</a>
       </p>
       <h2>Instance Method Summary</h2>
       <ul class='summary'>
@@ -205,7 +227,7 @@
 </div>
     </div>
     <div id='footer'>
-  May 21, 14 19:28:14 by
+  May 23, 14 08:40:35 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>
