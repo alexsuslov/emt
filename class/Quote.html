@@ -33,6 +33,12 @@
           <td>libs&#47;rules&#47;quote.coffee</td>
         </tr>
       </table>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <h2 id="-">Групповой Объект правил &quot;Кавычки&quot;</h2><p>используется как объект расширения для остальных груп правил</p>
+</div>
+<div class='tags'>
+</div>
       <h2>Variables Summary</h2>
       <dl class='constants'>
   <dt id='description-variable'>
@@ -57,7 +63,11 @@
   </dt>
   <dd>
     <pre><code class='coffeescript'>&#39;Quote&#39;</code></pre>
-    
+    <div class='docstring'>
+  <p>Имя конфига</p>
+</div>
+<div class='tags'>
+</div>
   </dd>
   <dt id='config-variable'>
     config
@@ -69,7 +79,11 @@
   log: true,
   debug: true
 }</code></pre>
-    
+    <div class='docstring'>
+  <p>Конфиг для теста</p>
+</div>
+<div class='tags'>
+</div>
   </dd>
   <dt id='rules-variable'>
     rules
@@ -107,7 +121,7 @@
       </a>
     </span>
     <span class='desc'>
-      Применение правил 
+      Применение правил @text 
     </span>
   </li>
 </ul>
@@ -121,8 +135,11 @@
       <br>
     </p>
     <div class='docstring'>
-  <p>Конструктор
-@param opt[object]</p><ul>
+  <p>Конструктор</p><ul>
+<li>Настраивает конфиг</li>
+<li>Замыкает на себя text</li>
+<li>Создает список правил согласно прядка</li>
+</ul><p>@param opt[object]</p><ul>
 <li>Lib[Object] обязательно</li>
 <li>text[String] строка</li>
 </ul>
@@ -142,7 +159,7 @@
       <br>
     </p>
     <div class='docstring'>
-  <p>Применение правил</p>
+  <p>Применение правил @text</p>
 </div>
 <div class='tags'>
 </div>
@@ -150,7 +167,7 @@
 </div>
     </div>
     <div id='footer'>
-  May 23, 14 08:40:35 by
+  May 23, 14 09:49:24 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>
