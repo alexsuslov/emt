@@ -5,6 +5,7 @@
 ### 2. Чтобы Работало, Быстро.
 
 ### 3. Чтобы Работало, Быстро и Красиво.
+
 ## Установка
 ```
 git clone https://github.com/alexsuslov/emt.git
@@ -12,18 +13,22 @@ git clone https://github.com/alexsuslov/emt.git
 cd emt
 npm install
 
+grunt
+
 ```
+
 ## Тесты
 ```
 npm test
 ```
-
 
 Отчет о тестах
 ```
 ./test_report.bash > report.md
 ```
 
-## [Отчет о работе теста](https://github.com/alexsuslov/emt/blob/master/report.md)
+[Ссылка на Отчет](https://github.com/alexsuslov/emt/blob/master/report.md)
+
+
 
 
