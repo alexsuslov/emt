@@ -76,20 +76,18 @@ class OpenQuote
   # Правило замены
   replace:->
     self = @
-    use = true
+
     # Правило
     re = /(^|\(|\s|\>|-)(\"|\\\")(\S+)/i
+    m = @text.match re
+    if m
+      # Замена
+      @text = @text.replace re , (str)->
+        self.debug str
+        self.debug m
 
-    # Замена
-    @text = @text.replace re , (str)->
-      self.debug str
+        m[1] + self.Lib.QUOTE_FIRS_OPEN + m[3]
 
-      m = str.match re
-      self.debug m
-      use = false
-
-      m[1] + self.Lib.QUOTE_FIRS_OPEN + m[3]
-
-    use
+    !!m
 
 module.exports = OpenQuote

@@ -16,5 +16,5 @@ describe "Rules", ->
       open_quote.text = text
       open_quote.apply()
       console.log 'profiling: ', open_quote.profiling
-      assert.equal "привет &laquo;test\" привет. привет \"test\" привет", open_quote.text
+      assert.equal "привет &laquo;test\" привет. привет &laquo;test\" привет", open_quote.text
 
