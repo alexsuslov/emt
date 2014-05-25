@@ -5,16 +5,16 @@ OpenQuote = require( './open_quote')
 # Правило "Закрывающая кавычка"
 ##
 class Rule extends OpenQuote
-  description: 'Расстановка дефисов между из-за, из-под'
+  description: 'Автоматическая простановка дефисов в обезличенных местоимениях и междометиях'
   version:'0.0.0'
-  configName:'izZaPod'
+  configName:'toLiboNibud'
 
   replace:->
     # return if @config.on
     self = @
 
     # Правило
-    re = /(\s|\&nbsp\;|\>|^)(из)(\040|\t|\&nbsp\;)\-?(за|под)([\.\,\!\?\:\;]|\040|\&nbsp\;)/i
+    re = /(\s|^|\&nbsp\;|\>)(кто|кем|когда|зачем|почему|как|что|чем|где|чего|кого)\-?(\040|\t|\&nbsp\;)\-?(то|либо|нибудь)([\.\,\!\?\;]|\040|\&nbsp\;|$)/i
 
     m = @text.match re
     if m
