@@ -19,29 +19,29 @@
       Index
     </a>
     &raquo;
-    <span class='title'>CloseQuoteAdv</span>
+    <span class='title'>Dash</span>
   </div>
 </div>
     <div id='content'>
       <h1>
         Class:
-        CloseQuoteAdv
+        Dash
       </h1>
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>libs&#47;rules&#47;close_quote_adv.coffee</td>
+          <td>libs&#47;rules&#47;dash.coffee</td>
         </tr>
         <tr>
           <td>Inherits:</td>
           <td>
-            Rules.open_quote
+            <a href='../class/Quote.html'>Quote</a>
           </td>
         </tr>
       </table>
       <h2>Overview</h2>
       <div class='docstring'>
-  <h2 id="-">Правило &quot;Закрывающая кавычка особые случаи&quot;</h2>
+  <h2 id="-">Групповой Объект правил &quot;Сокращения&quot;</h2>
 
 </div>
 <div class='tags'>
@@ -53,7 +53,7 @@
     =
   </dt>
   <dd>
-    <pre><code class='coffeescript'>&quot;Закрывающая кавычка особые случаи&quot;</code></pre>
+    <pre><code class='coffeescript'>&quot;Дефисы и тире&quot;</code></pre>
     
   </dd>
   <dt id='version-variable'>
@@ -69,36 +69,68 @@
     =
   </dt>
   <dd>
-    <pre><code class='coffeescript'>&#39;CloseQuoteAdv&#39;</code></pre>
+    <pre><code class='coffeescript'>&#39;Dash&#39;</code></pre>
     
   </dd>
-</dl>
-      <h2>Instance Method Summary</h2>
-      <ul class='summary'>
-  <li>
-    <span class='signature'>
-      <a href='#apply-dynamic'>
-        #
-(void)
-<b>apply</b><span>()</span>
-      </a>
-    </span>
-    <span class='desc'>
-    </span>
-  </li>
-</ul>
-      <h2>Instance Method Details</h2>
-      <div class='methods'>
-  <div class='method_details'>
-    <p class='signature' id='apply-dynamic'>
-      #
-(void)
-<b>apply</b><span>()</span>
-      <br>
-    </p>
+  <dt id='config-variable'>
+    config
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>{
+  on: true,
+  log: true,
+  debug: true
+}</code></pre>
     
-  </div>
+  </dd>
+  <dt id='rules-variable'>
+    rules
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>[]</code></pre>
+    <div class='docstring'>
+  <p>Очередь правил</p>
 </div>
+<div class='tags'>
+</div>
+  </dd>
+  <dt id='order-variable'>
+    order
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>[&quot;mdash_symbol_to_html_mdash&quot;, &quot;mdash&quot;, &quot;mdash_2&quot;, &quot;mdash_3&quot;, &quot;iz_za_pod&quot;, &quot;to_libo_nibud&quot;, &quot;koe_kak&quot;, &quot;ka_de_kas&quot;]</code></pre>
+    <div class='docstring'>
+  <p>Порядок выполнения</p>
+</div>
+<div class='tags'>
+</div>
+  </dd>
+</dl>
+      <h3 class='inherited'>
+        Variable inherited from
+        <a href='../class/Quote.html'>Quote</a>
+      </h3>
+      <p class='inherited'>
+        <a href='../class/Quote.html#description-variable'>description</a>
+        <a href='../class/Quote.html#version-variable'>version</a>
+        <a href='../class/Quote.html#configName-variable'>configName</a>
+        <a href='../class/Quote.html#config-variable'>config</a>
+        <a href='../class/Quote.html#rules-variable'>rules</a>
+        <a href='../class/Quote.html#order-variable'>order</a>
+      </p>
+      <h2>
+        <small>Inherited Method Summary</small>
+        <h3 class='inherited'>
+          Methods inherited from
+          <a href='../class/Quote.html'>Quote</a>
+        </h3>
+        <p class='inherited'>
+          <a href='../class/Quote.html#apply-dynamic'>#apply</a>
+        </p>
+      </h2>
     </div>
     <div id='footer'>
   May 25, 14 14:07:39 by

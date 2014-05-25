@@ -19,30 +19,31 @@
       Index
     </a>
     &raquo;
-    <span class='title'>CloseQuoteAdv</span>
+    <span class='title'>Rule</span>
   </div>
 </div>
     <div id='content'>
       <h1>
         Class:
-        CloseQuoteAdv
+        Rule
       </h1>
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>libs&#47;rules&#47;close_quote_adv.coffee</td>
+          <td>libs&#47;rules&#47;mdash_2_html.coffee</td>
         </tr>
         <tr>
           <td>Inherits:</td>
           <td>
-            Rules.open_quote
+            <a href='../class/OpenQuote.html'>OpenQuote</a>
           </td>
         </tr>
       </table>
       <h2>Overview</h2>
       <div class='docstring'>
-  <h2 id="-">Правило &quot;Закрывающая кавычка особые случаи&quot;</h2>
-
+  <p>#
+Правило &quot;Закрывающая кавычка&quot;
+#</p>
 </div>
 <div class='tags'>
 </div>
@@ -53,7 +54,7 @@
     =
   </dt>
   <dd>
-    <pre><code class='coffeescript'>&quot;Закрывающая кавычка особые случаи&quot;</code></pre>
+    <pre><code class='coffeescript'>&quot;Замена символа тире на html конструкцию&quot;</code></pre>
     
   </dd>
   <dt id='version-variable'>
@@ -69,31 +70,70 @@
     =
   </dt>
   <dd>
-    <pre><code class='coffeescript'>&#39;CloseQuoteAdv&#39;</code></pre>
+    <pre><code class='coffeescript'>&#39;mdush2html&#39;</code></pre>
+    
+  </dd>
+  <dt id='config-variable'>
+    config
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>{
+  on: true,
+  log: true,
+  debug: true
+}</code></pre>
     
   </dd>
 </dl>
+      <h3 class='inherited'>
+        Variable inherited from
+        <a href='../class/OpenQuote.html'>OpenQuote</a>
+      </h3>
+      <p class='inherited'>
+        <a href='../class/OpenQuote.html#used-variable'>used</a>
+        <a href='../class/OpenQuote.html#timer-variable'>timer</a>
+        <a href='../class/OpenQuote.html#description-variable'>description</a>
+        <a href='../class/OpenQuote.html#version-variable'>version</a>
+        <a href='../class/OpenQuote.html#configName-variable'>configName</a>
+        <a href='../class/OpenQuote.html#text-variable'>text</a>
+        <a href='../class/OpenQuote.html#config-variable'>config</a>
+      </p>
       <h2>Instance Method Summary</h2>
       <ul class='summary'>
   <li>
     <span class='signature'>
-      <a href='#apply-dynamic'>
+      <a href='#replace-dynamic'>
         #
 (void)
-<b>apply</b><span>()</span>
+<b>replace</b><span>()</span>
       </a>
     </span>
     <span class='desc'>
     </span>
   </li>
 </ul>
+      <h2>
+        <small>Inherited Method Summary</small>
+        <h3 class='inherited'>
+          Methods inherited from
+          <a href='../class/OpenQuote.html'>OpenQuote</a>
+        </h3>
+        <p class='inherited'>
+          <a href='../class/OpenQuote.html#logger-dynamic'>#logger</a>
+          <a href='../class/OpenQuote.html#debug-dynamic'>#debug</a>
+          <a href='../class/OpenQuote.html#multiply-dynamic'>#multiply</a>
+          <a href='../class/OpenQuote.html#apply-dynamic'>#apply</a>
+          <a href='../class/OpenQuote.html#replace-dynamic'>#replace</a>
+        </p>
+      </h2>
       <h2>Instance Method Details</h2>
       <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='apply-dynamic'>
+    <p class='signature' id='replace-dynamic'>
       #
 (void)
-<b>apply</b><span>()</span>
+<b>replace</b><span>()</span>
       <br>
     </p>
     

@@ -39,18 +39,24 @@
       </table>
       <h2>Variables Summary</h2>
       <dl class='constants'>
-  <dt id='exports.module-variable'>
-    exports.module
+  <dt id='module.exports-variable'>
+    module.exports
     =
   </dt>
   <dd>
     <pre><code class='coffeescript'>{
-  abbr: require(&#39;.&#47;abbr&#39;),
-  quote: require(&#39;.&#47;quote&#39;),
   open_quote: require(&#39;.&#47;open_quote&#39;),
-  close_quote_adv: require(&#39;.&#47;close_quote_adv&#39;),
-  open_quote_adv: require(&#39;.&#47;open_quote_adv&#39;),
-  close_quote: require(&#39;.&#47;close_quote&#39;)
+
+  &#47;*
+  close_quote_adv: require(&#39;.&#47;close_quote_adv&#39;)
+  open_quote_adv:require(&#39;.&#47;open_quote_adv&#39;)
+   *&#47;
+  close_quote: require(&#39;.&#47;close_quote&#39;),
+
+  &#47;*
+  mdush
+   *&#47;
+  mdush2html: require(&#39;.&#47;mdash_2_html&#39;)
 }</code></pre>
     <div class='docstring'>
   <p>Индекс правил</p>
@@ -61,7 +67,7 @@
 </dl>
     </div>
     <div id='footer'>
-  May 23, 14 09:49:24 by
+  May 25, 14 14:07:39 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>

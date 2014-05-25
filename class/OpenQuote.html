@@ -35,12 +35,35 @@
       </table>
       <h2>Overview</h2>
       <div class='docstring'>
-  <h2 id="-">Правило &quot;Открывающая кавычка&quot;</h2><p>используется как объект расширения для остальных правил</p>
+  <p>Правило &quot;Открывающая кавычка&quot;
+используется как объект расширения для остальных правил</p>
 </div>
 <div class='tags'>
 </div>
+      <h2>Direct Known Subclasses</h2>
+      <p class='children'>
+        <a href='../class/CloseQuote.html'>CloseQuote</a>
+        <a href='../class/Rule.html'>Rule</a>
+        <a href='../class/Rule.html'>Rule</a>
+      </p>
       <h2>Variables Summary</h2>
       <dl class='constants'>
+  <dt id='used-variable'>
+    used
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>0</code></pre>
+    
+  </dd>
+  <dt id='timer-variable'>
+    timer
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>0</code></pre>
+    
+  </dd>
   <dt id='description-variable'>
     description
     =
@@ -65,6 +88,14 @@
     <pre><code class='coffeescript'>&#39;OpenQuote&#39;</code></pre>
     
   </dd>
+  <dt id='text-variable'>
+    text
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>&#39;&#39;</code></pre>
+    
+  </dd>
   <dt id='config-variable'>
     config
     =
@@ -72,8 +103,8 @@
   <dd>
     <pre><code class='coffeescript'>{
   on: true,
-  log: true,
-  debug: true
+  log: false,
+  debug: false
 }</code></pre>
     
   </dd>
@@ -110,6 +141,19 @@
   </li>
   <li>
     <span class='signature'>
+      <a href='#multiply-dynamic'>
+        #
+(void)
+<b>multiply</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Цикл применения правила сохраняет время работы в @profiling
+
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
       <a href='#apply-dynamic'>
         #
 (void)
@@ -117,6 +161,19 @@
       </a>
     </span>
     <span class='desc'>
+      Применение правила для text 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#replace-dynamic'>
+        #
+(void)
+<b>replace</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Правило замены 
     </span>
   </li>
 </ul>
@@ -176,18 +233,49 @@
 </div>
   </div>
   <div class='method_details'>
+    <p class='signature' id='multiply-dynamic'>
+      #
+(void)
+<b>multiply</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Цикл применения правила
+сохраняет время работы в @profiling</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
     <p class='signature' id='apply-dynamic'>
       #
 (void)
 <b>apply</b><span>()</span>
       <br>
     </p>
-    
+    <div class='docstring'>
+  <p>Применение правила для text</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='replace-dynamic'>
+      #
+(void)
+<b>replace</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Правило замены</p>
+</div>
+<div class='tags'>
+</div>
   </div>
 </div>
     </div>
     <div id='footer'>
-  May 23, 14 09:49:24 by
+  May 25, 14 14:07:39 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>
