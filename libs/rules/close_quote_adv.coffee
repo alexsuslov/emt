@@ -16,11 +16,7 @@ class CloseQuoteAdv extends Rules.open_quote
 
     # Правилo 1
 
-    re = new RegExp [
-      "/([a-zа-яё0-9]|\\.|\\&hellip\\;|\\!|\\?|\\>|\\)"
-      "|\\:)((\\\"|\\\\\"|\\&laquo\\;)+)(\\<[^\\>]+\\>)"
-      "(\\.|\\&hellip\\;|\\;|\\:|\\?|\\!|\\,|\\)|\\<\\/|$| )/" ].join ''
-      , 'i'
+    re = /([a-zа-яё0-9]|\.|\&hellip\;|\!|\?|\>|\)|\:)((\"|\\\"|\&laquo\;)+)(\<[^\>]+\>)(\.|\&hellip\;|\;|\:|\?|\!|\,|\)|\<\/|$| )/i
     # Замена
     @text = @text.replace re , (str)->
       self.debug str if debug
@@ -72,5 +68,5 @@ class CloseQuoteAdv extends Rules.open_quote
       '>&raquo;' + m[2]
     @
 
-exports.module = CloseQuoteAdv
+module.exports = CloseQuoteAdv
 

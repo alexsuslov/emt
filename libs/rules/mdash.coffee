@@ -4,17 +4,17 @@ OpenQuote = require( './open_quote')
 ##
 # Правило "Закрывающая кавычка"
 ##
-class CloseQuote extends OpenQuote
-  description: "Закрывающая кавычка"
+class Rule extends OpenQuote
+  description: "Тире после кавычек, скобочек, пунктуации"
   version:'0.0.0'
-  configName:'CloseQuote'
+  configName:'mdush'
 
   apply:->
     # return if @config.on
     self = @
-    use = false
+
     # Правило
-    re = /([a-zа-яё0-9]|\.|\&hellip\;|\!|\?|\>|\)|\:)(\"+)(\.|\&hellip\;|\;|\:|\?|\!|\,|\s|\)|\<\/|$)/i
+    re = /([a-zа-яё0-9]+|\,|\:|\)|\&(ra|ld)quo\;|\|\"|\>)(\040|\t)(—|\-|\&mdash\;)(\s|$|\<)/i
 
     # Замена
     @text = @text.replace re , (str)->
@@ -22,10 +22,9 @@ class CloseQuote extends OpenQuote
 
       m = str.match re
       self.debug m
-      use = true
-      m[1] + self.Lib.QUOTE_FIRS_CLOSE + m[3]
 
-    use
+      m[1] + '&nbsp;&mdash;' + m[5]
+    @
 
-module.exports = CloseQuote
+module.exports = Rule
 

@@ -8,7 +8,6 @@ emt = new EMT
 
 describe "EMTBase", ->
 
-
   it "is present EMTretQuote", ->
     assert.equal "Кавычки", emt.tret_objects.EMTretQuote.title
 

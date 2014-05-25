@@ -28,6 +28,6 @@ class OpenQuoteAdv extends Rules.open_quote
 
     @
 
-exports.module = OpenQuoteAdv
+module.exports = OpenQuoteAdv
 
 

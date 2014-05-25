@@ -7,7 +7,11 @@ module.exports = (grunt)->
         max_line_length:
           value: 100
           level: "warn"
-      app: ['Gruntfile.coffee','libs/**/*.coffee', 'emt.coffee']
+      app: [
+        'Gruntfile.coffee'
+        'libs/**/*.coffee'
+        'emt.coffee'
+      ]
     # coffee:
       # для браузера
       # compile:
@@ -73,7 +77,7 @@ module.exports = (grunt)->
         files: ['test/*.coffee']
         tasks: ['coffeelint','mochaTest']
       app:
-        files: ['libs/*.coffee']
+        files: ['libs/**/*.coffee']
         tasks: [
           'coffeelint'
           'mochaTest'
