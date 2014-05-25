@@ -12,20 +12,19 @@ class CloseQuote extends OpenQuote
   apply:->
     # return if @config.on
     self = @
-    use = false
+
     # Правило
     re = /([a-zа-яё0-9]|\.|\&hellip\;|\!|\?|\>|\)|\:)(\"+)(\.|\&hellip\;|\;|\:|\?|\!|\,|\s|\)|\<\/|$)/i
+    m = @text.match re
+    if m
+      # Замена
+      @text = @text.replace re , (str)->
+        self.debug str
+        self.debug m
 
-    # Замена
-    @text = @text.replace re , (str)->
-      self.debug str
+        m[1] + self.Lib.QUOTE_FIRS_CLOSE + m[3]
 
-      m = str.match re
-      self.debug m
-      use = true
-      m[1] + self.Lib.QUOTE_FIRS_CLOSE + m[3]
-
-    use
+    !!m
 
 module.exports = CloseQuote
 
