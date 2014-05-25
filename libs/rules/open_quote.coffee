@@ -1,16 +1,18 @@
 ###
-## Правило "Открывающая кавычка"
+Правило "Открывающая кавычка"
 используется как объект расширения для остальных правил
 ###
 class OpenQuote
+  used:0
+  timer:0
   description: "Открывающая кавычка"
   version:'0.0.0'
   configName:'OpenQuote'
-
+  text:''
   config:
-    on: true
-    log: true
-    debug:true
+    on: on
+    log: off
+    debug: off
 
   ###
   Конструктор
@@ -43,7 +45,7 @@ class OpenQuote
     if level in ['warning','info']
       console.log new Date +" #{level}: #{message}"
 
-    console.log " #{level}: #{message}", obj if level is 'debug'
+    console.log "#{level}: #{message}", obj if level is 'debug'
     @
 
   ###
@@ -54,25 +56,40 @@ class OpenQuote
   ###
   debug:(obj)->
     return unless  @config.debug
-    logger 'debug', '', obj
+    @logger 'debug', @configName, obj
     @
 
-  apply:->
-    return if @config.on
-    self = @
-    debug = @config.debug
+  # Цикл применения правила
+  # сохраняет время работы в @profiling
+  multiply:()->
+    start = new Date().getTime()
+    while @replace()
+      @used += 1
+    @profiling = new Date().getTime() - start
+    @
 
+  # Применение правила для text
+  apply:->
+    return unless @config.on
+    @multiply()
+
+  # Правило замены
+  replace:->
+    self = @
+    use = true
     # Правило
     re = /(^|\(|\s|\>|-)(\"|\\\")(\S+)/i
 
     # Замена
     @text = @text.replace re , (str)->
-      self.debug str if debug
+      self.debug str
 
       m = str.match re
-      self.debug m if debug
+      self.debug m
+      use = false
 
-      m[1] + @Lib.QUOTE_FIRS_OPEN + m[3]
-    @
+      m[1] + self.Lib.QUOTE_FIRS_OPEN + m[3]
 
-exports.module = OpenQuote
+    use
+
+module.exports = OpenQuote
