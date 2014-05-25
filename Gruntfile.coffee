@@ -41,12 +41,21 @@ module.exports = (grunt)->
       inputs: [
         "libs/"
       ]
+
     mochaTest:
       test:
         options:
-          reporter: 'spec',
+          reporter: 'spec'
           require: 'coffee-script/register'
         src: ['test/**/*.coffee']
+      md:
+        options:
+          reporter: 'Markdown'
+          require: 'coffee-script/register'
+          quiet: true
+          captureFile: 'report.md'
+        src: ['test/**/*.coffee']
+
 
     # uglify:
     #   translate:
