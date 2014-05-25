@@ -14,11 +14,11 @@ class Rule extends OpenQuote
     debug:true
 
   replace:->
-    use = true
-    @text = @text.replace /-/ , ->
-      use = false
-      '&mdash;'
-    use
+    m = @text.match /-/
+    if m
+      @text = @text.replace /-/ , ->
+        '&mdash;'
+    !!m
 
 module.exports = Rule
 

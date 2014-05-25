@@ -1,6 +1,6 @@
 assert = require("assert")
 
-Rule = require( '../libs/rules/mdash')
+Rule = require( '../libs/rules/mdash3')
 EMTLib = require( '../libs/emt_lib').EMTLib
 
 rule = new Rule
@@ -10,10 +10,10 @@ rule = new Rule
 describe "Rules", ->
   describe rule.description, ->
 
-    text = "  привет, - привет"
+    text = "  привет! - привет"
 
     it text, ->
       rule.text = text
       rule.apply()
-      assert.equal "  привет,&nbsp;&mdash; привет", rule.text
+      assert.equal "  привет!&nbsp;&mdash;привет", rule.text
 

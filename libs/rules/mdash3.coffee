@@ -5,17 +5,16 @@ OpenQuote = require( './open_quote')
 # Правило "Закрывающая кавычка"
 ##
 class Rule extends OpenQuote
-  description: "Тире после кавычек, скобочек, пунктуации"
+  description: 'Тире после знаков восклицания, троеточия и прочее'
   version:'0.0.0'
-  configName:'mdush'
+  configName:'mdash2'
 
   replace:->
     # return if @config.on
     self = @
-    use = true
 
     # Правило
-    re = /([a-zа-яё0-9]+|\,|\:|\)|\&(ra|ld)quo\;|\|\"|\>)(\040|\t)(—|\-|\&mdash\;)(\s|$|\<)/
+    re = /(\.|\!|\?|\&hellip\;)(\040|\t|\&nbsp\;)(\-|\&mdash\;)(\040|\t|\&nbsp\;)/
     m = @text.match re
     if m
       # Замена
@@ -23,7 +22,8 @@ class Rule extends OpenQuote
         self.debug str
         self.debug m
 
-        m[1] + '&nbsp;&mdash;' + m[5]
+        m[1] + '&nbsp;&mdash;'
+
     !!m
 
 module.exports = Rule
