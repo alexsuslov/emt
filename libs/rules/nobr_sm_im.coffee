@@ -5,14 +5,14 @@ OpenQuote = require( './open_quote')
 # Правило
 ##
 class Rule extends OpenQuote
-  description: 'Расстановка пробелов перед сокращениями гл., стр., рис., илл., ст., п.'
+  description: 'Расстановка пробелов перед сокращениями см., им.'
   version:'0.0.0'
-  configName:'nobr_acronym'
+  configName:'nobr_sm_im'
 
   replace:->
     # Список правил
     rex = [
-      /(\s|^|\>|\()(гл|стр|рис|илл?|ст|п|с)\.(\040|\t)*(\d+)(\&nbsp\;|\s|\.|\,|\?|\!|$)/i
+      /(\s|^|\>|\()(см|им)\.(\040|\t)*([а-яё0-9a-z]+)(\s|\.|\,|\?|\!|$)/i
     ]
 
     for re in rex
