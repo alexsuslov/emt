@@ -13,14 +13,14 @@ class Rule extends OpenQuote
 
     # Список правил
     rex = [
-      /(^|\D)1\/(2|4)(\D)/
-      /(^|\D)3\/4(\D)/
+      /1\/(2|4)/
+      /3\/4/
     ]
     rep = [
       (m)->
-        "#{m[1]}&frac1#{m[2]};#{m[3]}"
+        "&frac1#{m[1]};"
       (m)->
-        "#{m[1]}&frac34;#{m[2]}"
+        "&frac34;"
     ]
     for re, idx in rex
       m = @text.match re
