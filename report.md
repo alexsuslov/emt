@@ -4,8 +4,10 @@ profiling:  0
      - [Открывающая кавычка](#rules--)
      - [Кое-как, кой-кого, все-таки](#rules------)
      - [Расстановка знака минус между числами](#rules-----)
+     - [Замена символов и привязка сокращений в весовых величинах: г, кг, мг…](#rules-----------)
      - [Расстановка пробелов перед сокращениями dpi, lpi](#rules-----dpi-lpi)
      - [Расстановка пробелов перед сокращениями гл., стр., рис., илл., ст., п.](#rules----------)
+     - [Расстановка пробелов в сокращениях г., ул., пер., д.](#rules--------)
      - [Расстановка пробелов перед сокращениями см., им.](#rules------)
      - [Закрывающая кавычка](#rules--)
      - [Расстановка дефисов между из-за, из-под](#rules-------)
@@ -417,6 +419,18 @@ return assert.equal(" 1&minus;1 ", rule.text);
 
 <a name="rules"></a>
 # Rules
+<a name="rules-----------"></a>
+## Замена символов и привязка сокращений в весовых величинах: г, кг, мг…
+ 1 см. 1 м2 .
+
+```js
+rule.text = text;
+rule.apply();
+return assert.equal(' 1&nbsp;см. 1&nbsp;м&sup2; ', rule.text);
+```
+
+<a name="rules"></a>
+# Rules
 <a name="rules-----dpi-lpi"></a>
 ## Расстановка пробелов перед сокращениями dpi, lpi
  300 dpi 150 lpi .
@@ -437,6 +451,18 @@ return assert.equal(" 300&nbsp;dpi 150&nbsp;lpi ", rule.text);
 rule.text = text;
 rule.apply();
 return assert.equal(" гл&nbsp;4, стр&nbsp;5, рис&nbsp;7, илл&nbsp;9, ст&nbsp;6, п&nbsp;9 ", rule.text);
+```
+
+<a name="rules"></a>
+# Rules
+<a name="rules--------"></a>
+## Расстановка пробелов в сокращениях г., ул., пер., д.
+ г. Тест, пр-кт Тест,  д. 4 .
+
+```js
+rule.text = text;
+rule.apply();
+return assert.equal(" г.&nbsp;Тест, пр-кт&nbsp;Тест,  д.&nbsp;4 ", rule.text);
 ```
 
 <a name="rules"></a>
