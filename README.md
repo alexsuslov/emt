@@ -22,11 +22,6 @@ grunt
 npm test
 ```
 
-Отчет о тестах
-```
-./test_report.bash > report.md
-```
-
 [Ссылка на последний отчет](https://github.com/alexsuslov/emt/blob/master/report.md)
 
 
