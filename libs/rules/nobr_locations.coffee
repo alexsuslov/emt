@@ -23,10 +23,11 @@ class Rule extends OpenQuote
       break if m
 
     if m
-      if idx in [0,2]
-        reStr = m[1] + m[2] + '.&nbsp;' + m[4] + m[5]
-      else
+      if idx is 1
         reStr = m[1] + m[2] + '&nbsp;' + m[4] + m[5]
+      else
+        reStr = m[1] + m[2] + '.&nbsp;' + m[4] + m[5]
+
       @text = @text.replace m[0] , reStr
 
     !!m
