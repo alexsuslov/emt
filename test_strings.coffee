@@ -1,7 +1,7 @@
 # Number
 minus_in_numbers_range = ' 1-10 '
-auto_times_x = ' x - * '
-simple_fraction = '1/2, 1/4'
+
+
 math_chars = ['-, =, +, >, <']
 thinsp_between_number_triads = '1 2 3'
 thinsp_between_no_and_number = ['№ 4, № 5']

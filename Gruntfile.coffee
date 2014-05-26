@@ -43,11 +43,6 @@ module.exports = (grunt)->
       ]
 
     mochaTest:
-      test:
-        options:
-          reporter: 'spec'
-          require: 'coffee-script/register'
-        src: ['test/**/*.coffee']
       md:
         options:
           reporter: 'Markdown'
@@ -55,6 +50,12 @@ module.exports = (grunt)->
           quiet: true
           captureFile: 'report.md'
         src: ['test/**/*.coffee']
+      test:
+        options:
+          reporter: 'spec'
+          require: 'coffee-script/register'
+        src: ['test/**/*.coffee']
+
 
 
     # uglify:
@@ -84,7 +85,7 @@ module.exports = (grunt)->
         tasks: ['coffeelint']
       tests:
         files: ['test/*.coffee']
-        tasks: ['coffeelint','mochaTest']
+        tasks: ['coffeelint','mochaTest:md', 'mochaTest:test']
       app:
         files: ['libs/**/*.coffee']
         tasks: [
