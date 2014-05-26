@@ -2,7 +2,7 @@
 minus_in_numbers_range = ' 1-10 '
 math_chars = ['-, =, +, >, <']
 
-thinsp_between_number_triads = '1 2 3'
+
 thinsp_between_no_and_number = ['№ 4, № 5']
 thinsp_between_sect_and_number = '§ 1'
 
