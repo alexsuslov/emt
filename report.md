@@ -11,6 +11,7 @@ profiling:  0
      - [Тире после переноса строки](#rules----)
      - [Замена символа тире на html конструкцию](#rules-----html-)
      - [Тире после знаков восклицания, троеточия и прочее](#rules-------)
+     - [Объединение триад чисел полупробелом](#rules----)
      - [Автоматическая простановка дефисов в обезличенных местоимениях и междометиях](#rules--------)
    - [EMTBase](#emtbase)
      - [add_safe_tag](#emtbase-add_safe_tag)
@@ -518,6 +519,18 @@ return assert.equal("привет &laquo;test\" привет. привет &laqu
 open_quote.text = text;
 open_quote.apply();
 return assert.equal(" test &frac12; &frac14; &frac34;", open_quote.text);
+```
+
+<a name="rules"></a>
+# Rules
+<a name="rules----"></a>
+## Объединение триад чисел полупробелом
+ 123 123 123 .
+
+```js
+rule.text = text;
+rule.apply();
+return assert.equal(" 123&thinsp;123&thinsp;123 ", rule.text);
 ```
 
 <a name="rules"></a>

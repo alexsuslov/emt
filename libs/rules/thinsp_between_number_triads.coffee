@@ -23,7 +23,7 @@ class Rule extends OpenQuote
       if m[3] is '-'
         str = m[0]
       else
-        str = m[1]. str_replace " ", "&thinsp;"
+        str = m[1].replace " ", "&thinsp;"
       str += m[3]
 
       @text = @text.replace m[0] , str
