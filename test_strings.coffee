@@ -2,8 +2,6 @@
 minus_in_numbers_range = ' 1-10 '
 math_chars = ['-, =, +, >, <']
 
-thinsp_between_sect_and_number = '§ 1'
-
 # Abbr
 nobr_acronym = ' гл., стр., рис., илл., ст., п.'
 nobr_sm_im = ' см., им.'
