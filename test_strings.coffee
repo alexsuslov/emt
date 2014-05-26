@@ -1,5 +1,5 @@
 # Number
-minus_between_nums = ''
+minus_between_nums = ' 1-1 '
 minus_in_numbers_range = ''
 auto_times_x = ''
 simple_fraction = ''
