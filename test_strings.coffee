@@ -3,8 +3,7 @@ minus_in_numbers_range = ' 1-10 '
 math_chars = ['-, =, +, >, <']
 
 # Abbr
-nobr_acronym = ' гл., стр., рис., илл., ст., п.'
-nobr_sm_im = ' см., им.'
+
 nobr_locations = ' г., ул., пер., д.'
 nbsp_before_unit = 'м, см, м2'
 nbsp_before_weight_unit = 'г, кг, мг'

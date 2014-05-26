@@ -98,6 +98,10 @@ module.exports = (grunt)->
           # 'concat'
         ]
 
+
+  grunt.registerTask('rep', [
+    'mochaTest:md'
+    ])
   grunt.registerTask('default', [
     'coffeelint'
     'mochaTest'
