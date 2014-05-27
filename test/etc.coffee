@@ -10,7 +10,7 @@ tests = [
   }
 ]
 
-describe "Правила для ", ->
+describe "Правило ", ->
   describe "Прочее", ->
     for test in tests
       ((test)->

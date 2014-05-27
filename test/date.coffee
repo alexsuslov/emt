@@ -25,7 +25,7 @@ tests = [
   }
 ]
 
-describe "Правила для ", ->
+describe "Правило ", ->
   describe "Даты и дни", ->
     for test in tests
       ((test)->

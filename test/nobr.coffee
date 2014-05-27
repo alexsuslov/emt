@@ -25,7 +25,7 @@ tests = [
   }
 ]
 
-describe "Правила для ", ->
+describe "Правило ", ->
   describe "Неразрывные конструкции", ->
     for test in tests
       ((test)->

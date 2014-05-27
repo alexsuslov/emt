@@ -37,7 +37,7 @@ tests = [
 
 ]
 
-describe "Правила для ", ->
+describe "Правило ", ->
   describe " Числа, дроби, математические знаки ", ->
     for test in tests
       ((test)->

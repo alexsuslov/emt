@@ -38,10 +38,14 @@ tests = [
     text: ' ООО Биомед '
     res: ' ООО&nbsp;Биомед '
   }
-
+  {
+    obj: require( '../libs/rules/nobr_abbreviation')
+    text: " 300 dpi 150 lpi "
+    res: " 300&nbsp;dpi 150&nbsp;lpi "
+  }
 ]
 
-describe "Правила для ", ->
+describe "Правило ", ->
   describe "Сокращения", ->
     for test in tests
       ((test)->

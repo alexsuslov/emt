@@ -45,7 +45,7 @@ tests = [
   }
 ]
 
-describe "Правила для ", ->
+describe "Правило ", ->
   describe "Дефисы и тире", ->
     for test in tests
       ((test)->
