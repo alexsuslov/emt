@@ -4,20 +4,22 @@ if isClient
   module = {}
 
   App =
+    rules:[]
     text:''
     Lib:{}
     Rules:{}
+    order:[
+      'Quote'
+      'Abbr'
+      'Numbers'
+    ]
 
 
     apply:->
-
-      @Rules.quote.text = @text
-      @Rules.quote.apply()
-      @text = @Rules.quote.text
-
-      @Rules.abbr.text = @text
-      @Rules.abbr.apply()
-      @text = @Rules.abbr.text
+      for rule in @rules
+        rule.text = @text
+        rule.apply()
+        @text = rule.text
 
       @el.html @text
 
@@ -25,14 +27,21 @@ if isClient
     init: (@opt, @el)->
       @text = el.html()
 
-      # Quote
-      @Rules.quote = new @Rules.Quote
-        Rules:  @Rules
-        Lib:    @Lib
-      # Abbr =
-      @Rules.abbr = new @Rules.Abbr
-        Rules:  @Rules
-        Lib:    @Lib
+      # Добавляю правила в очередь
+      for ruleName in @order
+        if @Rules[ruleName]
+          @rules.push new @Rules[ruleName]
+            Rules:  @Rules
+            Lib:    @Lib
+
+      # # Quote
+      # @Rules.quote = new @Rules.Quote
+      #   Rules:  @Rules
+      #   Lib:    @Lib
+      # # Abbr =
+      # @Rules.abbr = new @Rules.Abbr
+      #   Rules:  @Rules
+      #   Lib:    @Lib
 
       @apply()
 
@@ -795,7 +804,23 @@ class OpenQuote
       layout = @use_layout
 
     return @Lib.build_safe_tag content, tag, attribute, layout
+  ###
+  Создание тега с содержимым
 
+  @see  EMT_lib::build_safe_tag
+  @param  [string] $content
+  @param  [string] $tag
+  @param  [array] $attribute
+  @return   [string]
+  ###
+  ntag:(content, tag, attributes )->
+    attributes ?= {}
+    classname = ''
+    tag ?= 'span'
+    param = ''
+    for attribute of attributes
+      param = " #{attribute}='#{attributes[attribute]}'"
+    "<#{tag}#{param}>#{content}</#{tag}>"
 module.exports = OpenQuote
 
 if typeof window isnt 'undefined'
@@ -2272,6 +2297,45 @@ if typeof window isnt 'undefined'
   App.Rules['nobr_year_in_date'] = Rule
 
 # Зависимости
+Quote = require( './quote') unless Quote
+
+###
+## Групповой Объект правил "Сокращения"
+###
+class Numbers extends Quote
+  description: "Сокращения"
+  version:'0.0.0'
+  configName:'Numbers'
+
+
+  config:
+    on: true
+    log: true
+    debug:true
+
+  # Очередь правил
+  rules:[]
+
+  # Порядок выполнения
+  order:[
+    "minus_between_nums",
+    "minus_in_numbers_range",
+    "auto_times_x",
+    "numeric_sub",
+    "numeric_sup",
+    "simple_fraction",
+    "math_chars",
+    "thinsp_between_number_triads",
+    "thinsp_between_no_and_number",
+    "thinsp_between_sect_and_number",
+    ]
+
+module.exports = Numbers
+
+if typeof window isnt 'undefined'
+  App.Rules.Numbers = Numbers
+
+# Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
 
 ##
@@ -2294,7 +2358,7 @@ class Rule extends OpenQuote
       break if m
 
     if m
-      str = m[1] + @tag( @tag( m[2], "small"), "sub") + m[3]
+      str = m[1] + @ntag( @ntag( m[2], "small"), "sub") + m[3]
       @text = @text.replace m[0] , str
 
 
@@ -2328,7 +2392,7 @@ class Rule extends OpenQuote
       break if m
 
     if m
-      str = m[1] + @tag( @tag( m[2], "small"), "sup") + m[3]
+      str = m[1] + @ntag( @ntag( m[2], "small"), "sup") + m[3]
 
       @text = @text.replace m[0] , str
 

@@ -114,7 +114,23 @@ class OpenQuote
       layout = @use_layout
 
     return @Lib.build_safe_tag content, tag, attribute, layout
+  ###
+  Создание тега с содержимым
 
+  @see  EMT_lib::build_safe_tag
+  @param  [string] $content
+  @param  [string] $tag
+  @param  [array] $attribute
+  @return   [string]
+  ###
+  ntag:(content, tag, attributes )->
+    attributes ?= {}
+    classname = ''
+    tag ?= 'span'
+    param = ''
+    for attribute of attributes
+      param = " #{attribute}='#{attributes[attribute]}'"
+    "<#{tag}#{param}>#{content}</#{tag}>"
 module.exports = OpenQuote
 
 if typeof window isnt 'undefined'

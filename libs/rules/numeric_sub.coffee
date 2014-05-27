@@ -21,7 +21,7 @@ class Rule extends OpenQuote
       break if m
 
     if m
-      str = m[1] + @tag( @tag( m[2], "small"), "sub") + m[3]
+      str = m[1] + @ntag( @ntag( m[2], "small"), "sub") + m[3]
       @text = @text.replace m[0] , str
 
 

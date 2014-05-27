@@ -1,5 +1,5 @@
 (function() {
-  var Abbr, App, Dash, EMTLib, OpenQuote, OpenQuoteAdv, Quote, Rule, chars_table, html4_char, isClient, module,
+  var Abbr, App, Dash, EMTLib, Numbers, OpenQuote, OpenQuoteAdv, Quote, Rule, chars_table, html4_char, isClient, module,
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -9,30 +9,37 @@
   if (isClient) {
     module = {};
     App = {
+      rules: [],
       text: '',
       Lib: {},
       Rules: {},
+      order: ['Quote', 'Abbr', 'Numbers'],
       apply: function() {
-        this.Rules.quote.text = this.text;
-        this.Rules.quote.apply();
-        this.text = this.Rules.quote.text;
-        this.Rules.abbr.text = this.text;
-        this.Rules.abbr.apply();
-        this.text = this.Rules.abbr.text;
+        var rule, _i, _len, _ref;
+        _ref = this.rules;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          rule = _ref[_i];
+          rule.text = this.text;
+          rule.apply();
+          this.text = rule.text;
+        }
         return this.el.html(this.text);
       },
       init: function(opt, el) {
+        var ruleName, _i, _len, _ref;
         this.opt = opt;
         this.el = el;
         this.text = el.html();
-        this.Rules.quote = new this.Rules.Quote({
-          Rules: this.Rules,
-          Lib: this.Lib
-        });
-        this.Rules.abbr = new this.Rules.Abbr({
-          Rules: this.Rules,
-          Lib: this.Lib
-        });
+        _ref = this.order;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          ruleName = _ref[_i];
+          if (this.Rules[ruleName]) {
+            this.rules.push(new this.Rules[ruleName]({
+              Rules: this.Rules,
+              Lib: this.Lib
+            }));
+          }
+        }
         return this.apply();
       }
     };
@@ -956,6 +963,33 @@
         layout = this.use_layout;
       }
       return this.Lib.build_safe_tag(content, tag, attribute, layout);
+    };
+
+
+    /*
+    Создание тега с содержимым
+    
+    @see  EMT_lib::build_safe_tag
+    @param  [string] $content
+    @param  [string] $tag
+    @param  [array] $attribute
+    @return   [string]
+     */
+
+    OpenQuote.prototype.ntag = function(content, tag, attributes) {
+      var attribute, classname, param;
+      if (attributes == null) {
+        attributes = {};
+      }
+      classname = '';
+      if (tag == null) {
+        tag = 'span';
+      }
+      param = '';
+      for (attribute in attributes) {
+        param = " " + attribute + "='" + attributes[attribute] + "'";
+      }
+      return "<" + tag + param + ">" + content + "</" + tag + ">";
     };
 
     return OpenQuote;
@@ -2768,6 +2802,48 @@
     App.Rules['nobr_year_in_date'] = Rule;
   }
 
+  if (!Quote) {
+    Quote = require('./quote');
+  }
+
+
+  /*
+   *# Групповой Объект правил "Сокращения"
+   */
+
+  Numbers = (function(_super) {
+    __extends(Numbers, _super);
+
+    function Numbers() {
+      return Numbers.__super__.constructor.apply(this, arguments);
+    }
+
+    Numbers.prototype.description = "Сокращения";
+
+    Numbers.prototype.version = '0.0.0';
+
+    Numbers.prototype.configName = 'Numbers';
+
+    Numbers.prototype.config = {
+      on: true,
+      log: true,
+      debug: true
+    };
+
+    Numbers.prototype.rules = [];
+
+    Numbers.prototype.order = ["minus_between_nums", "minus_in_numbers_range", "auto_times_x", "numeric_sub", "numeric_sup", "simple_fraction", "math_chars", "thinsp_between_number_triads", "thinsp_between_no_and_number", "thinsp_between_sect_and_number"];
+
+    return Numbers;
+
+  })(Quote);
+
+  module.exports = Numbers;
+
+  if (typeof window !== 'undefined') {
+    App.Rules.Numbers = Numbers;
+  }
+
   if (!OpenQuote) {
     OpenQuote = require('./open_quote');
   }
@@ -2796,7 +2872,7 @@
         }
       }
       if (m) {
-        str = m[1] + this.tag(this.tag(m[2], "small"), "sub") + m[3];
+        str = m[1] + this.ntag(this.ntag(m[2], "small"), "sub") + m[3];
         this.text = this.text.replace(m[0], str);
       }
       return !!m;
@@ -2840,7 +2916,7 @@
         }
       }
       if (m) {
-        str = m[1] + this.tag(this.tag(m[2], "small"), "sup") + m[3];
+        str = m[1] + this.ntag(this.ntag(m[2], "small"), "sup") + m[3];
         this.text = this.text.replace(m[0], str);
       }
       return !!m;

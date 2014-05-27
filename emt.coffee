@@ -4,20 +4,22 @@ if isClient
   module = {}
 
   App =
+    rules:[]
     text:''
     Lib:{}
     Rules:{}
+    order:[
+      'Quote'
+      'Abbr'
+      'Numbers'
+    ]
 
 
     apply:->
-
-      @Rules.quote.text = @text
-      @Rules.quote.apply()
-      @text = @Rules.quote.text
-
-      @Rules.abbr.text = @text
-      @Rules.abbr.apply()
-      @text = @Rules.abbr.text
+      for rule in @rules
+        rule.text = @text
+        rule.apply()
+        @text = rule.text
 
       @el.html @text
 
@@ -25,14 +27,21 @@ if isClient
     init: (@opt, @el)->
       @text = el.html()
 
-      # Quote
-      @Rules.quote = new @Rules.Quote
-        Rules:  @Rules
-        Lib:    @Lib
-      # Abbr =
-      @Rules.abbr = new @Rules.Abbr
-        Rules:  @Rules
-        Lib:    @Lib
+      # Добавляю правила в очередь
+      for ruleName in @order
+        if @Rules[ruleName]
+          @rules.push new @Rules[ruleName]
+            Rules:  @Rules
+            Lib:    @Lib
+
+      # # Quote
+      # @Rules.quote = new @Rules.Quote
+      #   Rules:  @Rules
+      #   Lib:    @Lib
+      # # Abbr =
+      # @Rules.abbr = new @Rules.Abbr
+      #   Rules:  @Rules
+      #   Lib:    @Lib
 
       @apply()
 

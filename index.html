@@ -13,18 +13,29 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
         <div class="container">
+            <textarea name="emt" rows="10" class='emt col-lg-12 col-xs-12'></textarea>
             <p class='emt'>привет "привет" привет
             <br>
             300 dpi 150 lpi
             <br>
+            x_2
+            <br>
+            x^3
             </p>
         </div>
+
         <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
         <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
         <script src="dist/emt.js"></script>
         <script>
+
         $(function() {
-          $('p.emt').emt();
+          var $p = $('p.emt');
+          var emt = $p.emt();
+          $('textarea.emt').on('keyup' ,function(e){
+            $p.html( e.target.value);
+            emt = $('p.emt').emt();
+          });
         });
         </script>
 </body>

@@ -36,12 +36,12 @@ tests = [
   {
     obj: require( '../libs/rules/numeric_sub')
     text: " test_3 "
-    res: " test<c3Vi=><c21hbGw==>3</c21hbGw==></c3Vi=> "
+    res: " test<sub><small>3</small></sub> "
   }
   {
     obj: require( '../libs/rules/numeric_sup')
     text: " test^3 "
-    res: " test<c3Vw=><c21hbGw==>3</c21hbGw==></c3Vw=> "
+    res: " test<sup><small>3</small></sup> "
   }
 
 
