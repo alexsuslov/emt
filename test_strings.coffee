@@ -2,15 +2,6 @@
 minus_in_numbers_range = ' 1-10 '
 math_chars = ['-, =, +, >, <']
 
-# Abbr
-
-nbsp_before_weight_unit = 'г, кг, мг'
-nobr_before_unit_volt = ' В '
-nbsp_org_abbr = ' ООО,ЗАО,ОАО,НИИ,ПБОЮЛ '
-
-# Dash
-ka_de_kas = ' скажите-ка, он-де, ну-кась '
-
 # Date
 years = '1990-2000'
 mdash_month_interval = ''

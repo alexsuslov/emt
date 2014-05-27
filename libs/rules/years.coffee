@@ -12,7 +12,7 @@ class Rule extends OpenQuote
   replace:->
     # Список правил
     rex = [
-      /(с|по|период|середины|начала|начало|конца|конец|половины|в|между|\([cс]\)|\&copy\;)(\s+|\&nbsp\;)([\d]{4})(-|\&mdash\;|\&minus\;)([\d]{4})(( |\&nbsp\;)?(г\.г\.|гг\.|гг|г\.|г)([^а-яёa-z]))?/
+      /(с|по|период|середины|начала|начало|конца|конец|половины|в|между|\([cс]\)|\&copy\;)(\s+|\&nbsp\;)([\d]{4})(-|\&minus\;)([\d]{4})(( |\&nbsp\;)?(г\.г\.|гг\.|гг|г\.|г)([^а-яёa-z]))?/
     ]
 
 
@@ -22,7 +22,7 @@ class Rule extends OpenQuote
 
     if m
       reStr = m[1] + m[2]
-      if parseInt [3] >=  parseInt $m[5]
+      if parseInt [3] >=  parseInt m[5]
         reStr += m[3] + m[4] + m[5]
       else
         reStr += m[3] + "&mdash;" + m[5]
