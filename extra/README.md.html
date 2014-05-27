@@ -64,11 +64,32 @@ $(function() {
     emt = $(&#39;p.emt&#39;).emt();
   });
 });
-</code></pre><p>Выдает:</p><p><img src="https://raw.githubusercontent.com/alexsuslov/emt/master/img/EMT_test.jpg" alt="test"></p>
+</code></pre><p>Выдает:</p><p><img src="https://raw.githubusercontent.com/alexsuslov/emt/master/img/EMT_test.jpg" alt="test"></p><p><textarea name="emt" rows="10" cols='30'></textarea></p><p><p class='emt'></p></p><script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script scr='https://raw.githubusercontent.com/alexsuslov/emt/master/dist/emt.js'></script>
+<script>
+  $(function() {
+    var $p = $('p.emt');
+    var $t = $('textarea.emt');
+    $t.html( $p.html());
+    var emt = $p.emt();
+    $t.on('keyup' ,function(e){
+      $p.html( e.target.value);
+      emt.apply();
+    });
+  });
+</script>
+
+
+
+
+
+
+
+
       </div>
     </div>
     <div id='footer'>
-  May 27, 14 19:16:06 by
+  May 27, 14 19:23:14 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>
