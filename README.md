@@ -17,12 +17,8 @@ grunt
 
 ```
 ## [Доки](http://alexsuslov.github.io/emt/)
-## Тесты
-```
-npm test
-```
+## [Тесты](https://github.com/alexsuslov/emt/blob/master/report.md)
 
-[Ссылка на последний отчет](https://github.com/alexsuslov/emt/blob/master/report.md)
 
 
 
