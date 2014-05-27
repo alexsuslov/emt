@@ -22,7 +22,7 @@ class Rule extends OpenQuote
 
     if m
 
-      @text = @text.replace m[0] , "#{m[1]}#{m[2]}&nbsp;#{m[3]}#{m[5]}"
+      @text = @text.replace m[0] , "#{m[1]}#{m[2]}&nbsp;#{m[3]}#{m[4]}"
 
     !!m
 

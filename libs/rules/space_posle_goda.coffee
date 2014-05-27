@@ -15,7 +15,6 @@ class Rule extends OpenQuote
      /(^|\040|\&nbsp\;)([0-9]{3,4})(год([ауе]|ом)?)([^a-zа-яё]|$)/i
     ]
 
-
     for re, idx in rex
       m = @text.match re
       break if m
