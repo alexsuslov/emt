@@ -38,7 +38,8 @@ grunt
 
 ```
 
-Выдает
+Выдает:
+
 ![test](https://raw.githubusercontent.com/alexsuslov/emt/master/img/EMT_test.jpg)
   
 
