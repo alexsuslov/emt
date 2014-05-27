@@ -23,7 +23,7 @@ class Rule extends OpenQuote
     if m
 
       str = "&nbsp;#{m[2]}"
-      str += $m[3] unless m[3] == "&nbsp;"
+      str += m[3] unless m[3] == "&nbsp;"
 
       @text = @text.replace m[0] , str
 
