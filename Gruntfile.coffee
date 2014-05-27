@@ -97,24 +97,26 @@ module.exports = (grunt)->
         files: ['emt.coffee','libs/**/*.coffee']
         tasks: [
           'coffeelint'
-          'mochaTest'
           'coffee'
           'codo'
+          'mochaTest:spec'
           # 'uglify'
           # 'concat'
         ]
 
 
-  grunt.registerTask('rep', [
+  grunt.registerTask('default', [
+    'coffeelint'
+    'coffee'
+    # 'uglify'
+    # 'concat'
+    'codo'
     'mochaTest:md'
     ])
-  grunt.registerTask('default', [
+  grunt.registerTask('serve', [
     'coffeelint'
     'mochaTest:spec'
     'coffee'
-    'codo'
-    # 'uglify'
-    # 'concat'
     'connect'
     'watch'
     ])
