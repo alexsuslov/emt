@@ -4,7 +4,6 @@ math_chars = ['-, =, +, >, <']
 
 # Abbr
 
-nbsp_before_unit = ' 1 м, 2 см, 10 м2 '
 nbsp_before_weight_unit = 'г, кг, мг'
 nobr_before_unit_volt = ' В '
 nbsp_org_abbr = ' ООО,ЗАО,ОАО,НИИ,ПБОЮЛ '

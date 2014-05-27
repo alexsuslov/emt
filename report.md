@@ -431,6 +431,10 @@ return assert.equal(' 1&nbsp;см. 1&nbsp;м&sup2; ', rule.text);
 
 <a name="rules"></a>
 # Rules
+<a name="rules-----------"></a>
+## Замена символов и привязка сокращений в весовых величинах: г, кг, мг…
+<a name="rules"></a>
+# Rules
 <a name="rules-----dpi-lpi"></a>
 ## Расстановка пробелов перед сокращениями dpi, lpi
  300 dpi 150 lpi .
