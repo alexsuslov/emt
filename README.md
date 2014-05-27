@@ -29,12 +29,14 @@ grunt
 ```
 <p class='emt'>привет "привет" привет</p>
 
-<script src="dist/emt.js"></script>
-<script>
-  $(function() {
-    $('p.emt').emt();
+$(function() {
+  var $p = $('p.emt');
+  var emt = $p.emt();
+  $('textarea.emt').on('keyup' ,function(e){
+    $p.html( e.target.value);
+    emt = $('p.emt').emt();
   });
-</script>
+});
 
 ```
 
