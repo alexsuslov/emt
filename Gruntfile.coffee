@@ -26,7 +26,7 @@ module.exports = (grunt)->
             'libs/emt_lib.coffee'
             'libs/rules/open_quote.coffee'
             'libs/rules/close_quote.coffee'
-
+            'libs/rules/quote.coffee'
             # 'libs/rules/*.coffee'
             # 'emt.coffee'
           ]
@@ -90,7 +90,7 @@ module.exports = (grunt)->
     watch:
       config:
         files: ['Gruntfile.coffee']
-        tasks: ['coffeelint']
+        tasks: ['coffeelint','coffee']
       tests:
         files: ['test/*.coffee']
         tasks: ['coffeelint','mochaTest:spec' ]
@@ -111,7 +111,7 @@ module.exports = (grunt)->
     ])
   grunt.registerTask('default', [
     'coffeelint'
-    'mochaTest'
+    'mochaTest:spec'
     'coffee'
     'codo'
     # 'uglify'

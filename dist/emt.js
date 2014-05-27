@@ -1,5 +1,5 @@
 (function() {
-  var App, CloseQuote, EMTLib, OpenQuote, chars_table, html4_char, isClient, module,
+  var App, CloseQuote, EMTLib, OpenQuote, Quote, chars_table, html4_char, isClient, module,
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -13,24 +13,18 @@
       Lib: {},
       Rules: {},
       apply: function() {
-        this.Rules.openQuote.apply();
-        this.text = this.Rules.openQuote.text;
-        this.Rules.closeQuote.text = this.text;
-        this.Rules.closeQuote.apply();
-        this.text = this.Rules.closeQuote.text;
+        this.Rules.quote.text = this.text;
+        this.Rules.quote.apply();
+        this.text = this.Rules.quote.text;
         return this.el.text(this.text);
       },
       init: function(opt, el) {
         this.opt = opt;
         this.el = el;
         this.text = el.text();
-        this.Rules.openQuote = new OpenQuote({
-          Lib: this.Lib,
-          text: this.text
-        });
-        this.Rules.closeQuote = new CloseQuote({
-          Lib: this.Lib,
-          text: this.text
+        this.Rules.quote = new Quote({
+          Rules: this.Rules,
+          Lib: this.Lib
         });
         return this.apply();
       }
@@ -963,6 +957,10 @@
 
   module.exports = OpenQuote;
 
+  if (typeof window !== 'undefined') {
+    App.Rules.OpenQuote = OpenQuote;
+  }
+
   if (!OpenQuote) {
     OpenQuote = require('./open_quote');
   }
@@ -1000,6 +998,103 @@
   })(OpenQuote);
 
   module.exports = CloseQuote;
+
+  if (typeof window !== 'undefined') {
+    App.Rules.CloseQuote = CloseQuote;
+  }
+
+
+  /*
+   *# Групповой Объект правил "Кавычки"
+  используется как объект расширения для остальных груп правил
+   */
+
+  Quote = (function() {
+    Quote.prototype.description = "Кавычки";
+
+    Quote.prototype.version = '0.0.0';
+
+    Quote.prototype.configName = 'Quote';
+
+    Quote.prototype.config = {
+      on: true,
+      log: false,
+      debug: false
+    };
+
+    Quote.prototype.rules = [];
+
+    Quote.prototype.order = ["OpenQuote", "CloseQuote"];
+
+
+    /*
+    Конструктор
+    - Настраивает конфиг
+    - Замыкает на себя text
+    - Создает список правил согласно прядка
+    
+    @param opt[object]
+    - Lib[Object] обязательно
+    - text[String] строка
+     */
+
+    function Quote(opt) {
+      var ruleName, _i, _len, _ref, _ref1;
+      this.opt = opt;
+      if ((_ref = this.opt.config) != null ? _ref[this.configName] : void 0) {
+        this.config = this.opt.config[this.configName];
+      }
+      if (this.opt.Rules) {
+        this.Rules = this.opt.Rules;
+      }
+      if (!this.config.on) {
+        return;
+      }
+      if (this.opt.Lib) {
+        this.Lib = this.opt.Lib;
+      } else {
+        this.logger('error', 'No lib');
+      }
+      if (this.opt.text) {
+        this.text = this.opt.text;
+      }
+      _ref1 = this.order;
+      for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+        ruleName = _ref1[_i];
+        if (this.Rules[ruleName]) {
+          this.rules.push(new this.Rules[ruleName]({
+            Lib: this.Lib
+          }));
+        }
+      }
+      this;
+    }
+
+    Quote.prototype.apply = function() {
+      var rule, _i, _len, _ref, _results;
+      if (!this.config.on) {
+        return;
+      }
+      _ref = this.rules;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        rule = _ref[_i];
+        rule.text = this.text;
+        rule.apply();
+        _results.push(this.text = rule.text);
+      }
+      return _results;
+    };
+
+    return Quote;
+
+  })();
+
+  module.exports = Quote;
+
+  if (typeof window !== 'undefined') {
+    App.Rules.Quote = Quote;
+  }
 
 }).call(this);
 

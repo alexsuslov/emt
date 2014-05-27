@@ -26,6 +26,9 @@ class CloseQuote extends OpenQuote
 
     !!m
 
-# module.exports = CloseQuote
 
 module.exports = CloseQuote
+
+if typeof window isnt 'undefined'
+  App.Rules.CloseQuote = CloseQuote
+

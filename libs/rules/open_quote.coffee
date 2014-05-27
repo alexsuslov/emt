@@ -117,3 +117,6 @@ class OpenQuote
 
 module.exports = OpenQuote
 
+if typeof window isnt 'undefined'
+  App.Rules.OpenQuote = OpenQuote
+

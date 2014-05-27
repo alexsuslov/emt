@@ -2,6 +2,7 @@ isClient = !(typeof window is 'undefined')
 
 if isClient
   module = {}
+
   App =
     text:''
     Lib:{}
@@ -9,13 +10,9 @@ if isClient
 
 
     apply:->
-
-      @Rules.openQuote.apply()
-      @text = @Rules.openQuote.text
-
-      @Rules.closeQuote.text = @text
-      @Rules.closeQuote.apply()
-      @text = @Rules.closeQuote.text
+      @Rules.quote.text = @text
+      @Rules.quote.apply()
+      @text = @Rules.quote.text
 
       @el.text @text
 
@@ -24,13 +21,9 @@ if isClient
       @text = el.text()
 
       # Quote
-      @Rules.openQuote = new OpenQuote
-        Lib: @Lib
-        text: @text
-
-      @Rules.closeQuote = new CloseQuote
-        Lib: @Lib
-        text: @text
+      @Rules.quote = new Quote
+        Rules:  @Rules
+        Lib:    @Lib
 
       @apply()
 

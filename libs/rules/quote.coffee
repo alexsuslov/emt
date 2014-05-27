@@ -1,6 +1,3 @@
-# Зависимости
-Rules = require( './rules')
-
 ###
 ## Групповой Объект правил "Кавычки"
 используется как объект расширения для остальных груп правил
@@ -13,21 +10,21 @@ class Quote
 
   # Конфиг для теста
   config:
-    on: true
-    log: true
-    debug:true
+    on:     on
+    log:    off
+    debug:  off
 
   # Очередь правил
   rules:[]
 
   # Порядок выполнения
   order:[
-      "quotes_outside_a"
-      "open_quote"
-      "close_quote"
-      "close_quote_adv"
-      "open_quote_adv"
-      "quotation"
+      # "quotes_outside_a"
+      "OpenQuote"
+      "CloseQuote"
+      # "close_quote_adv"
+      # "open_quote_adv"
+      # "quotation"
     ]
 
   ###
@@ -42,8 +39,9 @@ class Quote
   ###
   constructor:(@opt)->
     @config = @opt.config[@configName] if @opt.config?[@configName]
+    @Rules = @opt.Rules if @opt.Rules
     # Уходим если группа правил отключена
-    return unless @config[@configName].on
+    return unless @config.on
 
     if @opt.Lib
       @Lib = @opt.Lib
@@ -54,19 +52,22 @@ class Quote
 
     # Добавляю правила в очередь
     for ruleName in @order
-      if Rules[ruleName]
-        @rules.push new Rules[ruleName]
+      if @Rules[ruleName]
+        @rules.push new @Rules[ruleName]
           Lib: @Lib
-          text: @text
     @
 
 
   # Применение правил @text
   apply:->
     # Уходим если группа правил отключена
-    return unless @config[@configName].on
+    return unless @config.on
     for rule in @rules
+      rule.text = @text
       rule.apply()
-    @text
+      @text = rule.text
 
-exports.module = Quote
+module.exports = Quote
+
+if typeof window isnt 'undefined'
+  App.Rules.Quote = Quote
