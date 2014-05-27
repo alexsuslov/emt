@@ -55,17 +55,19 @@ grunt
 <li>как jQuery плагин</li>
 </ul><p>Использование:</p><pre><code>&lt;p class=&#39;emt&#39;&gt;привет &quot;привет&quot; привет&lt;/p&gt;
 
-&lt;script src=&quot;dist/emt.js&quot;&gt;&lt;/script&gt;
-&lt;script&gt;
-  $(function() {
-    $(&#39;p.emt&#39;).emt();
+$(function() {
+  var $p = $(&#39;p.emt&#39;);
+  var emt = $p.emt();
+  $(&#39;textarea.emt&#39;).on(&#39;keyup&#39; ,function(e){
+    $p.html( e.target.value);
+    emt = $(&#39;p.emt&#39;).emt();
   });
-&lt;/script&gt;
+});
 </code></pre><p>Выдает:</p><p><img src="https://raw.githubusercontent.com/alexsuslov/emt/master/img/EMT_test.jpg" alt="test"></p>
       </div>
     </div>
     <div id='footer'>
-  May 27, 14 17:14:27 by
+  May 27, 14 18:39:46 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>
