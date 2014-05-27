@@ -89,5 +89,34 @@ class OpenQuote
         m[1] + self.Lib.QUOTE_FIRS_OPEN + m[3]
 
     !!m
+  ###
+  Создание защищенного тега с содержимым
+
+  @see  EMT_lib::build_safe_tag
+  @param  [string] $content
+  @param  [string] $tag
+  @param  [array] $attribute
+  @return   [string]
+  ###
+  tag:(content, tag, attribute )->
+    attribute ?= {}
+    classname = ''
+    tag ?= 'span'
+    classname = attribute.class if attribute.class
+    if classname is "nowrap"
+      unless @is_on 'nowrap'
+        tag = "nobr"
+        attribute = {}
+
+    style_inline = @classes[classname] if @classes?[classname]
+    attribute['__style'] = style_inline if style_inline
+
+    classname = @class_layout_prefix + classname if @class_layout_prefix
+    attribute.class = classname
+
+    if @use_layout
+      layout = @use_layout
+
+    return @Lib.build_safe_tag content, tag, attribute, layout
 
 module.exports = OpenQuote

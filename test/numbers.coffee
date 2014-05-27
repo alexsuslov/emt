@@ -33,6 +33,16 @@ tests = [
     text: '§ 1'
     res: "&sect;&thinsp;1"
   }
+  {
+    obj: require( '../libs/rules/numeric_sub')
+    text: " test_3 "
+    res: " test<c3Vi=><c21hbGw==>3</c21hbGw==></c3Vi=> "
+  }
+  {
+    obj: require( '../libs/rules/numeric_sup')
+    text: " test^3 "
+    res: " test<c3Vw=><c21hbGw==>3</c21hbGw==></c3Vw=> "
+  }
 
 
 ]

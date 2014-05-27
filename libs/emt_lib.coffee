@@ -201,7 +201,7 @@ class EMTLib
 
     classname = ""
     if Object.keys(attribute).length
-      if (layout & LAYOUT_STYLE)
+      if (layout & @LAYOUT_STYLE)
         if('__style' in attribute and attribute['__style'])
           st = @trim attribute['style']
           st += ";" if st[-1] != ";"
@@ -222,7 +222,7 @@ class EMTLib
 
         htmlTag += " #{attr}=\"#{value}\""
 
-    if (layout & LAYOUT_CLASS ) and classname
+    if (layout & @LAYOUT_CLASS ) and classname
       htmlTag += " class=\"#{classname}\""
 
     "<" + @encrypt_tag(htmlTag) + ">" + content + "</" + @encrypt_tag(tag) + ">"

@@ -21,8 +21,7 @@ class Rule extends OpenQuote
       break if m
 
     if m
-      # '$m[1] . $this->tag($this->tag($m[2],"small"),"sup") . $m[3]'
-      # str = [ m[1], m[2], m[3], "&times;", m[7], m[8] ].join ''
+      str = m[1] + @tag( @tag( m[2], "small"), "sup") + m[3]
 
       @text = @text.replace m[0] , str
 
