@@ -81,13 +81,9 @@ class OpenQuote
     re = /(^|\(|\s|\>|-)(\"|\\\")(\S+)/i
     m = @text.match re
     if m
+      str = m[1] + @Lib.QUOTE_FIRS_OPEN + m[3]
       # Замена
-      @text = @text.replace re , (str)->
-        self.debug str
-        self.debug m
-
-        m[1] + self.Lib.QUOTE_FIRS_OPEN + m[3]
-
+      @text = @text.replace re , str
     !!m
   ###
   Создание защищенного тега с содержимым
@@ -120,3 +116,4 @@ class OpenQuote
     return @Lib.build_safe_tag content, tag, attribute, layout
 
 module.exports = OpenQuote
+

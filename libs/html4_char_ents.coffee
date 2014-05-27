@@ -1,5 +1,5 @@
 # взято с http://www.w3.org/TR/html4/sgml/entities.html
-exports.module =
+html4_char =
     'nbsp' : 160,
     'iexcl' : 161,
     'cent' : 162,
@@ -252,3 +252,9 @@ exports.module =
     'lsaquo' : 8249,
     'rsaquo' : 8250,
     'euro' : 8364,
+
+if window?
+  window.html4_char = html4_char
+else
+  exports.module = html4_char
+

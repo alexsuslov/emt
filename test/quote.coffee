@@ -6,12 +6,12 @@ tests = [
   {
     obj: require( '../libs/rules/open_quote')
     text: "привет \"test\" привет. привет \"test\" привет"
-    res: "привет &laquo;test\" привет. привет &laquo;test\" привет"
+    res: "привет «test\" привет. привет «test\" привет"
   }
   {
     obj: require( '../libs/rules/close_quote')
     text: "привет \"test\" привет"
-    res: "привет \"test&raquo; привет"
+    res: "привет \"test» привет"
   }
 
 ]

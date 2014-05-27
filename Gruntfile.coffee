@@ -12,17 +12,24 @@ module.exports = (grunt)->
         'libs/**/*.coffee'
         'emt.coffee'
       ]
-    # coffee:
+    coffee:
       # для браузера
-      # compile:
-      #   options:
-      #     bare: true
-      #     sourceMap: true
-      #   files:
-      #     'dist/ems.js':[
-      #       'libs/*.coffee'
-      #       'emt.coffee'
-      #     ]
+      compile:
+        options:
+          bare: false
+          sourceMap: true
+        files:
+          'dist/emt.js':[
+            'emt.coffee'
+            'libs/chars_table.coffee'
+            'libs/html4_char_ents.coffee'
+            'libs/emt_lib.coffee'
+            'libs/rules/open_quote.coffee'
+            'libs/rules/close_quote.coffee'
+
+            # 'libs/rules/*.coffee'
+            # 'emt.coffee'
+          ]
       # тесты для браузера
       # test:
       #   options:
@@ -73,13 +80,13 @@ module.exports = (grunt)->
     #       'js/emt.min.js'
     #     ]
     #     dest:'js/test.min.js'
-    # connect:
-    #   server:
-    #     options:
-    #       hostname:'localhost'
-    #       port: 9001
-    #       # base: 'www-root'
-    #       livereload: true
+    connect:
+      server:
+        options:
+          hostname:'localhost'
+          port: 9001
+          # base: 'www-root'
+          livereload: true
     watch:
       config:
         files: ['Gruntfile.coffee']
@@ -88,11 +95,11 @@ module.exports = (grunt)->
         files: ['test/*.coffee']
         tasks: ['coffeelint','mochaTest:spec' ]
       app:
-        files: ['libs/**/*.coffee']
+        files: ['emt.coffee','libs/**/*.coffee']
         tasks: [
           'coffeelint'
           'mochaTest'
-          # 'coffee'
+          'coffee'
           'codo'
           # 'uglify'
           # 'concat'
@@ -105,10 +112,10 @@ module.exports = (grunt)->
   grunt.registerTask('default', [
     'coffeelint'
     'mochaTest'
-    # 'coffee'
+    'coffee'
     'codo'
     # 'uglify'
     # 'concat'
-    # 'connect'
+    'connect'
     'watch'
     ])

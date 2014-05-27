@@ -1,5 +1,5 @@
 # Зависимости
-OpenQuote = require( './open_quote')
+OpenQuote = require( './open_quote') unless OpenQuote
 
 ##
 # Правило "Закрывающая кавычка"
@@ -26,5 +26,6 @@ class CloseQuote extends OpenQuote
 
     !!m
 
-module.exports = CloseQuote
+# module.exports = CloseQuote
 
+module.exports = CloseQuote

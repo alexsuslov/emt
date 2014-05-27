@@ -1,4 +1,4 @@
-exports.module =
+chars_table =
   '"' :
     html : [
       '&laquo;', '&raquo;', '&ldquo;', '&lsquo;', '&bdquo;'
@@ -69,3 +69,8 @@ exports.module =
   #Добавление к тегам атрибута 'id', благодаря которому
   #при повторном типографирование текста будут удалены теги,
   #Расставленные данным типографом
+
+if window?
+  window.chars_table = chars_table
+else
+  exports.module = chars_table

@@ -1,16 +1,18 @@
+chars_table = require './chars_table' unless chars_table
+html4_char = require './html4_char_ents' unless html4_char
+
+# Библиотека полезностей
 class EMTLib
 
-  charsTable : require './chars_table'
-
-  html4_char_ents : require './html4_char_ents'
-
+  charsTable : chars_table
+  html4_char_ents : html4_char
   domain_zones:[
     "r","ру","com","ком","org","орг","уа","ua"
     ]
 
   # Типы кавычек
-  QUOTE_FIRS_OPEN : '&laquo;'
-  QUOTE_FIRS_CLOSE : '&raquo;'
+  QUOTE_FIRS_OPEN : '«'
+  QUOTE_FIRS_CLOSE : '»'
   QUOTE_CRAWSE_OPEN : '&bdquo;'
   QUOTE_CRAWSE_CLOSE : '&ldquo;'
 
@@ -285,8 +287,11 @@ class EMTLib
       return @getUnicodeChar @html4_char_ents[entity]
     return false
 
-module.exports =
-  EMTLib: EMTLib
-  emtlib: new EMTLib()
 
+if window?
+  App.Lib = new EMTLib()
 
+else
+  module.exports =
+    EMTLib: EMTLib
+    emtlib: new EMTLib()
