@@ -22,9 +22,9 @@ class Rule extends OpenQuote
       break if m
 
     if m
-      str = $m[1] + @Lib.trim(m[3]) + "&nbsp;"
+      str = m[1] + @Lib.trim(m[3]) + "&nbsp;"
       str += @Lib.trim(m[4]) + "&nbsp;" if m[4]
-      str += $m[5]
+      str += m[5]
 
       @text = @text.replace m[0] , str
 
