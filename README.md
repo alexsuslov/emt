@@ -27,7 +27,8 @@ grunt
 
 Использование:
 ```
-<p class='emt'>привет "привет" привет</p>
+<textarea name="emt" rows="10" class='emt col-lg-12 col-xs-12'></textarea>
+<p class='emt'></p>
 
 $(function() {
   var $p = $('p.emt');
@@ -43,7 +44,26 @@ $(function() {
 Выдает:
 
 ![test](https://raw.githubusercontent.com/alexsuslov/emt/master/img/EMT_test.jpg)
-  
+
+
+<textarea name="emt" rows="10" cols='30'></textarea>
+<p class='emt'></p>
+<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script scr='https://raw.githubusercontent.com/alexsuslov/emt/master/dist/emt.js'></script>
+<script>
+  $(function() {
+    var $p = $('p.emt');
+    var $t = $('textarea.emt');
+    $t.html( $p.html());
+    var emt = $p.emt();
+    $t.on('keyup' ,function(e){
+      $p.html( e.target.value);
+      emt.apply();
+    });
+  });
+</script>
+
+ 
 
 
 

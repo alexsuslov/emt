@@ -4,10 +4,10 @@ Quote = require( './quote') unless Quote
 ###
 ## Групповой Объект правил "Сокращения"
 ###
-class Dash extends Quote
-  description: "Дефисы и тире"
+class Etc extends Quote
+  description: "Прочее"
   version:'0.0.0'
-  configName:'Dash'
+  configName:'EmtDate'
 
 
   config:
@@ -20,16 +20,9 @@ class Dash extends Quote
 
   # Порядок выполнения
   order:[
-    "mdash_symbol_to_html_mdash",
-    "mdash",
-    "mdash_2",
-    "mdash_3",
-    "iz_za_pod",
-    "to_libo_nibud",
-    "koe_kak",
-    "ka_de_kas"
+    "acute_accent"
     ]
 
-module.exports = Dash
+module.exports = Etc
 if typeof window isnt 'undefined'
-  App.Rules['Dash'] = Dash
+  App.Rules['Etc'] = Etc

@@ -12,20 +12,26 @@ if isClient
       'Quote'
       'Abbr'
       'Numbers'
+      'Dash'
+      'EmtDate'
+      'Etc'
+      'NoBr'
     ]
 
 
     apply:->
+      @text = @el.html()
+
       for rule in @rules
         rule.text = @text
         rule.apply()
         @text = rule.text
 
       @el.html @text
+      @
 
 
     init: (@opt, @el)->
-      @text = el.html()
 
       # Добавляю правила в очередь
       for ruleName in @order
@@ -35,6 +41,7 @@ if isClient
             Lib:    @Lib
 
       @apply()
+      @
 
   window.App = App
 
@@ -1182,7 +1189,68 @@ class Dash extends Quote
 
 module.exports = Dash
 if typeof window isnt 'undefined'
-  App.Rules['Dash'] = Rule
+  App.Rules['Dash'] = Dash
+
+# Зависимости
+Quote = require( './quote') unless Quote
+
+###
+## Групповой Объект правил "Сокращения"
+###
+class EmtDate extends Quote
+  description: "Даты и дни"
+  version:'0.0.0'
+  configName:'EmtDate'
+
+
+  config:
+    on: true
+    log: true
+    debug:true
+
+  # Очередь правил
+  rules:[]
+
+  # Порядок выполнения
+  order:[
+    "years",
+    "mdash_month_interval",
+    "space_posle_goda",
+    "nbsp_posle_goda_abbr",
+    ]
+
+module.exports = EmtDate
+if typeof window isnt 'undefined'
+  App.Rules['EmtDate'] = EmtDate
+
+# Зависимости
+Quote = require( './quote') unless Quote
+
+###
+## Групповой Объект правил "Сокращения"
+###
+class Etc extends Quote
+  description: "Прочее"
+  version:'0.0.0'
+  configName:'EmtDate'
+
+
+  config:
+    on: true
+    log: true
+    debug:true
+
+  # Очередь правил
+  rules:[]
+
+  # Порядок выполнения
+  order:[
+    "acute_accent"
+    ]
+
+module.exports = Etc
+if typeof window isnt 'undefined'
+  App.Rules['Etc'] = Etc
 
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
@@ -2036,6 +2104,38 @@ module.exports = Rule
 
 if typeof window isnt 'undefined'
   App.Rules['nbsp_v_kak_to'] = Rule
+
+# Зависимости
+Quote = require( './quote') unless Quote
+
+###
+## Групповой Объект правил "Сокращения"
+###
+class NoBr extends Quote
+  description: "Неразрывные конструкции"
+  version:'0.0.0'
+  configName:'NoBr'
+
+
+  config:
+    on: true
+    log: true
+    debug:true
+
+  # Очередь правил
+  rules:[]
+
+  # Порядок выполнения
+  order:[
+    "super_nbsp"
+    "nbsp_v_kak_to"
+    "nbsp_before_particle"
+    "nbsp_celcius"
+    ]
+
+module.exports = NoBr
+if typeof window isnt 'undefined'
+  App.Rules['NoBr'] = NoBr
 
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote

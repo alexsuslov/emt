@@ -31,10 +31,12 @@
 
         $(function() {
           var $p = $('p.emt');
+          var $t = $('textarea.emt');
+          $t.html( $p.html());
           var emt = $p.emt();
-          $('textarea.emt').on('keyup' ,function(e){
+          $t.on('keyup' ,function(e){
             $p.html( e.target.value);
-            emt = $('p.emt').emt();
+            emt.apply();
           });
         });
         </script>

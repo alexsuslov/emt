@@ -12,20 +12,26 @@ if isClient
       'Quote'
       'Abbr'
       'Numbers'
+      'Dash'
+      'EmtDate'
+      'Etc'
+      'NoBr'
     ]
 
 
     apply:->
+      @text = @el.html()
+
       for rule in @rules
         rule.text = @text
         rule.apply()
         @text = rule.text
 
       @el.html @text
+      @
 
 
     init: (@opt, @el)->
-      @text = el.html()
 
       # Добавляю правила в очередь
       for ruleName in @order
@@ -35,6 +41,7 @@ if isClient
             Lib:    @Lib
 
       @apply()
+      @
 
   window.App = App
 

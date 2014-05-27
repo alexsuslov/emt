@@ -4,10 +4,10 @@ Quote = require( './quote') unless Quote
 ###
 ## Групповой Объект правил "Сокращения"
 ###
-class Dash extends Quote
-  description: "Дефисы и тире"
+class NoBr extends Quote
+  description: "Неразрывные конструкции"
   version:'0.0.0'
-  configName:'Dash'
+  configName:'NoBr'
 
 
   config:
@@ -20,16 +20,12 @@ class Dash extends Quote
 
   # Порядок выполнения
   order:[
-    "mdash_symbol_to_html_mdash",
-    "mdash",
-    "mdash_2",
-    "mdash_3",
-    "iz_za_pod",
-    "to_libo_nibud",
-    "koe_kak",
-    "ka_de_kas"
+    "super_nbsp"
+    "nbsp_v_kak_to"
+    "nbsp_before_particle"
+    "nbsp_celcius"
     ]
 
-module.exports = Dash
+module.exports = NoBr
 if typeof window isnt 'undefined'
-  App.Rules['Dash'] = Dash
+  App.Rules['NoBr'] = NoBr

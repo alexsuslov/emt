@@ -1,5 +1,5 @@
 (function() {
-  var Abbr, App, Dash, EMTLib, Numbers, OpenQuote, OpenQuoteAdv, Quote, Rule, chars_table, html4_char, isClient, module,
+  var Abbr, App, Dash, EMTLib, EmtDate, Etc, NoBr, Numbers, OpenQuote, OpenQuoteAdv, Quote, Rule, chars_table, html4_char, isClient, module,
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -13,9 +13,10 @@
       text: '',
       Lib: {},
       Rules: {},
-      order: ['Quote', 'Abbr', 'Numbers'],
+      order: ['Quote', 'Abbr', 'Numbers', 'Dash', 'EmtDate', 'Etc', 'NoBr'],
       apply: function() {
         var rule, _i, _len, _ref;
+        this.text = this.el.html();
         _ref = this.rules;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           rule = _ref[_i];
@@ -23,13 +24,13 @@
           rule.apply();
           this.text = rule.text;
         }
-        return this.el.html(this.text);
+        this.el.html(this.text);
+        return this;
       },
       init: function(opt, el) {
         var ruleName, _i, _len, _ref;
         this.opt = opt;
         this.el = el;
-        this.text = el.html();
         _ref = this.order;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           ruleName = _ref[_i];
@@ -40,7 +41,8 @@
             }));
           }
         }
-        return this.apply();
+        this.apply();
+        return this;
       }
     };
     window.App = App;
@@ -1444,7 +1446,91 @@
   module.exports = Dash;
 
   if (typeof window !== 'undefined') {
-    App.Rules['Dash'] = Rule;
+    App.Rules['Dash'] = Dash;
+  }
+
+  if (!Quote) {
+    Quote = require('./quote');
+  }
+
+
+  /*
+   *# Групповой Объект правил "Сокращения"
+   */
+
+  EmtDate = (function(_super) {
+    __extends(EmtDate, _super);
+
+    function EmtDate() {
+      return EmtDate.__super__.constructor.apply(this, arguments);
+    }
+
+    EmtDate.prototype.description = "Даты и дни";
+
+    EmtDate.prototype.version = '0.0.0';
+
+    EmtDate.prototype.configName = 'EmtDate';
+
+    EmtDate.prototype.config = {
+      on: true,
+      log: true,
+      debug: true
+    };
+
+    EmtDate.prototype.rules = [];
+
+    EmtDate.prototype.order = ["years", "mdash_month_interval", "space_posle_goda", "nbsp_posle_goda_abbr"];
+
+    return EmtDate;
+
+  })(Quote);
+
+  module.exports = EmtDate;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['EmtDate'] = EmtDate;
+  }
+
+  if (!Quote) {
+    Quote = require('./quote');
+  }
+
+
+  /*
+   *# Групповой Объект правил "Сокращения"
+   */
+
+  Etc = (function(_super) {
+    __extends(Etc, _super);
+
+    function Etc() {
+      return Etc.__super__.constructor.apply(this, arguments);
+    }
+
+    Etc.prototype.description = "Прочее";
+
+    Etc.prototype.version = '0.0.0';
+
+    Etc.prototype.configName = 'EmtDate';
+
+    Etc.prototype.config = {
+      on: true,
+      log: true,
+      debug: true
+    };
+
+    Etc.prototype.rules = [];
+
+    Etc.prototype.order = ["acute_accent"];
+
+    return Etc;
+
+  })(Quote);
+
+  module.exports = Etc;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['Etc'] = Etc;
   }
 
   if (!OpenQuote) {
@@ -2487,6 +2573,48 @@
 
   if (typeof window !== 'undefined') {
     App.Rules['nbsp_v_kak_to'] = Rule;
+  }
+
+  if (!Quote) {
+    Quote = require('./quote');
+  }
+
+
+  /*
+   *# Групповой Объект правил "Сокращения"
+   */
+
+  NoBr = (function(_super) {
+    __extends(NoBr, _super);
+
+    function NoBr() {
+      return NoBr.__super__.constructor.apply(this, arguments);
+    }
+
+    NoBr.prototype.description = "Неразрывные конструкции";
+
+    NoBr.prototype.version = '0.0.0';
+
+    NoBr.prototype.configName = 'NoBr';
+
+    NoBr.prototype.config = {
+      on: true,
+      log: true,
+      debug: true
+    };
+
+    NoBr.prototype.rules = [];
+
+    NoBr.prototype.order = ["super_nbsp", "nbsp_v_kak_to", "nbsp_before_particle", "nbsp_celcius"];
+
+    return NoBr;
+
+  })(Quote);
+
+  module.exports = NoBr;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['NoBr'] = NoBr;
   }
 
   if (!OpenQuote) {
