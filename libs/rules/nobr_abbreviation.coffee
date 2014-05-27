@@ -1,6 +1,5 @@
 # Зависимости
-OpenQuote = require( './open_quote')
-
+OpenQuote = require( './open_quote') unless OpenQuote
 ##
 # Правило "Закрывающая кавычка"
 ##
@@ -31,3 +30,5 @@ class Rule extends OpenQuote
 
 module.exports = Rule
 
+if typeof window isnt 'undefined'
+  App.Rules['nobr_abbreviation'] = Rule

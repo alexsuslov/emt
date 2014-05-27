@@ -1,5 +1,5 @@
 # Зависимости
-OpenQuote = require( './open_quote')
+OpenQuote = require( './open_quote') unless OpenQuote
 
 ##
 # Правило
@@ -32,3 +32,5 @@ class Rule extends OpenQuote
 
 module.exports = Rule
 
+if typeof window isnt 'undefined'
+  App.Rules['thinsp_between_number_triads'] = Rule

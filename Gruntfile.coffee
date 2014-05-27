@@ -24,11 +24,10 @@ module.exports = (grunt)->
             'libs/chars_table.coffee'
             'libs/html4_char_ents.coffee'
             'libs/emt_lib.coffee'
-            'libs/rules/open_quote.coffee'
-            'libs/rules/close_quote.coffee'
-            'libs/rules/quote.coffee'
-            # 'libs/rules/*.coffee'
-            # 'emt.coffee'
+            'libs/rules/dep/*.coffee'
+            'libs/rules/*.coffee'
+            '!libs/rules/quote.coffee'
+            '!libs/rules/open_quote.coffee'
           ]
       # тесты для браузера
       # test:

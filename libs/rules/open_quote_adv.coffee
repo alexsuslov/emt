@@ -1,13 +1,13 @@
 # Зависимости
-Rules = require( './rules')
+OpenQuote = require( './open_quote') unless OpenQuote
 
 ###
 ## Открывающая кавычка особые случаи
 ###
-class OpenQuoteAdv extends Rules.open_quote
+class OpenQuoteAdv extends OpenQuote
   description: "Открывающая кавычка особые случаи"
   version:'0.0.0'
-  configName:'OpenQuoteAdv'
+  configName:'open_quote_adv'
 
   apply:->
     return if @config.on
@@ -30,4 +30,5 @@ class OpenQuoteAdv extends Rules.open_quote
 
 module.exports = OpenQuoteAdv
 
-
+if typeof window isnt 'undefined'
+  App.Rules['open_quote_adv'] = Rule

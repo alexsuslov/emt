@@ -1,13 +1,13 @@
 # Зависимости
-Rules = require( './rules')
+OpenQuote = require( './open_quote') unless OpenQuote
 
 ###
 ## Правило "Закрывающая кавычка особые случаи"
 ###
-class CloseQuoteAdv extends Rules.open_quote
+class Rule extends OpenQuote
   description: "Закрывающая кавычка особые случаи"
   version:'0.0.0'
-  configName:'CloseQuoteAdv'
+  configName:'close_quote_adv'
 
   apply:->
     return if @config.on
@@ -68,5 +68,7 @@ class CloseQuoteAdv extends Rules.open_quote
       '>&raquo;' + m[2]
     @
 
-module.exports = CloseQuoteAdv
+module.exports = Rule
 
+if typeof window isnt 'undefined'
+  App.Rules['close_quote_adv'] = Rule

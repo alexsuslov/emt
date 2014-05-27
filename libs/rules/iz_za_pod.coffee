@@ -1,5 +1,5 @@
 # Зависимости
-OpenQuote = require( './open_quote')
+OpenQuote = require( './open_quote') unless OpenQuote
 
 ##
 # Правило "Закрывающая кавычка"
@@ -7,7 +7,7 @@ OpenQuote = require( './open_quote')
 class Rule extends OpenQuote
   description: 'Расстановка дефисов между из-за, из-под'
   version:'0.0.0'
-  configName:'izZaPod'
+  configName:'iz_za_pod'
 
   replace:->
     # return if @config.on
@@ -32,3 +32,5 @@ class Rule extends OpenQuote
 
 module.exports = Rule
 
+if typeof window isnt 'undefined'
+  App.Rules['iz_za_pod'] = Rule

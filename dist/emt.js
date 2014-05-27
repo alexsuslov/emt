@@ -1,5 +1,5 @@
 (function() {
-  var App, CloseQuote, EMTLib, OpenQuote, Quote, chars_table, html4_char, isClient, module,
+  var Abbr, App, Dash, EMTLib, OpenQuote, OpenQuoteAdv, Quote, Rule, chars_table, html4_char, isClient, module,
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -16,13 +16,20 @@
         this.Rules.quote.text = this.text;
         this.Rules.quote.apply();
         this.text = this.Rules.quote.text;
-        return this.el.text(this.text);
+        this.Rules.abbr.text = this.text;
+        this.Rules.abbr.apply();
+        this.text = this.Rules.abbr.text;
+        return this.el.html(this.text);
       },
       init: function(opt, el) {
         this.opt = opt;
         this.el = el;
-        this.text = el.text();
-        this.Rules.quote = new Quote({
+        this.text = el.html();
+        this.Rules.quote = new this.Rules.Quote({
+          Rules: this.Rules,
+          Lib: this.Lib
+        });
+        this.Rules.abbr = new this.Rules.Abbr({
           Rules: this.Rules,
           Lib: this.Lib
         });
@@ -802,7 +809,7 @@
 
     OpenQuote.prototype.version = '0.0.0';
 
-    OpenQuote.prototype.configName = 'OpenQuote';
+    OpenQuote.prototype.configName = 'open_quote';
 
     OpenQuote.prototype.text = '';
 
@@ -958,49 +965,7 @@
   module.exports = OpenQuote;
 
   if (typeof window !== 'undefined') {
-    App.Rules.OpenQuote = OpenQuote;
-  }
-
-  if (!OpenQuote) {
-    OpenQuote = require('./open_quote');
-  }
-
-  CloseQuote = (function(_super) {
-    __extends(CloseQuote, _super);
-
-    function CloseQuote() {
-      return CloseQuote.__super__.constructor.apply(this, arguments);
-    }
-
-    CloseQuote.prototype.description = "Закрывающая кавычка";
-
-    CloseQuote.prototype.version = '0.0.0';
-
-    CloseQuote.prototype.configName = 'CloseQuote';
-
-    CloseQuote.prototype.apply = function() {
-      var m, re, self;
-      self = this;
-      re = /([a-zа-яё0-9]|\.|\&hellip\;|\!|\?|\>|\)|\:)(\"+)(\.|\&hellip\;|\;|\:|\?|\!|\,|\s|\)|\<\/|$)/i;
-      m = this.text.match(re);
-      if (m) {
-        this.text = this.text.replace(re, function(str) {
-          self.debug(str);
-          self.debug(m);
-          return m[1] + self.Lib.QUOTE_FIRS_CLOSE + m[3];
-        });
-      }
-      return !!m;
-    };
-
-    return CloseQuote;
-
-  })(OpenQuote);
-
-  module.exports = CloseQuote;
-
-  if (typeof window !== 'undefined') {
-    App.Rules.CloseQuote = CloseQuote;
+    App.Rules['open_quote'] = OpenQuote;
   }
 
 
@@ -1024,7 +989,7 @@
 
     Quote.prototype.rules = [];
 
-    Quote.prototype.order = ["OpenQuote", "CloseQuote"];
+    Quote.prototype.order = ["open_quote", "close_quote"];
 
 
     /*
@@ -1094,6 +1059,2449 @@
 
   if (typeof window !== 'undefined') {
     App.Rules.Quote = Quote;
+  }
+
+  if (!Quote) {
+    Quote = require('./quote');
+  }
+
+
+  /*
+   *# Групповой Объект правил "Сокращения"
+   */
+
+  Abbr = (function(_super) {
+    __extends(Abbr, _super);
+
+    function Abbr() {
+      return Abbr.__super__.constructor.apply(this, arguments);
+    }
+
+    Abbr.prototype.description = "Сокращения";
+
+    Abbr.prototype.version = '0.0.0';
+
+    Abbr.prototype.configName = 'Abbr';
+
+    Abbr.prototype.config = {
+      on: true,
+      log: true,
+      debug: true
+    };
+
+    Abbr.prototype.rules = [];
+
+    Abbr.prototype.order = ["nobr_abbreviation", "nobr_acronym", "nobr_sm_im", "nobr_locations", "nbsp_before_unit", "nbsp_before_weight_unit", "nobr_before_unit_volt", "ps_pps", "nobr_vtch_itd_itp", "nbsp_te", "nbsp_money_abbr", "nbsp_org_abbr", "nobr_gost"];
+
+    return Abbr;
+
+  })(Quote);
+
+  module.exports = Abbr;
+
+  if (typeof window !== 'undefined') {
+    App.Rules.Abbr = Abbr;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Акцент';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'acute_accent';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, rex, _i, _len;
+      rex = [/([уеыаоэяиюё])\`([а-яё])/i];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        this.text = this.text.replace(m[0], "" + m[1] + "&#769;" + m[2]);
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['acute_accent'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Замена x на символ × в размерных единицах';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'auto_times_x';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, rex, str, _i, _len;
+      rex = [/(\d+)(x|х)(\d+)(x|х)(\d+)/i];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        str = [m[1], "&times;", m[3], "&times;", m[5]].join('');
+        this.text = this.text.replace(m[0], str);
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['auto_times_x'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Тире между диапозоном веков';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'century_period';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, rex, _i, _len;
+      rex = [/(\040|\t|\&nbsp\;|^)([XIV]{1,5})(-|\&mdash\;)([XIV]{1,5})(( |\&nbsp\;)?(в\.в\.|вв\.|вв|в\.|в))/];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        this.text = this.text.replace(m[0], "" + m[1] + "&#769;" + m[2]);
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['century_period'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = "Закрывающая кавычка";
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'close_quote';
+
+    Rule.prototype.apply = function() {
+      var m, re, self;
+      self = this;
+      re = /([a-zа-яё0-9]|\.|\&hellip\;|\!|\?|\>|\)|\:)(\"+)(\.|\&hellip\;|\;|\:|\?|\!|\,|\s|\)|\<\/|$)/i;
+      m = this.text.match(re);
+      if (m) {
+        this.text = this.text.replace(re, function(str) {
+          self.debug(str);
+          self.debug(m);
+          return m[1] + self.Lib.QUOTE_FIRS_CLOSE + m[3];
+        });
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['close_quote'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+
+  /*
+   *# Правило "Закрывающая кавычка особые случаи"
+   */
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = "Закрывающая кавычка особые случаи";
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'close_quote_adv';
+
+    Rule.prototype.apply = function() {
+      var debug, re, self;
+      if (this.config.on) {
+        return;
+      }
+      self = this;
+      debug = this.config.debug;
+      re = /([a-zа-яё0-9]|\.|\&hellip\;|\!|\?|\>|\)|\:)((\"|\\\"|\&laquo\;)+)(\<[^\>]+\>)(\.|\&hellip\;|\;|\:|\?|\!|\,|\)|\<\/|$| )/i;
+      this.text = this.text.replace(re, function(str) {
+        var cnt, m, str_repeat;
+        if (debug) {
+          self.debug(str);
+        }
+        m = str.match(re);
+        if (debug) {
+          self.debug(m);
+        }
+        cnt = substr_count(m[2], "\"");
+        cnt += substr_count(m[2], "&laquo;");
+        str_repeat = this.Lib.repeat(this.Lib.QUOTE_FIRS_CLOSE, cnt);
+        return m[1] + str_repeat + m[4] + m[5];
+      });
+      re(new RegExp(['/([a-zа-яё0-9]|\.|\&hellip\;|\!|\?|\>|\)|\:)', '(\s+)((\"|\\\")+)(\s+)', '(\.|\&hellip\;|\;|\:|\?|\!|\,|\)|\<\/|$| )/'].join('', 'i')));
+      this.text = this.text.replace(re, function(str) {
+        var cnt, m, str_repeat;
+        if (debug) {
+          self.debug(str);
+        }
+        m = str.match(re);
+        if (debug) {
+          self.debug(m);
+        }
+        cnt = substr_count(m[3], "\"");
+        cnt += substr_count(m[3], "&laquo;");
+        str_repeat = this.Lib.repeat(this.Lib.QUOTE_FIRS_CLOSE, cnt);
+        return m[1] + m[2] + str_repeat + m[5] + m[6];
+      });
+      re = /\>(\&laquo\;)\.($|\s|\<)/i;
+      this.text = this.text.replace(re, function(str) {
+        var m;
+        if (debug) {
+          self.debug(str);
+        }
+        m = str.match(re);
+        if (debug) {
+          self.debug(m);
+        }
+        return '>&raquo;' + m[2];
+      });
+      re = /\>(\&laquo\;)\.($|\s|\<)/i;
+      this.text = this.text.replace(re, function(str) {
+        var m;
+        if (debug) {
+          self.debug(str);
+        }
+        m = str.match(re);
+        if (debug) {
+          self.debug(m);
+        }
+        return '>&raquo;' + m[2];
+      });
+      return this;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['close_quote_adv'] = Rule;
+  }
+
+  if (!Quote) {
+    Quote = require('./quote');
+  }
+
+
+  /*
+   *# Групповой Объект правил "Сокращения"
+   */
+
+  Dash = (function(_super) {
+    __extends(Dash, _super);
+
+    function Dash() {
+      return Dash.__super__.constructor.apply(this, arguments);
+    }
+
+    Dash.prototype.description = "Дефисы и тире";
+
+    Dash.prototype.version = '0.0.0';
+
+    Dash.prototype.configName = 'Dash';
+
+    Dash.prototype.config = {
+      on: true,
+      log: true,
+      debug: true
+    };
+
+    Dash.prototype.rules = [];
+
+    Dash.prototype.order = ["mdash_symbol_to_html_mdash", "mdash", "mdash_2", "mdash_3", "iz_za_pod", "to_libo_nibud", "koe_kak", "ka_de_kas"];
+
+    return Dash;
+
+  })(Quote);
+
+  module.exports = Dash;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['Dash'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Удаление nbsp в nobr/nowrap тэгах';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'expand_no_nbsp_in_nobr';
+
+    Rule.prototype.replace = function() {};
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['expand_no_nbsp_in_nobr'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Обрамление пятисимвольных слов разделенных дефисом в неразрывные блоки';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'hyphen_nowrap';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, rex, _i, _len;
+      rex = [/(\&nbsp\;|\s|\>|^)([a-zа-яё]{1}\-[a-zа-яё]{4}|[a-zа-яё]{2}\-[a-zа-яё]{3}|[a-zа-яё]{3}\-[a-zа-яё]{2}|[a-zа-яё]{4}\-[a-zа-яё]{1}|когда\-то|кое\-как|кой\-кого|вс[её]\-таки|[а-яё]+\-(кась|ка|де))(\s|\.|\,|\!|\?|\&nbsp\;|\&hellip\;|$)/i];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        return this.text = this.text.replace(m[0], "" + m[1] + m[2] + "&nbsp;" + m[4] + "C" + m[6]);
+      }
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['hyphen_nowrap'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Обрамление пятисимвольных слов разделенных дефисом в неразрывные блоки';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'nbsp_celcius';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, rex, _i, _len;
+      rex = [/(\&nbsp\;|\s|\>|^)([a-zа-яё]{1}\-[a-zа-яё]{4}|[a-zа-яё]{2}\-[a-zа-яё]{3}|[a-zа-яё]{3}\-[a-zа-яё]{2}|[a-zа-яё]{4}\-[a-zа-яё]{1}|когда\-то|кое\-как|кой\-кого|вс[её]\-таки|[а-яё]+\-(кась|ка|де))(\s|\.|\,|\!|\?|\&nbsp\;|\&hellip\;|$)/i];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        return this.text = this.text.replace(m[0], "" + m[1] + m[2] + "&nbsp;" + m[4] + "C" + m[6]);
+      }
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['nbsp_celcius'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Объединение IP-адресов';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'ip_address';
+
+    Rule.prototype.replace = function() {};
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['ip_address'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Расстановка дефисов между из-за, из-под';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'iz_za_pod';
+
+    Rule.prototype.replace = function() {
+      var m, re, self;
+      self = this;
+      re = /(\s|\&nbsp\;|\>|^)(из)(\040|\t|\&nbsp\;)\-?(за|под)([\.\,\!\?\:\;]|\040|\&nbsp\;)/i;
+      m = this.text.match(re);
+      if (m) {
+        this.text = this.text.replace(re, function(str) {
+          var reStr;
+          self.debug(str);
+          self.debug(m);
+          reStr = '';
+          if (m[1] !== "&nbsp;") {
+            reStr += m[1];
+          }
+          reStr += "" + m[2] + "-" + m[4];
+          if (m[5] !== "&nbsp;") {
+            return reStr += m[5];
+          }
+        });
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['iz_za_pod'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Расстановка дефисов с частицами ка, де, кась';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'ka_de_kas';
+
+    Rule.prototype.replace = function() {
+      var m, re, reStr, rex, self, use, _i, _len;
+      self = this;
+      use = 0;
+      rex = [/(\s|^|\&nbsp\;|\>)([а-яё]+)(\040|\t|\&nbsp\;)(ка)([\.\,\!\?\;]|\040|\&nbsp\;|$)/i, /(\s|^|\&nbsp\;|\>)([а-яё]+)(\040|\t|\&nbsp\;)(де)([\.\,\!\?\;]|\040|\&nbsp\;|$)/i, /(\s|^|\&nbsp\;|\>)([а-яё]+)(\040|\t|\&nbsp\;)(кась)([\.\,\!\?\;]|\040|\&nbsp\;|$)/i];
+      for (_i = 0, _len = rex.length; _i < _len; _i++) {
+        re = rex[_i];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        reStr = '';
+        if (m[1] !== "&nbsp;") {
+          reStr += m[1];
+        }
+        reStr += "" + m[2] + "-" + m[4];
+        if (m[5] !== "&nbsp;") {
+          reStr += m[5];
+        }
+        this.text = this.text.replace(m[0], reStr);
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['ka_de_kas'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Кое-как, кой-кого, все-таки';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'koe_kak';
+
+    Rule.prototype.replace = function() {
+      var m, re, reStr, rex, self, use, _i, _len;
+      self = this;
+      use = 0;
+      rex = [/(\s|^|\&nbsp\;|\>)(кое)\-?(\040|\t|\&nbsp\;)\-?(как)([\.\,\!\?\;]|\040|\&nbsp\;|$)/i, /(\s|^|\&nbsp\;|\>)(кой)\-?(\040|\t|\&nbsp\;)\-?(кого)([\.\,\!\?\;]|\040|\&nbsp\;|$)/i, /(\s|^|\&nbsp\;|\>)(вс[её])\-?(\040|\t|\&nbsp\;)\-?(таки)([\.\,\!\?\;]|\040|\&nbsp\;|$)/i];
+      for (_i = 0, _len = rex.length; _i < _len; _i++) {
+        re = rex[_i];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        reStr = '';
+        if (m[1] !== "&nbsp;") {
+          reStr += m[1];
+        }
+        reStr += "" + m[2] + "-" + m[4];
+        if (m[5] !== "&nbsp;") {
+          reStr += m[5];
+        }
+        this.text = this.text.replace(m[0], reStr);
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['koe_kak'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Математические знаки больше/меньше/плюс минус/неравно';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'math_chars';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, rep, rex, _i, _len;
+      rex = [/!=/, /\<=/, /([^=]|^)\>=/, /~=/, /\+-/];
+      rep = [
+        function(m) {
+          return '&ne;';
+        }, function(m) {
+          return '&le;';
+        }, function(m) {
+          return "m[1]&ge;";
+        }, function(m) {
+          return '&cong;';
+        }, function(m) {
+          return '&plusmn;';
+        }
+      ];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        this.text = this.text.replace(m[0], rep[idx](m));
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['math_chars'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = "Тире после кавычек, скобочек, пунктуации";
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'mdash';
+
+    Rule.prototype.replace = function() {
+      var m, re, self, use;
+      self = this;
+      use = true;
+      re = /([a-zа-яё0-9]+|\,|\:|\)|\&(ra|ld)quo\;|\|\"|\>)(\040|\t)(—|\-|\&mdash\;)(\s|$|\<)/;
+      m = this.text.match(re);
+      if (m) {
+        this.text = this.text.replace(re, function(str) {
+          self.debug(str);
+          self.debug(m);
+          return m[1] + '&nbsp;&mdash;' + m[5];
+        });
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['mdash'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Тире после переноса строки';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'mdash2';
+
+    Rule.prototype.replace = function() {
+      var m, re, self;
+      self = this;
+      re = /(\n|\r|^|\>)(\-|\&mdash\;)(\t|\040)/;
+      m = this.text.match(re);
+      if (m) {
+        this.text = this.text.replace(re, function(str) {
+          self.debug(str);
+          self.debug(m);
+          return m[1] + '&nbsp;&mdash;';
+        });
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['mdash2'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Тире после знаков восклицания, троеточия и прочее';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'mdash3';
+
+    Rule.prototype.replace = function() {
+      var m, re, self;
+      self = this;
+      re = /(\.|\!|\?|\&hellip\;)(\040|\t|\&nbsp\;)(\-|\&mdash\;)(\040|\t|\&nbsp\;)/;
+      m = this.text.match(re);
+      if (m) {
+        this.text = this.text.replace(re, function(str) {
+          self.debug(str);
+          self.debug(m);
+          return m[1] + '&nbsp;&mdash;';
+        });
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['mdash3'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = "Замена символа тире на html конструкцию";
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'mdash_2_html';
+
+    Rule.prototype.config = {
+      on: true,
+      log: true,
+      debug: true
+    };
+
+    Rule.prototype.replace = function() {
+      var m;
+      m = this.text.match(/-/);
+      if (m) {
+        this.text = this.text.replace(/-/, function() {
+          return '&mdash;';
+        });
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['mdash_2_html'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Расстановка тире и объединение в неразрывные периоды месяцев';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'mdash_month_interval';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, rex, _i, _len;
+      rex = [/((январ|феврал|сентябр|октябр|ноябр|декабр)([ьяюе]|[её]м)|(апрел|июн|июл)([ьяюе]|ем)|(март|август)([ауе]|ом)?|ма[йяюе]|маем)\-((январ|феврал|сентябр|октябр|ноябр|декабр)([ьяюе]|[её]м)|(апрел|июн|июл)([ьяюе]|ем)|(март|август)([ауе]|ом)?|ма[йяюе]|маем)/i];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        this.text = this.text.replace(m[0], "" + m[1] + "&mdash;" + m[8]);
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['mdash_month_interval'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Расстановка знака минус между числами';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'minus_between_nums';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, rex, _i, _len;
+      rex = [/(\d+)\-(\d)/i];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        return this.text = this.text.replace(m[0], "" + m[1] + "&minus;" + m[2]);
+      }
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['auto_times_x'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Расстановка знака минус между диапозоном чисел';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'minus_in_numbers_range';
+
+    Rule.prototype.replace = function() {};
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['minus_in_numbers_range'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Расстановка тире и объединение в неразрывные периоды дней';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'nbsp_and_dash_month_interval';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, rex, _i, _len;
+      rex = [/([^\>]|^)(\d+)(\-|\&minus\;|\&mdash\;)(\d+)( |\&nbsp\;)(января|февраля|марта|апреля|мая|июня|июля|августа|сентября|октября|ноября|декабря)([^\<]|$)/i];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        this.text = this.text.replace(m[0], "" + m[1] + "&mdash;" + m[8]);
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['nbsp_and_dash_month_interval'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Неразрывный пробел перед частицей';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'nbsp_before_particle';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, rex, str, _i, _len;
+      rex = [/(\040|\t)+(ли|бы|б|же|ж)(\&nbsp\;|\.|\,|\:|\;|\&hellip\;|\?|\s)/i];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        str = "&nbsp;" + m[2];
+        if (m[3] !== "&nbsp;") {
+          str += m[3];
+        }
+        return this.text = this.text.replace(m[0], str);
+      }
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['nbsp_before_particle'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Замена символов и привязка сокращений в весовых величинах: г, кг, мг…';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'nbsp_before_unit';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, rex, strs, _i, _len;
+      rex = [/(\s|^|\>|\&nbsp\;|\,)(\d+)(\s)?(м|мм|см|дм|км|гм|km|dm|cm|mm)(\s|\.|\!|\?|\,|$|\&plusmn\;|\;)/i, /(\s|^|\>|\&nbsp\;|\,)(\d+)(\s)?(м|мм|см|дм|км|гм|km|dm|cm|mm)([32]|&sup3;|&sup2;)(\s|\.|\!|\?|\,|$|\&plusmn\;|\;)/i];
+      strs = [
+        function(m) {
+          return m[1] + m[2] + '&nbsp;' + m[4] + m[5];
+        }, function(m) {
+          var str, _ref;
+          str = m[1] + m[2] + "&nbsp;" + m[4];
+          if ((_ref = m[5]) === "3" || _ref === "2") {
+            str += "&sup" + m[5] + ";";
+          } else {
+            str += m[5];
+          }
+          return str + m[6];
+        }
+      ];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        this.text = this.text.replace(m[0], strs[idx](m));
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['nbsp_before_unit'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Замена символов и привязка сокращений в весовых величинах: г, кг, мг…';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'nbsp_before_weight_unit';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, rex, _i, _len;
+      rex = [/(\s|^|\>|\&nbsp\;|\,)(\d+)(\s)?(г|кг|мг|т)(\s|\.|\!|\?|\,|$|\&nbsp\;|\;)/i];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        this.text = this.text.replace(m[0], "" + m[1] + m[2] + "&nbsp;" + m[4] + m[5]);
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['nbsp_before_weight_unit'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Привязка градусов к числу';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'nbsp_celcius';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, rex, _i, _len;
+      rex = [/(\s|^|\>|\&nbsp\;)(\d+)(\s)?(°|\&deg\;)(C|С)(\s|\.|\!|\?|\,|$|\&nbsp\;|\;)/i];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        return this.text = this.text.replace(m[0], "" + m[1] + m[2] + "&nbsp;" + m[4] + "C" + m[6]);
+      }
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['nbsp_celcius'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Привязка союзов и предлогов к предыдущим словам в случае конца предложения';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'nbsp_in_the_end';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, rex, _i, _len;
+      rex = [/([a-zа-яё0-9\-]{3,}) ([a-zа-яё]{1,2})\.( [A-ZА-ЯЁ]|$)/];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        this.text = this.text.replace(m[0], "" + m[1] + "&nbsp;" + m[2] + m[3]);
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['nbsp_in_the_end'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Привязка сокращений форм собственности к названиям организаций';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'nbsp_org_abbr';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, reStr, rex, _i, _len;
+      rex = [/([^a-zA-Zа-яёА-ЯЁ]|^)(ООО|ЗАО|ОАО|НИИ|ПБОЮЛ)\s([a-zA-Zа-яёА-ЯЁ]|\"|\&laquo\;|\&bdquo\;|<)/];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        reStr = m[1] + m[2] + '&nbsp;' + m[3];
+        this.text = this.text.replace(m[0], reStr);
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['nbsp_org_abbr'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Пробел после года';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'nbsp_posle_goda_abbr';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, rex, _i, _len;
+      rex = [/(^|\040|\&nbsp\;|\"|\&laquo\;)([0-9]{3,4})[ ]?(г\.)([^a-zа-яё]|$)/i];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        this.text = this.text.replace(m[0], "" + m[1] + m[2] + "&nbsp;" + m[3] + m[4]);
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['nbsp_posle_goda_abbr'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Неразрывный пробел в как то';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'nbsp_v_kak_to';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, rex, _i, _len;
+      rex = [/как то/i];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        return this.text = this.text.replace(m[0], "как&nbsp;то");
+      }
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['nbsp_v_kak_to'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Расстановка пробелов перед сокращениями dpi, lpi';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'nobr_abbreviation';
+
+    Rule.prototype.replace = function() {
+      var m, re, reStr, rex, self, use, _i, _len;
+      self = this;
+      use = 0;
+      rex = [/(\s+|^|\>)(\d+)(\040|\t)*(dpi|lpi)([\s\;\.\?\!\:\(]|$)/i];
+      for (_i = 0, _len = rex.length; _i < _len; _i++) {
+        re = rex[_i];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        reStr = m[1] + m[2] + '&nbsp;' + m[4] + m[5];
+        this.text = this.text.replace(m[0], reStr);
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['nobr_abbreviation'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Расстановка пробелов перед сокращениями гл., стр., рис., илл., ст., п.';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'nobr_acronym';
+
+    Rule.prototype.replace = function() {
+      var m, re, reStr, rex, _i, _len;
+      rex = [/(\s|^|\>|\()(гл|стр|рис|илл?|ст|п|с)\.(\040|\t)*(\d+)(\&nbsp\;|\s|\.|\,|\?|\!|$)/i];
+      for (_i = 0, _len = rex.length; _i < _len; _i++) {
+        re = rex[_i];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        reStr = m[1] + m[2] + '&nbsp;' + m[4] + m[5];
+        this.text = this.text.replace(m[0], reStr);
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['nobr_acronym'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Установка пробельных символов в сокращении вольт';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'nobr_before_unit_volt';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, reStr, rex, _i, _len;
+      rex = [/(\d+)([вВ]|\s[вВ])(\s|\.|\!|\?|\,|$)/];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        reStr = m[1] + '&nbsp;В.';
+        this.text = this.text.replace(m[0], reStr);
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['nobr_before_unit_volt'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Расстановка пробелов в сокращениях г., ул., пер., д.';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'nobr_locations';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, reStr, rex, _i, _len;
+      rex = [/(\s|^|\>)(г|ул|пер|просп|пл|бул|наб|пр|ш|туп)\.(\040|\t)*([а-яё0-9a-z]+)(\s|\.|\,|\?|\!|$)/i, /(\s|^|\>)(б\-р|пр\-кт)(\040|\t)*([а-яё0-9a-z]+)(\s|\.|\,|\?|\!|$)/i, /(\s|^|\>)(д|кв|эт)\.(\040|\t)*(\d+)(\s|\.|\,|\?|\!|$)/i];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        if (idx === 1) {
+          reStr = m[1] + m[2] + '&nbsp;' + m[4] + m[5];
+        } else {
+          reStr = m[1] + m[2] + '.&nbsp;' + m[4] + m[5];
+        }
+        this.text = this.text.replace(m[0], reStr);
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['nobr_locations'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Расстановка пробелов перед сокращениями см., им.';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'nobr_sm_im';
+
+    Rule.prototype.replace = function() {
+      var m, re, reStr, rex, _i, _len;
+      rex = [/(\s|^|\>|\()(см|им)\.(\040|\t)*([а-яё0-9a-z]+)(\s|\.|\,|\?|\!|$)/i];
+      for (_i = 0, _len = rex.length; _i < _len; _i++) {
+        re = rex[_i];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        reStr = m[1] + m[2] + '&nbsp;' + m[4] + m[5];
+        this.text = this.text.replace(m[0], reStr);
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['nobr_sm_im'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Объединение сокращений и т.д., и т.п., в т.ч.';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'nobr_vtch_itd_itp';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, reStr, rex, _i, _len;
+      rex = [/(^|\s|\&nbsp\;)и( |\&nbsp\;)т\.?[ ]?д(\.|$|\s|\&nbsp\;)/, /(^|\s|\&nbsp\;)и( |\&nbsp\;)т\.?[ ]?п(\.|$|\s|\&nbsp\;)/, /(^|\s|\&nbsp\;)в( |\&nbsp\;)т\.?[ ]?ч(\.|$|\s|\&nbsp\;)/];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        reStr = m[1] + m[2] + '&nbsp;' + m[4] + m[5];
+        this.text = this.text.replace(m[0], reStr);
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['nobr_vtch_itd_itp'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Привязка года к дате';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'nobr_year_in_date';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, rex, _i, _len;
+      rex = [/(\s|\&nbsp\;)([0-9]{2}\.[0-9]{2}\.([0-9]{2})?[0-9]{2})(\s|\&nbsp\;)?г(\.|\s|\&nbsp\;)/i, /(\s|\&nbsp\;)([0-9]{2}\.[0-9]{2}\.([0-9]{2})?[0-9]{2})(\s|\&nbsp\;|\.(\s|\&nbsp\;|$)|$)/i];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        this.text = this.text.replace(m[0], "" + m[1] + "&mdash;" + m[8]);
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['nobr_year_in_date'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Нижний индекс';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'numeric_sub';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, rex, str, _i, _len;
+      rex = [/([a-zа-яё0-9])\_([\d]{1,3})([^а-яёa-z0-9]|$)/i];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        str = m[1] + this.tag(this.tag(m[2], "small"), "sub") + m[3];
+        this.text = this.text.replace(m[0], str);
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['numeric_sub'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Верхний индекс';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'numeric_sup';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, rex, str, _i, _len;
+      rex = [/([a-zа-яё0-9])\^([\d]{1,3})([^а-яёa-z0-9]|$)/i];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        str = m[1] + this.tag(this.tag(m[2], "small"), "sup") + m[3];
+        this.text = this.text.replace(m[0], str);
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['numeric_sup'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+
+  /*
+   *# Открывающая кавычка особые случаи
+   */
+
+  OpenQuoteAdv = (function(_super) {
+    __extends(OpenQuoteAdv, _super);
+
+    function OpenQuoteAdv() {
+      return OpenQuoteAdv.__super__.constructor.apply(this, arguments);
+    }
+
+    OpenQuoteAdv.prototype.description = "Открывающая кавычка особые случаи";
+
+    OpenQuoteAdv.prototype.version = '0.0.0';
+
+    OpenQuoteAdv.prototype.configName = 'open_quote_adv';
+
+    OpenQuoteAdv.prototype.apply = function() {
+      var debug, re, self;
+      if (this.config.on) {
+        return;
+      }
+      self = this;
+      debug = this.config.debug;
+      re = /(^|\(|\s|\>)(\"|\\\")(\s)(\S+)/i;
+      this.text = this.text.replace(re, function(str) {
+        var m;
+        if (debug) {
+          self.debug(str);
+        }
+        m = str.match(re);
+        if (debug) {
+          self.debug(m);
+        }
+        return m[1] + self.Lib.QUOTE_FIRS_OPEN + m[4];
+      });
+      return this;
+    };
+
+    return OpenQuoteAdv;
+
+  })(OpenQuote);
+
+  module.exports = OpenQuoteAdv;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['open_quote_adv'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Объединение в неразрывные конструкции номеров телефонов';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'phone_builder';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, rex, str, _i, _len;
+      rex = [/([^\d\+]|^)([\+]?[0-9]{1,3})( |\&nbsp\;|\&thinsp\;)([0-9]{3,4}|\([0-9]{3,4}\))( |\&nbsp\;|\&thinsp\;)([0-9]{2,3})(-|\&minus\;)([0-9]{2})(-|\&minus\;)([0-9]{2})([^\d]|$)/, /([^\d\+]|^)([\+]?[0-9]{1,3})( |\&nbsp\;|\&thinsp\;)([0-9]{3,4}|[0-9]{3,4})( |\&nbsp\;|\&thinsp\;)([0-9]{2,3})(-|\&minus\;)([0-9]{2})(-|\&minus\;)([0-9]{2})([^\d]|$)/];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        if (idx === 0) {
+          str = m[1];
+        }
+        this.text = this.text.replace(m[0], str);
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['phone_builder'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Объединение сокращений P.S., P.P.S.';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'ps_pps';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, reStr, rex, _i, _len;
+      rex = [/(^|\040|\t|\>|\r|\n)(p\.\040?)(p\.\040?)?(s\.)([^\<])/i];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        reStr = m[1] + m[2] + '&nbsp;' + m[4] + m[5];
+        this.text = this.text.replace(m[0], reStr);
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['ps_pps'] = Rule;
+  }
+
+
+  /*
+  Индекс правил
+   */
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Замена дробей 1/2, 1/4, 3/4 на соответствующие символы';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'simple_fraction';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, rep, rex, _i, _len;
+      rex = [/1\/(2|4)/, /3\/4/];
+      rep = [
+        function(m) {
+          return "&frac1" + m[1] + ";";
+        }, function(m) {
+          return "&frac34;";
+        }
+      ];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        this.text = this.text.replace(m[0], rep[idx](m));
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['simple_fraction'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Пробел после года';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'simple_fraction';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, rex, _i, _len;
+      rex = [/(^|\040|\&nbsp\;)([0-9]{3,4})(год([ауе]|ом)?)([^a-zа-яё]|$)/i];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        this.text = this.text.replace(m[0], "" + m[1] + m[2] + " " + m[3] + m[5]);
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['simple_fraction'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Объединение IP-адресов';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'spaces_nobr_in_surname_abbr';
+
+    Rule.prototype.replace = function() {
+      var rex;
+      return rex = [/(\s|^|\.|\,|\;|\:|\?|\!|\&nbsp\;)([A-ZА-ЯЁ])\.?(\s|\&nbsp\;)?([A-ZА-ЯЁ])(\.(\s|\&nbsp\;)?|(\s|\&nbsp\;))([A-ZА-ЯЁ][a-zа-яё]+)(\s|$|\.|\,|\;|\:|\?|\!|\&nbsp\;)/, /(\s|^|\.|\,|\;|\:|\?|\!|\&nbsp\;)([A-ZА-ЯЁ][a-zа-яё]+)(\s|\&nbsp\;)([A-ZА-ЯЁ])\.?(\s|\&nbsp\;)?([A-ZА-ЯЁ])\.?(\s|$|\.|\,|\;|\:|\?|\!|\&nbsp\;)/];
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['spaces_nobr_in_surname_abbr'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Привязка союзов и предлогов к написанным после словам';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'super_nbsp';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, rex, str, _i, _len;
+      rex = [/(\s|^|\&(la|bd)quo\;|\>|\(|\&mdash\;\&nbsp\;)([a-zа-яё]{1,2}\s+)([a-zа-яё]{1,2}\s+)?([a-zа-яё0-9\-]{2,}|[0-9])/i];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        str = m[1] + this.Lib.trim(m[3]) + "&nbsp;";
+        if (m[4]) {
+          str += this.Lib.trim(m[4]) + "&nbsp;";
+        }
+        str += m[5];
+        this.text = this.text.replace(m[0], str);
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['super_nbsp'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Пробел между символом номера и числом';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'thinsp_between_no_and_number';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, rex, _i, _len;
+      rex = [/(№|\&#8470\;)(\s|&nbsp;)*(\d)/i];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        this.text = this.text.replace(m[0], "&#8470;&thinsp;" + m[3]);
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['thinsp_between_no_and_number'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Объединение триад чисел полупробелом';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'thinsp_between_number_triads';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, rex, str, _i, _len;
+      rex = [/([0-9]{1,3}( [0-9]{3}){1,})(.|$)/];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        if (m[3] === '-') {
+          str = m[0];
+        } else {
+          str = m[1].replace(" ", "&thinsp;");
+        }
+        str += m[3];
+        this.text = this.text.replace(m[0], str);
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['thinsp_between_number_triads'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Пробел между параграфом и числом';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'thinsp_between_sect_and_number';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, rex, _i, _len;
+      rex = [/(§|\&sect\;)(\s|&nbsp;)*(\d+|[IVX]+|[a-zа-яё]+)/i];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        this.text = this.text.replace(m[0], "&sect;&thinsp;" + m[3]);
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['thinsp_between_sect_and_number'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Тире между диапозоном веков';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'time_interval';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, rex, _i, _len;
+      rex = [/([^\d\>]|^)([\d]{1,2}\:[\d]{2})(-|\&mdash\;|\&minus\;)([\d]{1,2}\:[\d]{2})([^\d\<]|$)/i];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        this.text = this.text.replace(m[0], "" + m[1] + "&#769;" + m[2]);
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['time_interval'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Автоматическая простановка дефисов в обезличенных местоимениях и междометиях';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'to_libo_nibud';
+
+    Rule.prototype.replace = function() {
+      var m, re, self;
+      self = this;
+      re = /(\s|^|\&nbsp\;|\>)(кто|кем|когда|зачем|почему|как|что|чем|где|чего|кого)\-?(\040|\t|\&nbsp\;)\-?(то|либо|нибудь)([\.\,\!\?\;]|\040|\&nbsp\;|$)/i;
+      m = this.text.match(re);
+      if (m) {
+        this.text = this.text.replace(re, function(str) {
+          var reStr;
+          self.debug(str);
+          self.debug(m);
+          reStr = '';
+          if (m[1] !== "&nbsp;") {
+            reStr += m[1];
+          }
+          reStr += "" + m[2] + "-" + m[4];
+          if (m[5] !== "&nbsp;") {
+            return reStr += m[5];
+          }
+        });
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['to_libo_nibud'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Надстрочный текст после символа ^';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'word_sup';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, rex, _i, _len;
+      rex = [/((\s|\&nbsp\;|^)+)\^([a-zа-яё0-9\.\:\,\-]+)(\s|\&nbsp\;|$|\.$)/i];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        this.text = this.text.replace(m[0], "" + m[1] + "&#769;" + m[2]);
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['word_sup'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Установка тире и пробельных символов в периодах дат';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'years';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, reStr, rex, _i, _len;
+      rex = [/(с|по|период|середины|начала|начало|конца|конец|половины|в|между|\([cс]\)|\&copy\;)(\s+|\&nbsp\;)([\d]{4})(-|\&minus\;)([\d]{4})(( |\&nbsp\;)?(г\.г\.|гг\.|гг|г\.|г)([^а-яёa-z]))?/];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        reStr = m[1] + m[2];
+        if (parseInt([3] >= parseInt(m[5]))) {
+          reStr += m[3] + m[4] + m[5];
+        } else {
+          reStr += m[3] + "&mdash;" + m[5];
+        }
+        if (m[6]) {
+          reStr += "&nbsp;гг.";
+        }
+        if (m[9]) {
+          reStr += m[9];
+        }
+        this.text = this.text.replace(m[0], reStr);
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['years'] = Rule;
   }
 
 }).call(this);

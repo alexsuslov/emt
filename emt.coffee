@@ -10,18 +10,27 @@ if isClient
 
 
     apply:->
+
       @Rules.quote.text = @text
       @Rules.quote.apply()
       @text = @Rules.quote.text
 
-      @el.text @text
+      @Rules.abbr.text = @text
+      @Rules.abbr.apply()
+      @text = @Rules.abbr.text
+
+      @el.html @text
 
 
     init: (@opt, @el)->
-      @text = el.text()
+      @text = el.html()
 
       # Quote
-      @Rules.quote = new Quote
+      @Rules.quote = new @Rules.Quote
+        Rules:  @Rules
+        Lib:    @Lib
+      # Abbr =
+      @Rules.abbr = new @Rules.Abbr
         Rules:  @Rules
         Lib:    @Lib
 

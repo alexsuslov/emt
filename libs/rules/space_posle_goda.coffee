@@ -1,5 +1,5 @@
 # Зависимости
-OpenQuote = require( './open_quote')
+OpenQuote = require( './open_quote') unless OpenQuote
 
 ##
 # Правило
@@ -7,7 +7,7 @@ OpenQuote = require( './open_quote')
 class Rule extends OpenQuote
   description: 'Пробел после года'
   version:'0.0.0'
-  configName:'space_posle_goda'
+  configName:'simple_fraction'
 
   replace:->
     # Список правил
@@ -27,3 +27,5 @@ class Rule extends OpenQuote
 
 module.exports = Rule
 
+if typeof window isnt 'undefined'
+  App.Rules['simple_fraction'] = Rule

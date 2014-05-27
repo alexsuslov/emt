@@ -1,5 +1,5 @@
 # Зависимости
-OpenQuote = require( './open_quote')
+OpenQuote = require( './open_quote') unless OpenQuote
 
 ##
 # Правило
@@ -26,4 +26,6 @@ class Rule extends OpenQuote
     !!m
 
 module.exports = Rule
+if typeof window isnt 'undefined'
+  App.Rules['nobr_sm_im'] = Rule
 

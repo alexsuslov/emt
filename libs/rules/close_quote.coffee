@@ -4,10 +4,10 @@ OpenQuote = require( './open_quote') unless OpenQuote
 ##
 # Правило "Закрывающая кавычка"
 ##
-class CloseQuote extends OpenQuote
+class Rule extends OpenQuote
   description: "Закрывающая кавычка"
   version:'0.0.0'
-  configName:'CloseQuote'
+  configName:'close_quote'
 
   apply:->
     # return if @config.on
@@ -27,8 +27,8 @@ class CloseQuote extends OpenQuote
     !!m
 
 
-module.exports = CloseQuote
+module.exports = Rule
 
 if typeof window isnt 'undefined'
-  App.Rules.CloseQuote = CloseQuote
+  App.Rules['close_quote'] = Rule
 

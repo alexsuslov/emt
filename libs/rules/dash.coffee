@@ -1,5 +1,5 @@
 # Зависимости
-Quote = require( './quote')
+Quote = require( './quote') unless Quote
 
 ###
 ## Групповой Объект правил "Сокращения"
@@ -30,4 +30,6 @@ class Dash extends Quote
     "ka_de_kas"
     ]
 
-exports.module = Dash
+module.exports = Dash
+if typeof window isnt 'undefined'
+  App.Rules['Dash'] = Rule

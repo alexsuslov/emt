@@ -1,10 +1,10 @@
 # Зависимости
-Rules = require( './rules')
+Quote = require( './quote') unless Quote
 
 ###
 ## Групповой Объект правил "Сокращения"
 ###
-class Abbr extends Rules.quote
+class Abbr extends Quote
   description: "Сокращения"
   version:'0.0.0'
   configName:'Abbr'
@@ -35,4 +35,7 @@ class Abbr extends Rules.quote
     "nobr_gost"
     ]
 
-exports.module = Abbr
+module.exports = Abbr
+
+if typeof window isnt 'undefined'
+  App.Rules.Abbr = Abbr

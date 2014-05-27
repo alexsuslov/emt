@@ -1,5 +1,5 @@
 # Зависимости
-OpenQuote = require( './open_quote')
+OpenQuote = require( './open_quote') unless OpenQuote
 
 ##
 # Правило "Закрывающая кавычка"
@@ -7,7 +7,7 @@ OpenQuote = require( './open_quote')
 class Rule extends OpenQuote
   description: 'Кое-как, кой-кого, все-таки'
   version:'0.0.0'
-  configName:'toLiboNibud'
+  configName:'koe_kak'
 
   replace:->
     # return if @config.on
@@ -37,3 +37,5 @@ class Rule extends OpenQuote
 
 module.exports = Rule
 
+if typeof window isnt 'undefined'
+  App.Rules['koe_kak'] = Rule

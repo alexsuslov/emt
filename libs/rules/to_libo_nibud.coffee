@@ -1,5 +1,5 @@
 # Зависимости
-OpenQuote = require( './open_quote')
+OpenQuote = require( './open_quote') unless OpenQuote
 
 ##
 # Правило "Закрывающая кавычка"
@@ -7,7 +7,7 @@ OpenQuote = require( './open_quote')
 class Rule extends OpenQuote
   description: 'Автоматическая простановка дефисов в обезличенных местоимениях и междометиях'
   version:'0.0.0'
-  configName:'toLiboNibud'
+  configName:'to_libo_nibud'
 
   replace:->
     # return if @config.on
@@ -32,3 +32,5 @@ class Rule extends OpenQuote
 
 module.exports = Rule
 
+if typeof window isnt 'undefined'
+  App.Rules['to_libo_nibud'] = Rule

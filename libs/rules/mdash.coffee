@@ -1,5 +1,5 @@
 # Зависимости
-OpenQuote = require( './open_quote')
+OpenQuote = require( './open_quote') unless OpenQuote
 
 ##
 # Правило "Закрывающая кавычка"
@@ -7,7 +7,7 @@ OpenQuote = require( './open_quote')
 class Rule extends OpenQuote
   description: "Тире после кавычек, скобочек, пунктуации"
   version:'0.0.0'
-  configName:'mdush'
+  configName:'mdash'
 
   replace:->
     # return if @config.on
@@ -28,3 +28,5 @@ class Rule extends OpenQuote
 
 module.exports = Rule
 
+if typeof window isnt 'undefined'
+  App.Rules['mdash'] = Rule

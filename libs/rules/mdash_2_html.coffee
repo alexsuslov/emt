@@ -1,5 +1,5 @@
 # Зависимости
-OpenQuote = require( './open_quote')
+OpenQuote = require( './open_quote') unless OpenQuote
 
 ##
 # Правило "Закрывающая кавычка"
@@ -7,7 +7,7 @@ OpenQuote = require( './open_quote')
 class Rule extends OpenQuote
   description: "Замена символа тире на html конструкцию"
   version:'0.0.0'
-  configName:'mdush2html'
+  configName:'mdash_2_html'
   config:
     on: true
     log: true
@@ -22,3 +22,5 @@ class Rule extends OpenQuote
 
 module.exports = Rule
 
+if typeof window isnt 'undefined'
+  App.Rules['mdash_2_html'] = Rule

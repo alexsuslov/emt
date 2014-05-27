@@ -10,18 +10,27 @@ if isClient
 
 
     apply:->
+
       @Rules.quote.text = @text
       @Rules.quote.apply()
       @text = @Rules.quote.text
 
-      @el.text @text
+      @Rules.abbr.text = @text
+      @Rules.abbr.apply()
+      @text = @Rules.abbr.text
+
+      @el.html @text
 
 
     init: (@opt, @el)->
-      @text = el.text()
+      @text = el.html()
 
       # Quote
-      @Rules.quote = new Quote
+      @Rules.quote = new @Rules.Quote
+        Rules:  @Rules
+        Lib:    @Lib
+      # Abbr =
+      @Rules.abbr = new @Rules.Abbr
         Rules:  @Rules
         Lib:    @Lib
 
@@ -679,7 +688,7 @@ class OpenQuote
   timer:0
   description: "Открывающая кавычка"
   version:'0.0.0'
-  configName:'OpenQuote'
+  configName:'open_quote'
   text:''
   config:
     on: on
@@ -790,42 +799,7 @@ class OpenQuote
 module.exports = OpenQuote
 
 if typeof window isnt 'undefined'
-  App.Rules.OpenQuote = OpenQuote
-
-
-# Зависимости
-OpenQuote = require( './open_quote') unless OpenQuote
-
-##
-# Правило "Закрывающая кавычка"
-##
-class CloseQuote extends OpenQuote
-  description: "Закрывающая кавычка"
-  version:'0.0.0'
-  configName:'CloseQuote'
-
-  apply:->
-    # return if @config.on
-    self = @
-
-    # Правило
-    re = /([a-zа-яё0-9]|\.|\&hellip\;|\!|\?|\>|\)|\:)(\"+)(\.|\&hellip\;|\;|\:|\?|\!|\,|\s|\)|\<\/|$)/i
-    m = @text.match re
-    if m
-      # Замена
-      @text = @text.replace re , (str)->
-        self.debug str
-        self.debug m
-
-        m[1] + self.Lib.QUOTE_FIRS_CLOSE + m[3]
-
-    !!m
-
-
-module.exports = CloseQuote
-
-if typeof window isnt 'undefined'
-  App.Rules.CloseQuote = CloseQuote
+  App.Rules['open_quote'] = OpenQuote
 
 
 ###
@@ -850,8 +824,8 @@ class Quote
   # Порядок выполнения
   order:[
       # "quotes_outside_a"
-      "OpenQuote"
-      "CloseQuote"
+      "open_quote"
+      "close_quote"
       # "close_quote_adv"
       # "open_quote_adv"
       # "quotation"
@@ -901,3 +875,1983 @@ module.exports = Quote
 
 if typeof window isnt 'undefined'
   App.Rules.Quote = Quote
+
+# Зависимости
+Quote = require( './quote') unless Quote
+
+###
+## Групповой Объект правил "Сокращения"
+###
+class Abbr extends Quote
+  description: "Сокращения"
+  version:'0.0.0'
+  configName:'Abbr'
+
+
+  config:
+    on: true
+    log: true
+    debug:true
+
+  # Очередь правил
+  rules:[]
+
+  # Порядок выполнения
+  order:[
+    "nobr_abbreviation",
+    "nobr_acronym",
+    "nobr_sm_im",
+    "nobr_locations",
+    "nbsp_before_unit",
+    "nbsp_before_weight_unit",
+    "nobr_before_unit_volt",
+    "ps_pps",
+    "nobr_vtch_itd_itp",
+    "nbsp_te",
+    "nbsp_money_abbr",
+    "nbsp_org_abbr",
+    "nobr_gost"
+    ]
+
+module.exports = Abbr
+
+if typeof window isnt 'undefined'
+  App.Rules.Abbr = Abbr
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Акцент'
+  version:'0.0.0'
+  configName:'acute_accent'
+
+  replace:->
+    # Список правил
+    rex = [
+     /([уеыаоэяиюё])\`([а-яё])/i
+    ]
+
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+
+      @text = @text.replace m[0] , "#{m[1]}&#769;#{m[2]}"
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['acute_accent'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Замена x на символ × в размерных единицах'
+  version:'0.0.0'
+  configName:'auto_times_x'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /(\d+)(x|х)(\d+)(x|х)(\d+)/i
+    ]
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+
+      str = [ m[1], "&times;", m[3], "&times;", m[5]].join ''
+
+      @text = @text.replace m[0] , str
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['auto_times_x'] = Rule
+
+
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Тире между диапозоном веков'
+  version:'0.0.0'
+  configName:'century_period'
+
+  replace:->
+    # Список правил
+    rex = [
+      /(\040|\t|\&nbsp\;|^)([XIV]{1,5})(-|\&mdash\;)([XIV]{1,5})(( |\&nbsp\;)?(в\.в\.|вв\.|вв|в\.|в))/
+    ]
+
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+      # '$m[1] .$this->tag($m[2]."&mdash;".$m[4]." вв.","span", array("class"=>"nowrap"))'
+      @text = @text.replace m[0] , "#{m[1]}&#769;#{m[2]}"
+
+    !!m
+
+module.exports = Rule
+if typeof window isnt 'undefined'
+  App.Rules['century_period'] = Rule
+
+
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило "Закрывающая кавычка"
+##
+class Rule extends OpenQuote
+  description: "Закрывающая кавычка"
+  version:'0.0.0'
+  configName:'close_quote'
+
+  apply:->
+    # return if @config.on
+    self = @
+
+    # Правило
+    re = /([a-zа-яё0-9]|\.|\&hellip\;|\!|\?|\>|\)|\:)(\"+)(\.|\&hellip\;|\;|\:|\?|\!|\,|\s|\)|\<\/|$)/i
+    m = @text.match re
+    if m
+      # Замена
+      @text = @text.replace re , (str)->
+        self.debug str
+        self.debug m
+
+        m[1] + self.Lib.QUOTE_FIRS_CLOSE + m[3]
+
+    !!m
+
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['close_quote'] = Rule
+
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+###
+## Правило "Закрывающая кавычка особые случаи"
+###
+class Rule extends OpenQuote
+  description: "Закрывающая кавычка особые случаи"
+  version:'0.0.0'
+  configName:'close_quote_adv'
+
+  apply:->
+    return if @config.on
+    self = @
+    debug = @config.debug
+
+    # Правилo 1
+
+    re = /([a-zа-яё0-9]|\.|\&hellip\;|\!|\?|\>|\)|\:)((\"|\\\"|\&laquo\;)+)(\<[^\>]+\>)(\.|\&hellip\;|\;|\:|\?|\!|\,|\)|\<\/|$| )/i
+    # Замена
+    @text = @text.replace re , (str)->
+      self.debug str if debug
+
+      m = str.match re
+      self.debug m if debug
+
+      cnt =  substr_count m[2], "\""
+      cnt +=  substr_count m[2], "&laquo;"
+
+      str_repeat = @Lib.repeat @Lib.QUOTE_FIRS_CLOSE, cnt
+
+      m[1] + str_repeat + m[4]+ m[5]
+
+    # Правилo 2
+    re new RegExp [
+      '/([a-zа-яё0-9]|\.|\&hellip\;|\!|\?|\>|\)|\:)'
+      '(\s+)((\"|\\\")+)(\s+)'
+      '(\.|\&hellip\;|\;|\:|\?|\!|\,|\)|\<\/|$| )/'].join ''
+      , 'i'
+
+    @text = @text.replace re , (str)->
+      self.debug str if debug
+
+      m = str.match re
+      self.debug m if debug
+
+      cnt =  substr_count m[3], "\""
+      cnt +=  substr_count m[3], "&laquo;"
+
+      str_repeat = @Lib.repeat @Lib.QUOTE_FIRS_CLOSE, cnt
+
+      m[1] + m[2] + str_repeat + m[5]+ m[6]
+
+    # Правилo 3
+    re = /\>(\&laquo\;)\.($|\s|\<)/i
+    @text = @text.replace re , (str)->
+      self.debug str if debug
+      m = str.match re
+      self.debug m if debug
+      '>&raquo;' + m[2]
+
+    # Правилo 4
+    re = /\>(\&laquo\;)\.($|\s|\<)/i
+    @text = @text.replace re , (str)->
+      self.debug str if debug
+      m = str.match re
+      self.debug m if debug
+      '>&raquo;' + m[2]
+    @
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['close_quote_adv'] = Rule
+
+# Зависимости
+Quote = require( './quote') unless Quote
+
+###
+## Групповой Объект правил "Сокращения"
+###
+class Dash extends Quote
+  description: "Дефисы и тире"
+  version:'0.0.0'
+  configName:'Dash'
+
+
+  config:
+    on: true
+    log: true
+    debug:true
+
+  # Очередь правил
+  rules:[]
+
+  # Порядок выполнения
+  order:[
+    "mdash_symbol_to_html_mdash",
+    "mdash",
+    "mdash_2",
+    "mdash_3",
+    "iz_za_pod",
+    "to_libo_nibud",
+    "koe_kak",
+    "ka_de_kas"
+    ]
+
+module.exports = Dash
+if typeof window isnt 'undefined'
+  App.Rules['Dash'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Удаление nbsp в nobr/nowrap тэгах'
+  version:'0.0.0'
+  configName:'expand_no_nbsp_in_nobr'
+
+  replace:->
+    # @todo function
+    # # Список правил
+    # rex = [
+    #   /([^\d\>]|^)([\d]{1,2}\:[\d]{2})(-|\&mdash\;|\&minus\;)([\d]{1,2}\:[\d]{2})([^\d\<]|$)/i
+    # ]
+
+
+    # for re, idx in rex
+    #   m = @text.match re
+    #   break if m
+
+    # if m
+
+    #   @text = @text.replace m[0] , "#{m[1]}&#769;#{m[2]}"
+
+    # !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['expand_no_nbsp_in_nobr'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Обрамление пятисимвольных слов разделенных дефисом в неразрывные блоки'
+  version:'0.0.0'
+  configName:'hyphen_nowrap'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /(\&nbsp\;|\s|\>|^)([a-zа-яё]{1}\-[a-zа-яё]{4}|[a-zа-яё]{2}\-[a-zа-яё]{3}|[a-zа-яё]{3}\-[a-zа-яё]{2}|[a-zа-яё]{4}\-[a-zа-яё]{1}|когда\-то|кое\-как|кой\-кого|вс[её]\-таки|[а-яё]+\-(кась|ка|де))(\s|\.|\,|\!|\?|\&nbsp\;|\&hellip\;|$)/i
+    ]
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+      # '$m[1] . $this->tag($m[2], "span", array("class"=>"nowrap")) . $m[4]'
+      @text = @text.replace m[0] , "#{m[1]}#{m[2]}&nbsp;#{m[4]}C#{m[6]}"
+
+    # !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['hyphen_nowrap'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Обрамление пятисимвольных слов разделенных дефисом в неразрывные блоки'
+  version:'0.0.0'
+  configName:'nbsp_celcius'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /(\&nbsp\;|\s|\>|^)([a-zа-яё]{1}\-[a-zа-яё]{4}|[a-zа-яё]{2}\-[a-zа-яё]{3}|[a-zа-яё]{3}\-[a-zа-яё]{2}|[a-zа-яё]{4}\-[a-zа-яё]{1}|когда\-то|кое\-как|кой\-кого|вс[её]\-таки|[а-яё]+\-(кась|ка|де))(\s|\.|\,|\!|\?|\&nbsp\;|\&hellip\;|$)/i
+    ]
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+      # '$m[1] . $this->tag($m[2], "span", array("class"=>"nowrap")) . $m[4]'
+      @text = @text.replace m[0] , "#{m[1]}#{m[2]}&nbsp;#{m[4]}C#{m[6]}"
+
+    # !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['nbsp_celcius'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Объединение IP-адресов'
+  version:'0.0.0'
+  configName:'ip_address'
+
+  replace:->
+
+    # # Список правил
+    # rex = [
+    #   /(\s|\&nbsp\;|^)(\d{0,3}\.\d{0,3}\.\d{0,3}\.\d{0,3})/i
+    # ]
+
+
+
+    # for re, idx in rex
+    #   m = @text.match re
+    #   break if m
+
+    # if m
+    #   # '$m[1]  .
+    #   # (
+    #   #   ($m[1] == ">" || $m[11] == "<") ? $m[2]." ".$m[4]." ".$m[6]."-".$m[8]."-".$m[10] :$this->tag($m[2]." ".$m[4]." ".$m[6]."-".$m[8]."-".$m[10], "span", array("class"=>"nowrap")
+    #   #     )
+    #   #   ).$m[11]',
+    #   # '$m[1]  .(($m[1] == ">" || $m[11] == "<") ? $m[2]." ".$m[4]." ".$m[6]."-".$m[8]."-".$m[10] :$this->tag($m[2]." ".$m[4]." ".$m[6]."-".$m[8]."-".$m[10], "span", array("class"=>"nowrap"))  ).$m[11]'
+    #   if idx is 0
+    #     str = m[1]
+
+    #   @text = @text.replace m[0] , str
+
+    # !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['ip_address'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило "Закрывающая кавычка"
+##
+class Rule extends OpenQuote
+  description: 'Расстановка дефисов между из-за, из-под'
+  version:'0.0.0'
+  configName:'iz_za_pod'
+
+  replace:->
+    # return if @config.on
+    self = @
+
+    # Правило
+    re = /(\s|\&nbsp\;|\>|^)(из)(\040|\t|\&nbsp\;)\-?(за|под)([\.\,\!\?\:\;]|\040|\&nbsp\;)/i
+
+    m = @text.match re
+    if m
+      # Замена
+      @text = @text.replace re , (str)->
+        self.debug str
+
+        self.debug m
+        reStr = ''
+        reStr += m[1] unless m[1] is "&nbsp;"
+        reStr += "#{m[2]}-#{m[4]}"
+        reStr += m[5] unless m[5] is "&nbsp;"
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['iz_za_pod'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило "Закрывающая кавычка"
+##
+class Rule extends OpenQuote
+  description: 'Расстановка дефисов с частицами ка, де, кась'
+  version:'0.0.0'
+  configName:'ka_de_kas'
+
+  replace:->
+    # return if @config.on
+    self = @
+    use = 0
+
+    # Правило
+    rex = [
+      /(\s|^|\&nbsp\;|\>)([а-яё]+)(\040|\t|\&nbsp\;)(ка)([\.\,\!\?\;]|\040|\&nbsp\;|$)/i
+      /(\s|^|\&nbsp\;|\>)([а-яё]+)(\040|\t|\&nbsp\;)(де)([\.\,\!\?\;]|\040|\&nbsp\;|$)/i
+      /(\s|^|\&nbsp\;|\>)([а-яё]+)(\040|\t|\&nbsp\;)(кась)([\.\,\!\?\;]|\040|\&nbsp\;|$)/i
+    ]
+
+    for re in rex
+      m = @text.match re
+      break if m
+
+    if m
+      reStr = ''
+      reStr += m[1] unless m[1] is "&nbsp;"
+      reStr += "#{m[2]}-#{m[4]}"
+      reStr += m[5] unless m[5] is "&nbsp;"
+
+      @text = @text.replace m[0] , reStr
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['ka_de_kas'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило "Закрывающая кавычка"
+##
+class Rule extends OpenQuote
+  description: 'Кое-как, кой-кого, все-таки'
+  version:'0.0.0'
+  configName:'koe_kak'
+
+  replace:->
+    # return if @config.on
+    self = @
+    use = 0
+
+    # Правило
+    rex = [
+      /(\s|^|\&nbsp\;|\>)(кое)\-?(\040|\t|\&nbsp\;)\-?(как)([\.\,\!\?\;]|\040|\&nbsp\;|$)/i
+      /(\s|^|\&nbsp\;|\>)(кой)\-?(\040|\t|\&nbsp\;)\-?(кого)([\.\,\!\?\;]|\040|\&nbsp\;|$)/i
+      /(\s|^|\&nbsp\;|\>)(вс[её])\-?(\040|\t|\&nbsp\;)\-?(таки)([\.\,\!\?\;]|\040|\&nbsp\;|$)/i
+    ]
+
+    for re in rex
+      m = @text.match re
+      break if m
+
+    if m
+      reStr = ''
+      reStr += m[1] unless m[1] is "&nbsp;"
+      reStr += "#{m[2]}-#{m[4]}"
+      reStr += m[5] unless m[5] is "&nbsp;"
+
+      @text = @text.replace m[0] , reStr
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['koe_kak'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Математические знаки больше/меньше/плюс минус/неравно'
+  version:'0.0.0'
+  configName:'math_chars'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /!=/
+      /\<=/
+      /([^=]|^)\>=/
+      /~=/
+      /\+-/
+    ]
+    rep = [
+      (m)->'&ne;'
+      (m)->'&le;'
+      (m)->"m[1]&ge;"
+      (m)->'&cong;'
+      (m)->'&plusmn;'
+    ]
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+
+      @text = @text.replace m[0] , rep[idx] m
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['math_chars'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило "Закрывающая кавычка"
+##
+class Rule extends OpenQuote
+  description: "Тире после кавычек, скобочек, пунктуации"
+  version:'0.0.0'
+  configName:'mdash'
+
+  replace:->
+    # return if @config.on
+    self = @
+    use = true
+
+    # Правило
+    re = /([a-zа-яё0-9]+|\,|\:|\)|\&(ra|ld)quo\;|\|\"|\>)(\040|\t)(—|\-|\&mdash\;)(\s|$|\<)/
+    m = @text.match re
+    if m
+      # Замена
+      @text = @text.replace re , (str)->
+        self.debug str
+        self.debug m
+
+        m[1] + '&nbsp;&mdash;' + m[5]
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['mdash'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило "Закрывающая кавычка"
+##
+class Rule extends OpenQuote
+  description: 'Тире после переноса строки'
+  version:'0.0.0'
+  configName:'mdash2'
+
+  replace:->
+    # return if @config.on
+    self = @
+
+    # Правило
+    re = /(\n|\r|^|\>)(\-|\&mdash\;)(\t|\040)/
+    m = @text.match re
+    if m
+      # Замена
+      @text = @text.replace re , (str)->
+        self.debug str
+        self.debug m
+
+        m[1] + '&nbsp;&mdash;'
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['mdash2'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило "Закрывающая кавычка"
+##
+class Rule extends OpenQuote
+  description: 'Тире после знаков восклицания, троеточия и прочее'
+  version:'0.0.0'
+  configName:'mdash3'
+
+  replace:->
+    # return if @config.on
+    self = @
+
+    # Правило
+    re = /(\.|\!|\?|\&hellip\;)(\040|\t|\&nbsp\;)(\-|\&mdash\;)(\040|\t|\&nbsp\;)/
+    m = @text.match re
+    if m
+      # Замена
+      @text = @text.replace re , (str)->
+        self.debug str
+        self.debug m
+
+        m[1] + '&nbsp;&mdash;'
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['mdash3'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило "Закрывающая кавычка"
+##
+class Rule extends OpenQuote
+  description: "Замена символа тире на html конструкцию"
+  version:'0.0.0'
+  configName:'mdash_2_html'
+  config:
+    on: true
+    log: true
+    debug:true
+
+  replace:->
+    m = @text.match /-/
+    if m
+      @text = @text.replace /-/ , ->
+        '&mdash;'
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['mdash_2_html'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Расстановка тире и объединение в неразрывные периоды месяцев'
+  version:'0.0.0'
+  configName:'mdash_month_interval'
+
+  replace:->
+    # Список правил
+    rex = [
+      /((январ|феврал|сентябр|октябр|ноябр|декабр)([ьяюе]|[её]м)|(апрел|июн|июл)([ьяюе]|ем)|(март|август)([ауе]|ом)?|ма[йяюе]|маем)\-((январ|феврал|сентябр|октябр|ноябр|декабр)([ьяюе]|[её]м)|(апрел|июн|июл)([ьяюе]|ем)|(март|август)([ауе]|ом)?|ма[йяюе]|маем)/i
+    ]
+
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+
+      @text = @text.replace m[0] , "#{m[1]}&mdash;#{m[8]}"
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['mdash_month_interval'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Расстановка знака минус между числами'
+  version:'0.0.0'
+  configName:'minus_between_nums'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /(\d+)\-(\d)/i
+    ]
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+      # '$m[1] . $this->tag($m[2].$m[3], "span", array("class"=>"nowrap")) . $m[6]'
+      @text = @text.replace m[0] , "#{m[1]}&minus;#{m[2]}"
+
+    # !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['auto_times_x'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Расстановка знака минус между диапозоном чисел'
+  version:'0.0.0'
+  configName:'minus_in_numbers_range'
+
+  replace:->
+    # Список правил
+    # rex = [
+    #   /(^|\s|\&nbsp\;)(\&minus\;|\-)(\d+)(\.\.\.|\&hellip\;)(\s|\&nbsp\;)?(\+|\-|\&minus\;)?(\d+)/i
+    # ]
+
+    # for re, idx in rex
+    #   m = @text.match re
+    #   break if m
+
+    # if m
+    #   str = m[1] + "&minus;" + m[3] + m[4] + m[5]
+
+    #   if m[6] is "+"
+    #     str += $m[6]
+    #   else
+    #     str += "&minus;"
+    #   str += m[7]
+
+    #   @text = @text.replace m[0] , str
+
+    # false
+
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['minus_in_numbers_range'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Расстановка тире и объединение в неразрывные периоды дней'
+  version:'0.0.0'
+  configName:'nbsp_and_dash_month_interval'
+
+  replace:->
+    # Список правил
+    rex = [
+      /([^\>]|^)(\d+)(\-|\&minus\;|\&mdash\;)(\d+)( |\&nbsp\;)(января|февраля|марта|апреля|мая|июня|июля|августа|сентября|октября|ноября|декабря)([^\<]|$)/i
+    ]
+
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+
+      # 'm[1].$this->tag($m[2]."&mdash;".$m[4]." ".$m[6],"span", array("class"=>"nowrap")).$m[7]'
+
+      @text = @text.replace m[0] , "#{m[1]}&mdash;#{m[8]}"
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['nbsp_and_dash_month_interval'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Неразрывный пробел перед частицей'
+  version:'0.0.0'
+  configName:'nbsp_before_particle'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /(\040|\t)+(ли|бы|б|же|ж)(\&nbsp\;|\.|\,|\:|\;|\&hellip\;|\?|\s)/i
+    ]
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+
+      str = "&nbsp;#{m[2]}"
+      str += m[3] unless m[3] == "&nbsp;"
+
+      @text = @text.replace m[0] , str
+
+    # !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['nbsp_before_particle'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Замена символов и привязка сокращений в весовых величинах: г, кг, мг…'
+  version:'0.0.0'
+  configName:'nbsp_before_unit'
+
+  replace:->
+    # Список правил
+    rex = [
+      /(\s|^|\>|\&nbsp\;|\,)(\d+)(\s)?(м|мм|см|дм|км|гм|km|dm|cm|mm)(\s|\.|\!|\?|\,|$|\&plusmn\;|\;)/i
+      /(\s|^|\>|\&nbsp\;|\,)(\d+)(\s)?(м|мм|см|дм|км|гм|km|dm|cm|mm)([32]|&sup3;|&sup2;)(\s|\.|\!|\?|\,|$|\&plusmn\;|\;)/i
+    ]
+
+    strs = [
+      (m)->
+        m[1] + m[2] + '&nbsp;' + m[4] + m[5]
+      (m)->
+        str = m[1] + m[2] + "&nbsp;" + m[4]
+        if m[5] in ["3", "2"]
+          str += "&sup" + m[5] + ";"
+        else
+           str += m[5]
+        str + m[6]
+
+      ]
+
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+    if m
+      @text = @text.replace m[0] , strs[idx](m)
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['nbsp_before_unit'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Замена символов и привязка сокращений в весовых величинах: г, кг, мг…'
+  version:'0.0.0'
+  configName:'nbsp_before_weight_unit'
+
+  replace:->
+    # Список правил
+    rex = [
+      /(\s|^|\>|\&nbsp\;|\,)(\d+)(\s)?(г|кг|мг|т)(\s|\.|\!|\?|\,|$|\&nbsp\;|\;)/i
+    ]
+
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+
+      @text = @text.replace m[0] , "#{m[1]}#{m[2]}&nbsp;#{m[4]}#{m[5]}"
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['nbsp_before_weight_unit'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Привязка градусов к числу'
+  version:'0.0.0'
+  configName:'nbsp_celcius'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /(\s|^|\>|\&nbsp\;)(\d+)(\s)?(°|\&deg\;)(C|С)(\s|\.|\!|\?|\,|$|\&nbsp\;|\;)/i
+    ]
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+
+      @text = @text.replace m[0] , "#{m[1]}#{m[2]}&nbsp;#{m[4]}C#{m[6]}"
+
+    # !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['nbsp_celcius'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Привязка союзов и предлогов к предыдущим словам в случае конца предложения'
+  version:'0.0.0'
+  configName:'nbsp_in_the_end'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /([a-zа-яё0-9\-]{3,}) ([a-zа-яё]{1,2})\.( [A-ZА-ЯЁ]|$)/
+    ]
+
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+      @text = @text.replace m[0] , "#{m[1]}&nbsp;#{m[2]}#{m[3]}"
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['nbsp_in_the_end'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Привязка сокращений форм собственности к названиям организаций'
+  version:'0.0.0'
+  configName:'nbsp_org_abbr'
+
+  replace:->
+    # Список правил
+    rex = [
+      /([^a-zA-Zа-яёА-ЯЁ]|^)(ООО|ЗАО|ОАО|НИИ|ПБОЮЛ)\s([a-zA-Zа-яёА-ЯЁ]|\"|\&laquo\;|\&bdquo\;|<)/
+    ]
+
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+      reStr = m[1] + m[2] + '&nbsp;' + m[3]
+      @text = @text.replace m[0] , reStr
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['nbsp_org_abbr'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Пробел после года'
+  version:'0.0.0'
+  configName:'nbsp_posle_goda_abbr'
+
+  replace:->
+    # Список правил
+    rex = [
+     /(^|\040|\&nbsp\;|\"|\&laquo\;)([0-9]{3,4})[ ]?(г\.)([^a-zа-яё]|$)/i
+    ]
+
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+
+      @text = @text.replace m[0] , "#{m[1]}#{m[2]}&nbsp;#{m[3]}#{m[4]}"
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['nbsp_posle_goda_abbr'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Неразрывный пробел в как то'
+  version:'0.0.0'
+  configName:'nbsp_v_kak_to'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /как то/i
+    ]
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+
+      @text = @text.replace m[0] , "как&nbsp;то"
+
+    # !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['nbsp_v_kak_to'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+##
+# Правило "Закрывающая кавычка"
+##
+class Rule extends OpenQuote
+  description: 'Расстановка пробелов перед сокращениями dpi, lpi'
+  version:'0.0.0'
+  configName:'nobr_abbreviation'
+
+  replace:->
+    # return if @config.on
+    self = @
+    use = 0
+
+    # Правило
+    rex = [
+      /(\s+|^|\>)(\d+)(\040|\t)*(dpi|lpi)([\s\;\.\?\!\:\(]|$)/i
+    ]
+
+    for re in rex
+      m = @text.match re
+      break if m
+
+    if m
+      reStr = m[1] + m[2] + '&nbsp;' + m[4] + m[5]
+      @text = @text.replace m[0] , reStr
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['nobr_abbreviation'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Расстановка пробелов перед сокращениями гл., стр., рис., илл., ст., п.'
+  version:'0.0.0'
+  configName:'nobr_acronym'
+
+  replace:->
+    # Список правил
+    rex = [
+      /(\s|^|\>|\()(гл|стр|рис|илл?|ст|п|с)\.(\040|\t)*(\d+)(\&nbsp\;|\s|\.|\,|\?|\!|$)/i
+    ]
+
+    for re in rex
+      m = @text.match re
+      break if m
+
+    if m
+      reStr = m[1] + m[2] + '&nbsp;' + m[4] + m[5]
+      @text = @text.replace m[0] , reStr
+
+    !!m
+
+module.exports = Rule
+if typeof window isnt 'undefined'
+  App.Rules['nobr_acronym'] = Rule
+
+
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Установка пробельных символов в сокращении вольт'
+  version:'0.0.0'
+  configName:'nobr_before_unit_volt'
+
+  replace:->
+    # Список правил
+    rex = [
+      /(\d+)([вВ]|\s[вВ])(\s|\.|\!|\?|\,|$)/
+    ]
+
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+      # '\1&nbsp;В\3'
+      reStr = m[1] + '&nbsp;В.'
+      @text = @text.replace m[0] , reStr
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['nobr_before_unit_volt'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Расстановка пробелов в сокращениях г., ул., пер., д.'
+  version:'0.0.0'
+  configName:'nobr_locations'
+
+  replace:->
+    # Список правил
+    rex = [
+      /(\s|^|\>)(г|ул|пер|просп|пл|бул|наб|пр|ш|туп)\.(\040|\t)*([а-яё0-9a-z]+)(\s|\.|\,|\?|\!|$)/i
+      /(\s|^|\>)(б\-р|пр\-кт)(\040|\t)*([а-яё0-9a-z]+)(\s|\.|\,|\?|\!|$)/i
+      /(\s|^|\>)(д|кв|эт)\.(\040|\t)*(\d+)(\s|\.|\,|\?|\!|$)/i
+    ]
+
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+      if idx is 1
+        reStr = m[1] + m[2] + '&nbsp;' + m[4] + m[5]
+      else
+        reStr = m[1] + m[2] + '.&nbsp;' + m[4] + m[5]
+
+      @text = @text.replace m[0] , reStr
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['nobr_locations'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Расстановка пробелов перед сокращениями см., им.'
+  version:'0.0.0'
+  configName:'nobr_sm_im'
+
+  replace:->
+    # Список правил
+    rex = [
+      /(\s|^|\>|\()(см|им)\.(\040|\t)*([а-яё0-9a-z]+)(\s|\.|\,|\?|\!|$)/i
+    ]
+
+    for re in rex
+      m = @text.match re
+      break if m
+
+    if m
+      reStr = m[1] + m[2] + '&nbsp;' + m[4] + m[5]
+      @text = @text.replace m[0] , reStr
+
+    !!m
+
+module.exports = Rule
+if typeof window isnt 'undefined'
+  App.Rules['nobr_sm_im'] = Rule
+
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Объединение сокращений и т.д., и т.п., в т.ч.'
+  version:'0.0.0'
+  configName:'nobr_vtch_itd_itp'
+
+  replace:->
+    # Список правил
+    rex = [
+      /(^|\s|\&nbsp\;)и( |\&nbsp\;)т\.?[ ]?д(\.|$|\s|\&nbsp\;)/
+      /(^|\s|\&nbsp\;)и( |\&nbsp\;)т\.?[ ]?п(\.|$|\s|\&nbsp\;)/
+      /(^|\s|\&nbsp\;)в( |\&nbsp\;)т\.?[ ]?ч(\.|$|\s|\&nbsp\;)/
+    ]
+
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+        # '$m[1].$this->tag("и т. д.", "span",  array("class" => "nowrap")).($m[3]!="."? $m[3] : "" )',
+        # '$m[1].$this->tag("и т. п.", "span",  array("class" => "nowrap")).($m[3]!="."? $m[3] : "" )',
+        # '$m[1].$this->tag("в т. ч.", "span",  array("class" => "nowrap")).($m[3]!="."? $m[3] : "" )','
+      reStr = m[1] + m[2] + '&nbsp;' + m[4] + m[5]
+      @text = @text.replace m[0] , reStr
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['nobr_vtch_itd_itp'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Привязка года к дате'
+  version:'0.0.0'
+  configName:'nobr_year_in_date'
+
+  replace:->
+    # Список правил
+    rex = [
+      /(\s|\&nbsp\;)([0-9]{2}\.[0-9]{2}\.([0-9]{2})?[0-9]{2})(\s|\&nbsp\;)?г(\.|\s|\&nbsp\;)/i,
+      /(\s|\&nbsp\;)([0-9]{2}\.[0-9]{2}\.([0-9]{2})?[0-9]{2})(\s|\&nbsp\;|\.(\s|\&nbsp\;|$)|$)/i
+    ]
+
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+      # if idx is 0
+      #   str = m[1].$this->tag($m[2]." г.","span", array("class"=>"nowrap")).($m[5]==="."?"":" ")'
+      # else
+      #     '$m[1].$this->tag($m[2],"span", array("class"=>"nowrap")).$m[4]'
+      # # 'm[1].$this->tag($m[2]."&mdash;".$m[4]." ".$m[6],"span", array("class"=>"nowrap")).$m[7]'
+
+      @text = @text.replace m[0] , "#{m[1]}&mdash;#{m[8]}"
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['nobr_year_in_date'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Нижний индекс'
+  version:'0.0.0'
+  configName:'numeric_sub'
+
+  replace:->
+
+    # # Список правил
+    rex = [
+      /([a-zа-яё0-9])\_([\d]{1,3})([^а-яёa-z0-9]|$)/i
+    ]
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+      str = m[1] + @tag( @tag( m[2], "small"), "sub") + m[3]
+      @text = @text.replace m[0] , str
+
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['numeric_sub'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Верхний индекс'
+  version:'0.0.0'
+  configName:'numeric_sup'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /([a-zа-яё0-9])\^([\d]{1,3})([^а-яёa-z0-9]|$)/i
+    ]
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+      str = m[1] + @tag( @tag( m[2], "small"), "sup") + m[3]
+
+      @text = @text.replace m[0] , str
+
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['numeric_sup'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+###
+## Открывающая кавычка особые случаи
+###
+class OpenQuoteAdv extends OpenQuote
+  description: "Открывающая кавычка особые случаи"
+  version:'0.0.0'
+  configName:'open_quote_adv'
+
+  apply:->
+    return if @config.on
+    self = @
+    debug = @config.debug
+
+    # Правилo 1
+
+    re = /(^|\(|\s|\>)(\"|\\\")(\s)(\S+)/i
+    # Замена
+    @text = @text.replace re , (str)->
+      self.debug str if debug
+
+      m = str.match re
+      self.debug m if debug
+
+      m[1] + self.Lib.QUOTE_FIRS_OPEN + m[4]
+
+    @
+
+module.exports = OpenQuoteAdv
+
+if typeof window isnt 'undefined'
+  App.Rules['open_quote_adv'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Объединение в неразрывные конструкции номеров телефонов'
+  version:'0.0.0'
+  configName:'phone_builder'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /([^\d\+]|^)([\+]?[0-9]{1,3})( |\&nbsp\;|\&thinsp\;)([0-9]{3,4}|\([0-9]{3,4}\))( |\&nbsp\;|\&thinsp\;)([0-9]{2,3})(-|\&minus\;)([0-9]{2})(-|\&minus\;)([0-9]{2})([^\d]|$)/
+      /([^\d\+]|^)([\+]?[0-9]{1,3})( |\&nbsp\;|\&thinsp\;)([0-9]{3,4}|[0-9]{3,4})( |\&nbsp\;|\&thinsp\;)([0-9]{2,3})(-|\&minus\;)([0-9]{2})(-|\&minus\;)([0-9]{2})([^\d]|$)/
+    ]
+
+
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+      # '$m[1]  .
+      # (
+      #   ($m[1] == ">" || $m[11] == "<") ? $m[2]." ".$m[4]." ".$m[6]."-".$m[8]."-".$m[10] :$this->tag($m[2]." ".$m[4]." ".$m[6]."-".$m[8]."-".$m[10], "span", array("class"=>"nowrap")
+      #     )
+      #   ).$m[11]',
+      # '$m[1]  .(($m[1] == ">" || $m[11] == "<") ? $m[2]." ".$m[4]." ".$m[6]."-".$m[8]."-".$m[10] :$this->tag($m[2]." ".$m[4]." ".$m[6]."-".$m[8]."-".$m[10], "span", array("class"=>"nowrap"))  ).$m[11]'
+      if idx is 0
+        str = m[1]
+
+      @text = @text.replace m[0] , str
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['phone_builder'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Объединение сокращений P.S., P.P.S.'
+  version:'0.0.0'
+  configName:'ps_pps'
+
+  replace:->
+    # Список правил
+    rex = [
+      /(^|\040|\t|\>|\r|\n)(p\.\040?)(p\.\040?)?(s\.)([^\<])/i
+    ]
+
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+      # '$m[1] . $this->tag(trim($m[2]) . " " . ($m[3] ? trim($m[3]) . " " : ""). $m[4], "span",  array("class" => "nowrap") ).$m[5] '
+      reStr = m[1] + m[2] + '&nbsp;' + m[4] + m[5]
+      @text = @text.replace m[0] , reStr
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['ps_pps'] = Rule
+
+###
+Индекс правил
+###
+# module.exports = {
+#   open_quote : require('./open_quote')
+#   close_quote: require './close_quote'
+#   mdush2html: require './mdash_2_html'
+# }
+
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Замена дробей 1/2, 1/4, 3/4 на соответствующие символы'
+  version:'0.0.0'
+  configName:'simple_fraction'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /1\/(2|4)/
+      /3\/4/
+    ]
+    rep = [
+      (m)->
+        "&frac1#{m[1]};"
+      (m)->
+        "&frac34;"
+    ]
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+
+      @text = @text.replace m[0] , rep[idx] m
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['simple_fraction'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Пробел после года'
+  version:'0.0.0'
+  configName:'simple_fraction'
+
+  replace:->
+    # Список правил
+    rex = [
+     /(^|\040|\&nbsp\;)([0-9]{3,4})(год([ауе]|ом)?)([^a-zа-яё]|$)/i
+    ]
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+
+      @text = @text.replace m[0] , "#{m[1]}#{m[2]} #{m[3]}#{m[5]}"
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['simple_fraction'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Объединение IP-адресов'
+  version:'0.0.0'
+  configName:'spaces_nobr_in_surname_abbr'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /(\s|^|\.|\,|\;|\:|\?|\!|\&nbsp\;)([A-ZА-ЯЁ])\.?(\s|\&nbsp\;)?([A-ZА-ЯЁ])(\.(\s|\&nbsp\;)?|(\s|\&nbsp\;))([A-ZА-ЯЁ][a-zа-яё]+)(\s|$|\.|\,|\;|\:|\?|\!|\&nbsp\;)/
+      /(\s|^|\.|\,|\;|\:|\?|\!|\&nbsp\;)([A-ZА-ЯЁ][a-zа-яё]+)(\s|\&nbsp\;)([A-ZА-ЯЁ])\.?(\s|\&nbsp\;)?([A-ZА-ЯЁ])\.?(\s|$|\.|\,|\;|\:|\?|\!|\&nbsp\;)/
+    ]
+
+
+
+    # for re, idx in rex
+    #   m = @text.match re
+    #   break if m
+
+    # if m
+    #   # '$m[1].$this->tag($m[2].". ".$m[4].". ".$m[8], "span",  array("class" => "nowrap")).$m[9]',
+    #   # '$m[1].$this->tag($m[2]." ".$m[4].". ".$m[6].".", "span",  array("class" => "nowrap")).$m[7]'
+    #   if idx is 0
+    #     str = m[1]
+
+    #   @text = @text.replace m[0] , str
+
+    # !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['spaces_nobr_in_surname_abbr'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Привязка союзов и предлогов к написанным после словам'
+  version:'0.0.0'
+  configName:'super_nbsp'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /(\s|^|\&(la|bd)quo\;|\>|\(|\&mdash\;\&nbsp\;)([a-zа-яё]{1,2}\s+)([a-zа-яё]{1,2}\s+)?([a-zа-яё0-9\-]{2,}|[0-9])/i
+    ]
+
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+      str = m[1] + @Lib.trim(m[3]) + "&nbsp;"
+      str += @Lib.trim(m[4]) + "&nbsp;" if m[4]
+      str += m[5]
+
+      @text = @text.replace m[0] , str
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['super_nbsp'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Пробел между символом номера и числом'
+  version:'0.0.0'
+  configName:'thinsp_between_no_and_number'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /(№|\&#8470\;)(\s|&nbsp;)*(\d)/i
+    ]
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+
+      @text = @text.replace m[0] , "&#8470;&thinsp;#{m[3]}"
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['thinsp_between_no_and_number'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Объединение триад чисел полупробелом'
+  version:'0.0.0'
+  configName:'thinsp_between_number_triads'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /([0-9]{1,3}( [0-9]{3}){1,})(.|$)/
+    ]
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+      if m[3] is '-'
+        str = m[0]
+      else
+        str = m[1].replace " ", "&thinsp;"
+      str += m[3]
+
+      @text = @text.replace m[0] , str
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['thinsp_between_number_triads'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Пробел между параграфом и числом'
+  version:'0.0.0'
+  configName:'thinsp_between_sect_and_number'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /(§|\&sect\;)(\s|&nbsp;)*(\d+|[IVX]+|[a-zа-яё]+)/i
+    ]
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+
+      @text = @text.replace m[0] , "&sect;&thinsp;#{m[3]}"
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['thinsp_between_sect_and_number'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Тире между диапозоном веков'
+  version:'0.0.0'
+  configName:'time_interval'
+
+  replace:->
+    # Список правил
+    rex = [
+      /([^\d\>]|^)([\d]{1,2}\:[\d]{2})(-|\&mdash\;|\&minus\;)([\d]{1,2}\:[\d]{2})([^\d\<]|$)/i
+    ]
+
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+      # '$m[1] . $this->tag($m[2]."&mdash;".$m[4],"span", array("class"=>"nowrap")).$m[5]'
+      @text = @text.replace m[0] , "#{m[1]}&#769;#{m[2]}"
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['time_interval'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило "Закрывающая кавычка"
+##
+class Rule extends OpenQuote
+  description: 'Автоматическая простановка дефисов в обезличенных местоимениях и междометиях'
+  version:'0.0.0'
+  configName:'to_libo_nibud'
+
+  replace:->
+    # return if @config.on
+    self = @
+
+    # Правило
+    re = /(\s|^|\&nbsp\;|\>)(кто|кем|когда|зачем|почему|как|что|чем|где|чего|кого)\-?(\040|\t|\&nbsp\;)\-?(то|либо|нибудь)([\.\,\!\?\;]|\040|\&nbsp\;|$)/i
+
+    m = @text.match re
+    if m
+      # Замена
+      @text = @text.replace re , (str)->
+        self.debug str
+
+        self.debug m
+        reStr = ''
+        reStr += m[1] unless m[1] is "&nbsp;"
+        reStr += "#{m[2]}-#{m[4]}"
+        reStr += m[5] unless m[5] is "&nbsp;"
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['to_libo_nibud'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Надстрочный текст после символа ^'
+  version:'0.0.0'
+  configName:'word_sup'
+
+  replace:->
+    # Список правил
+    rex = [
+      /((\s|\&nbsp\;|^)+)\^([a-zа-яё0-9\.\:\,\-]+)(\s|\&nbsp\;|$|\.$)/i
+    ]
+
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+      # '"" . $this->tag($this->tag($m[3],"small"),"sup") . $m[4]'
+      @text = @text.replace m[0] , "#{m[1]}&#769;#{m[2]}"
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['word_sup'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Установка тире и пробельных символов в периодах дат'
+  version:'0.0.0'
+  configName:'years'
+
+  replace:->
+    # Список правил
+    rex = [
+      /(с|по|период|середины|начала|начало|конца|конец|половины|в|между|\([cс]\)|\&copy\;)(\s+|\&nbsp\;)([\d]{4})(-|\&minus\;)([\d]{4})(( |\&nbsp\;)?(г\.г\.|гг\.|гг|г\.|г)([^а-яёa-z]))?/
+    ]
+
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+      reStr = m[1] + m[2]
+      if parseInt [3] >=  parseInt m[5]
+        reStr += m[3] + m[4] + m[5]
+      else
+        reStr += m[3] + "&mdash;" + m[5]
+
+      reStr += "&nbsp;гг." if m[6]
+      reStr += m[9] if m[9]
+
+      @text = @text.replace m[0] , reStr
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['years'] = Rule
