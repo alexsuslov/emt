@@ -2,9 +2,12 @@ profiling:  0
 # TOC
    - [Rules](#rules)
      - [Открывающая кавычка](#rules--)
+     - [Расстановка дефисов с частицами ка, де, кась](#rules-------)
      - [Кое-как, кой-кого, все-таки](#rules------)
+     - [Расстановка тире и объединение в неразрывные периоды месяцев](#rules--------)
      - [Расстановка знака минус между числами](#rules-----)
      - [Замена символов и привязка сокращений в весовых величинах: г, кг, мг…](#rules-----------)
+     - [Привязка сокращений форм собственности к названиям организаций](#rules-------)
      - [Расстановка пробелов перед сокращениями dpi, lpi](#rules-----dpi-lpi)
      - [Расстановка пробелов перед сокращениями гл., стр., рис., илл., ст., п.](#rules----------)
      - [Установка пробельных символов в сокращении вольт](#rules------)
@@ -16,10 +19,12 @@ profiling:  0
      - [Тире после переноса строки](#rules----)
      - [Замена символа тире на html конструкцию](#rules-----html-)
      - [Тире после знаков восклицания, троеточия и прочее](#rules-------)
+     - [Пробел после года](#rules---)
      - [Пробел между символом номера и числом](#rules------)
      - [Объединение триад чисел полупробелом](#rules----)
      - [Пробел между параграфом и числом](#rules-----)
      - [Автоматическая простановка дефисов в обезличенных местоимениях и междометиях](#rules--------)
+     - [Установка тире и пробельных символов в периодах дат](#rules--------)
    - [EMTBase](#emtbase)
      - [add_safe_tag](#emtbase-add_safe_tag)
      - [add_safe_block](#emtbase-add_safe_block)
@@ -396,6 +401,18 @@ return assert.equal(res, emt.apply());
 
 <a name="rules"></a>
 # Rules
+<a name="rules-------"></a>
+## Расстановка дефисов с частицами ка, де, кась
+ скажите ка, он де, ну кась .
+
+```js
+rule.text = text;
+rule.apply();
+return assert.equal(" скажите-ка, он-де, ну-кась ", rule.text);
+```
+
+<a name="rules"></a>
+# Rules
 <a name="rules------"></a>
 ## Кое-как, кой-кого, все-таки
  Кое -как,  кой -кого,  все -таки .
@@ -404,6 +421,18 @@ return assert.equal(res, emt.apply());
 rule.text = text;
 rule.apply();
 return assert.equal(" Кое-как,  кой-кого,  все-таки ", rule.text);
+```
+
+<a name="rules"></a>
+# Rules
+<a name="rules--------"></a>
+## Расстановка тире и объединение в неразрывные периоды месяцев
+ сентября-август .
+
+```js
+rule.text = text;
+rule.apply();
+return assert.equal(" сентября&mdash;август ", rule.text);
 ```
 
 <a name="rules"></a>
@@ -440,6 +469,18 @@ return assert.equal(' 1&nbsp;см. 1&nbsp;м&sup2; ', rule.text);
 rule.text = text;
 rule.apply();
 return assert.equal(' 1&nbsp;кг. ', rule.text);
+```
+
+<a name="rules"></a>
+# Rules
+<a name="rules-------"></a>
+## Привязка сокращений форм собственности к названиям организаций
+ ООО Биомед .
+
+```js
+rule.text = text;
+rule.apply();
+return assert.equal(' ООО&nbsp;Биомед ', rule.text);
 ```
 
 <a name="rules"></a>
@@ -602,6 +643,18 @@ return assert.equal(" test &frac12; &frac14; &frac34;", open_quote.text);
 
 <a name="rules"></a>
 # Rules
+<a name="rules---"></a>
+## Пробел после года
+ 1999год .
+
+```js
+rule.text = text;
+rule.apply();
+return assert.equal(" 1999 год ", rule.text);
+```
+
+<a name="rules"></a>
+# Rules
 <a name="rules------"></a>
 ## Пробел между символом номера и числом
 № 4, № 5.
@@ -646,5 +699,17 @@ return assert.equal("&sect;&thinsp;1", rule.text);
 rule.text = text;
 rule.apply();
 return assert.equal(" кто-то кто-либо кто-нибудь", rule.text);
+```
+
+<a name="rules"></a>
+# Rules
+<a name="rules--------"></a>
+## Установка тире и пробельных символов в периодах дат
+ с 1990-2000 .
+
+```js
+rule.text = text;
+rule.apply();
+return assert.equal(" с 1990&mdash;2000 ", rule.text);
 ```
 
