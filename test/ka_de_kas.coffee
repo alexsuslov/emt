@@ -7,14 +7,12 @@ rule = new Rule
   Lib: new EMTLib
 
 
-# describe "Rules", ->
-#   describe rule.description, ->
-#     text = " Кое -как,  кой -кого,  все -таки "
-#     eqs = " Кое-как,  кой-кого,  все-таки "
+describe "Rules", ->
+  describe rule.description, ->
+    text = ' скажите ка, он де, ну кась '
 
-
-#     it text, ->
-#       rule.text = text
-#       rule.apply()
-#       assert.equal " Кое-как,  кой-кого,  все-таки ", rule.text
+    it text, ->
+      rule.text = text
+      rule.apply()
+      assert.equal " скажите-ка, он-де, ну-кась ", rule.text
 
