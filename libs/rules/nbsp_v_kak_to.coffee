@@ -13,7 +13,7 @@ class Rule extends OpenQuote
 
     # Список правил
     rex = [
-      /как то\:/i
+      /как то/i
     ]
 
     for re, idx in rex
@@ -22,7 +22,7 @@ class Rule extends OpenQuote
 
     if m
 
-      @text = @text.replace m[0] , "как&nbsp;то:"
+      @text = @text.replace m[0] , "как&nbsp;то"
 
     # !!m
 
