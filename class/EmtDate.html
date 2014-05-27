@@ -19,23 +19,30 @@
       Index
     </a>
     &raquo;
-    <span class='title'>Quote</span>
+    <span class='title'>EmtDate</span>
   </div>
 </div>
     <div id='content'>
       <h1>
         Class:
-        Quote
+        EmtDate
       </h1>
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>libs&#47;rules&#47;quote.coffee</td>
+          <td>libs&#47;rules&#47;date.coffee</td>
+        </tr>
+        <tr>
+          <td>Inherits:</td>
+          <td>
+            <a href='../class/Quote.html'>Quote</a>
+          </td>
         </tr>
       </table>
       <h2>Overview</h2>
       <div class='docstring'>
-  <h2 id="-">Групповой Объект правил &quot;Кавычки&quot;</h2><p>используется как объект расширения для остальных груп правил</p>
+  <h2 id="-">Групповой Объект правил &quot;Сокращения&quot;</h2>
+
 </div>
 <div class='tags'>
 </div>
@@ -46,7 +53,7 @@
     =
   </dt>
   <dd>
-    <pre><code class='coffeescript'>&quot;Кавычки&quot;</code></pre>
+    <pre><code class='coffeescript'>&quot;Даты и дни&quot;</code></pre>
     
   </dd>
   <dt id='version-variable'>
@@ -62,12 +69,8 @@
     =
   </dt>
   <dd>
-    <pre><code class='coffeescript'>&#39;Quote&#39;</code></pre>
-    <div class='docstring'>
-  <p>Имя конфига</p>
-</div>
-<div class='tags'>
-</div>
+    <pre><code class='coffeescript'>&#39;EmtDate&#39;</code></pre>
+    
   </dd>
   <dt id='config-variable'>
     config
@@ -76,14 +79,10 @@
   <dd>
     <pre><code class='coffeescript'>{
   on: true,
-  log: false,
-  debug: false
+  log: true,
+  debug: true
 }</code></pre>
-    <div class='docstring'>
-  <p>Конфиг для теста</p>
-</div>
-<div class='tags'>
-</div>
+    
   </dd>
   <dt id='rules-variable'>
     rules
@@ -102,7 +101,7 @@
     =
   </dt>
   <dd>
-    <pre><code class='coffeescript'>[&quot;open_quote&quot;, &quot;close_quote&quot;]</code></pre>
+    <pre><code class='coffeescript'>[&quot;years&quot;, &quot;mdash_month_interval&quot;, &quot;space_posle_goda&quot;, &quot;nbsp_posle_goda_abbr&quot;]</code></pre>
     <div class='docstring'>
   <p>Порядок выполнения</p>
 </div>
@@ -110,61 +109,28 @@
 </div>
   </dd>
 </dl>
-      <h2>Instance Method Summary</h2>
-      <ul class='summary'>
-  <li>
-    <span class='signature'>
-      <a href='#apply-dynamic'>
-        #
-(void)
-<b>apply</b><span>()</span>
-      </a>
-    </span>
-    <span class='desc'>
-      Применение правил @text 
-    </span>
-  </li>
-</ul>
-      <h2>Constructor Details</h2>
-      <div class='methods'>
-  <div class='method_details'>
-    <p class='signature' id='constructor-dynamic'>
-      #
-(void)
-<b>constructor</b><span>(opt)</span>
-      <br>
-    </p>
-    <div class='docstring'>
-  <p>Конструктор</p><ul>
-<li>Настраивает конфиг</li>
-<li>Замыкает на себя text</li>
-<li>Создает список правил согласно прядка</li>
-</ul><p>@param opt[object]</p><ul>
-<li>Lib[Object] обязательно</li>
-<li>text[String] строка</li>
-</ul>
-
-</div>
-<div class='tags'>
-</div>
-  </div>
-</div>
-      <h2>Instance Method Details</h2>
-      <div class='methods'>
-  <div class='method_details'>
-    <p class='signature' id='apply-dynamic'>
-      #
-(void)
-<b>apply</b><span>()</span>
-      <br>
-    </p>
-    <div class='docstring'>
-  <p>Применение правил @text</p>
-</div>
-<div class='tags'>
-</div>
-  </div>
-</div>
+      <h3 class='inherited'>
+        Variable inherited from
+        <a href='../class/Quote.html'>Quote</a>
+      </h3>
+      <p class='inherited'>
+        <a href='../class/Quote.html#description-variable'>description</a>
+        <a href='../class/Quote.html#version-variable'>version</a>
+        <a href='../class/Quote.html#configName-variable'>configName</a>
+        <a href='../class/Quote.html#config-variable'>config</a>
+        <a href='../class/Quote.html#rules-variable'>rules</a>
+        <a href='../class/Quote.html#order-variable'>order</a>
+      </p>
+      <h2>
+        <small>Inherited Method Summary</small>
+        <h3 class='inherited'>
+          Methods inherited from
+          <a href='../class/Quote.html'>Quote</a>
+        </h3>
+        <p class='inherited'>
+          <a href='../class/Quote.html#apply-dynamic'>#apply</a>
+        </p>
+      </h2>
     </div>
     <div id='footer'>
   May 27, 14 19:16:06 by
