@@ -3,7 +3,6 @@ minus_in_numbers_range = ' 1-10 '
 math_chars = ['-, =, +, >, <']
 
 # Date
-years = '1990-2000'
 mdash_month_interval = ''
 space_posle_goda = '01.12,97 text'
 nbsp_posle_goda_abbr = '?'
