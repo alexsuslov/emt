@@ -16,7 +16,7 @@ npm install
 grunt
 
 ```
-
+## [Доки](http://alexsuslov.github.io/emt/)
 ## Тесты
 ```
 npm test
