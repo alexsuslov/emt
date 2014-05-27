@@ -34,15 +34,6 @@ if isClient
             Rules:  @Rules
             Lib:    @Lib
 
-      # # Quote
-      # @Rules.quote = new @Rules.Quote
-      #   Rules:  @Rules
-      #   Lib:    @Lib
-      # # Abbr =
-      # @Rules.abbr = new @Rules.Abbr
-      #   Rules:  @Rules
-      #   Lib:    @Lib
-
       @apply()
 
   window.App = App
