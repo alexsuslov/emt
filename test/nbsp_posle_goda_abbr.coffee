@@ -15,5 +15,5 @@ describe "Rules", ->
     it text, ->
       rule.text = text
       rule.apply()
-      assert.equal " 1999 год ", rule.text
+      assert.equal " 1999&nbsp;г. ", rule.text
 

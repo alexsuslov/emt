@@ -1,6 +1,6 @@
 assert = require("assert")
 
-Rule = require( '../libs/rules/minus_between_nums')
+Rule = require( '../libs/rules/nbsp_celcius')
 EMTLib = require( '../libs/emt_lib').EMTLib
 
 rule = new Rule
@@ -10,10 +10,10 @@ rule = new Rule
 describe "Rules", ->
   describe rule.description, ->
 
-    text = " 1-1 "
+    text = ' 10 &deg;С '
 
     it text, ->
       rule.text = text
       rule.apply()
-      assert.equal " 1&minus;1 ", rule.text
+      assert.equal " 10&nbsp;&deg;C ", rule.text
 
