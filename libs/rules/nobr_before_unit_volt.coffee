@@ -12,7 +12,7 @@ class Rule extends OpenQuote
   replace:->
     # Список правил
     rex = [
-      /(\d+)([вВ]| В)(\s|\.|\!|\?|\,|$)/
+      /(\d+)([вВ]|\s[вВ])(\s|\.|\!|\?|\,|$)/
     ]
 
 
@@ -21,7 +21,8 @@ class Rule extends OpenQuote
       break if m
 
     if m
-      reStr = m[1] + m[2] + '&nbsp;' + m[4] + m[5]
+      # '\1&nbsp;В\3'
+      reStr = m[1] + '&nbsp;В.'
       @text = @text.replace m[0] , reStr
 
     !!m

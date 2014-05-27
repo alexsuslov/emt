@@ -7,6 +7,7 @@ profiling:  0
      - [Замена символов и привязка сокращений в весовых величинах: г, кг, мг…](#rules-----------)
      - [Расстановка пробелов перед сокращениями dpi, lpi](#rules-----dpi-lpi)
      - [Расстановка пробелов перед сокращениями гл., стр., рис., илл., ст., п.](#rules----------)
+     - [Установка пробельных символов в сокращении вольт](#rules------)
      - [Расстановка пробелов в сокращениях г., ул., пер., д.](#rules--------)
      - [Расстановка пробелов перед сокращениями см., им.](#rules------)
      - [Закрывающая кавычка](#rules--)
@@ -433,6 +434,14 @@ return assert.equal(' 1&nbsp;см. 1&nbsp;м&sup2; ', rule.text);
 # Rules
 <a name="rules-----------"></a>
 ## Замена символов и привязка сокращений в весовых величинах: г, кг, мг…
+ 1кг. .
+
+```js
+rule.text = text;
+rule.apply();
+return assert.equal(' 1&nbsp;кг. ', rule.text);
+```
+
 <a name="rules"></a>
 # Rules
 <a name="rules-----dpi-lpi"></a>
@@ -455,6 +464,18 @@ return assert.equal(" 300&nbsp;dpi 150&nbsp;lpi ", rule.text);
 rule.text = text;
 rule.apply();
 return assert.equal(" гл&nbsp;4, стр&nbsp;5, рис&nbsp;7, илл&nbsp;9, ст&nbsp;6, п&nbsp;9 ", rule.text);
+```
+
+<a name="rules"></a>
+# Rules
+<a name="rules------"></a>
+## Установка пробельных символов в сокращении вольт
+ 10в. .
+
+```js
+rule.text = text;
+rule.apply();
+return assert.equal(" 10&nbsp;В. ", rule.text);
 ```
 
 <a name="rules"></a>
