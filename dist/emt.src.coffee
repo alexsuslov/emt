@@ -16,6 +16,7 @@ if isClient
       'EmtDate'
       'Etc'
       'NoBr'
+      'Text'
     ]
 
 
@@ -981,6 +982,44 @@ OpenQuote = require( './open_quote') unless OpenQuote
 # Правило
 ##
 class Rule extends OpenQuote
+  description: 'Выделение ссылок из текста'
+  version:'0.0.0'
+  configName:'auto_links'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /(\s|^)(http|ftp|mailto|https)(:\/\/)([^\s\,\!\<]{4,})(\s|\.|\,|\!|\?|\<|$)/i
+    ]
+
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+      subM4 = m[4].substr(-1)
+      pntM4 = ( if subM4 is "." then '.' else m[4])
+
+      str =  m[1] +  @ntag( pntM4 , "a" , {href : m[2] + m[3] + pntM4} ) + ( if m[4].substr(-1) is "." then "." else "") + m[5]
+
+      @text = @text.replace m[0] , str
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['auto_links'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
   description: 'Замена x на символ × в размерных единицах'
   version:'0.0.0'
   configName:'auto_times_x'
@@ -1222,6 +1261,42 @@ class EmtDate extends Quote
 module.exports = EmtDate
 if typeof window isnt 'undefined'
   App.Rules['EmtDate'] = EmtDate
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Выделение эл. почты из текста'
+  version:'0.0.0'
+  configName:'email'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /(\s|^|\&nbsp\;|\()([a-z0-9\-\_\.]{2,})\@([a-z0-9\-\.]{2,})\.([a-z]{2,6})(\)|\s|\.|\,|\!|\?|$|\<)/
+    ]
+
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+
+      tag = @ntag(m[2] + "@" + m[3] + "." + m[4], "a", {href:"mailto:" + m[2] + "@" + m[3] + "." + m[4]})
+
+      @text = @text.replace m[0] , m[1]+ tag + m[5]
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['email'] = Rule
 
 # Зависимости
 Quote = require( './quote') unless Quote
@@ -1980,7 +2055,7 @@ OpenQuote = require( './open_quote') unless OpenQuote
 # Правило
 ##
 class Rule extends OpenQuote
-  description: 'Привязка союзов и предлогов к предыдущим словам в случае конца предложения'
+  description: 'Обработка т.е.'
   version:'0.0.0'
   configName:'nbsp_in_the_end'
 
@@ -1988,7 +2063,7 @@ class Rule extends OpenQuote
 
     # Список правил
     rex = [
-      /([a-zа-яё0-9\-]{3,}) ([a-zа-яё]{1,2})\.( [A-ZА-ЯЁ]|$)/
+      /([a-zа-яё0-9\-]{3,})\s(те|т\.е|т\sе|т\s\.е)\.(\s[A-ZА-ЯЁ]|$)/
     ]
 
 
@@ -1997,7 +2072,9 @@ class Rule extends OpenQuote
       break if m
 
     if m
-      @text = @text.replace m[0] , "#{m[1]}&nbsp;#{m[2]}#{m[3]}"
+      console.log m
+      str = m[1] + @ntag( m[2], "span",  {class: "nowrap"})
+      @text = @text.replace m[0] , str
 
     !!m
 
@@ -2005,6 +2082,47 @@ module.exports = Rule
 
 if typeof window isnt 'undefined'
   App.Rules['nbsp_in_the_end'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Форматирование денежных сокращений (расстановка пробелов и привязка названия валюты к числу)'
+  version:'0.0.0'
+  configName:'nbsp_money_abbr'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /(\d)((\040|\s)?(тыс|млн|млрд)\.?(\040|\&nbsp\;)?)?(\040|\&nbsp\;)?(руб\.|долл\.|евро|€|&euro;|\$|у[\.]? ?е[\.]?)/i
+    ]
+
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+      str = m[1] + (if m[4] then "&nbsp;" + m[4] + (
+          if m[4] is "тыс" then '.' else ''
+          ) else '' ) + "&nbsp;" + (
+        if m[7].match /у[\\\\.]? ?е[\\\\.]?/i then "у.е." else m[7]
+        )
+
+
+
+      @text = @text.replace m[0] , str
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['nbsp_money_abbr'] = Rule
 
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
@@ -2104,6 +2222,47 @@ module.exports = Rule
 
 if typeof window isnt 'undefined'
   App.Rules['nbsp_v_kak_to'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Удаление повторяющихся слов'
+  version:'0.0.0'
+  configName:'email'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /([а-яё]{3,})( |\t|\&nbsp\;)\1/i
+      /(\s|\&nbsp\;|^|\.|\!|\?)(([А-ЯЁ])([а-яё]{2,}))( |\t|\&nbsp\;)(([а-яё])\4)/
+    ]
+    res = [
+      (m)->
+        m[1]
+    ,
+      (m)=>
+        m[1] + ( if m[7] is @Lib.strtolower( m[3]) then m[2] else m[2] + m[5] + m[6] )
+    ]
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+
+      @text = @text.replace m[0] , res[idx] m
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['no_repeat_words'] = Rule
 
 # Зависимости
 Quote = require( './quote') unless Quote
@@ -2246,6 +2405,49 @@ OpenQuote = require( './open_quote') unless OpenQuote
 # Правило
 ##
 class Rule extends OpenQuote
+  description: 'Привязка сокращения ГОСТ к номеру'
+  version:'0.0.0'
+  configName:'nobr_gost'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /(\040|\t|\&nbsp\;|^)ГОСТ( |\&nbsp\;)?(\d+)((\-|\&minus\;|\&mdash\;)(\d+))?(( |\&nbsp\;)(\-|\&mdash\;))?/i
+      /(\040|\t|\&nbsp\;|^|\>)ГОСТ( |\&nbsp\;)?(\d+)(\-|\&minus\;|\&mdash\;)(\d+)/i
+    ]
+    res = [
+      (m)=>
+        ndash = (if m[6] then "&ndash;" + m[6] else "")
+        mdash = (if m[7] then " &mdash;" else "")
+        m[1] + @ntag( "ГОСТ " + m[3] + ndash + mdash, "span", {class: "nowrap"})
+      (m)->
+        "m[1]\"ГОСТ \"m[3]\"&ndash;\"m[5]"
+
+    ]
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+
+      @text = @text.replace m[0] , res[idx]( m )
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['nbsp_money_abbr'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
   description: 'Расстановка пробелов в сокращениях г., ул., пер., д.'
   version:'0.0.0'
   configName:'nobr_locations'
@@ -2324,21 +2526,25 @@ class Rule extends OpenQuote
   replace:->
     # Список правил
     rex = [
-      /(^|\s|\&nbsp\;)и( |\&nbsp\;)т\.?[ ]?д(\.|$|\s|\&nbsp\;)/
-      /(^|\s|\&nbsp\;)и( |\&nbsp\;)т\.?[ ]?п(\.|$|\s|\&nbsp\;)/
-      /(^|\s|\&nbsp\;)в( |\&nbsp\;)т\.?[ ]?ч(\.|$|\s|\&nbsp\;)/
+      /(^|\s|\&nbsp\;)и(\s|\&nbsp\;)т\.?[ ]?д(\.|$|\s|\&nbsp\;)/
+      /(^|\s|\&nbsp\;)и(\s|\&nbsp\;)т\.?[ ]?п(\.|$|\s|\&nbsp\;)/
+      /(^|\s|\&nbsp\;)в(\s|\&nbsp\;)т\.?[ ]?ч(\.|$|\s|\&nbsp\;)/
     ]
 
+    res =[
+      "и т. д."
+      "и т. п."
+      "и т. ч."
+    ]
 
     for re, idx in rex
       m = @text.match re
       break if m
 
     if m
-        # '$m[1].$this->tag("и т. д.", "span",  array("class" => "nowrap")).($m[3]!="."? $m[3] : "" )',
-        # '$m[1].$this->tag("и т. п.", "span",  array("class" => "nowrap")).($m[3]!="."? $m[3] : "" )',
-        # '$m[1].$this->tag("в т. ч.", "span",  array("class" => "nowrap")).($m[3]!="."? $m[3] : "" )','
-      reStr = m[1] + m[2] + '&nbsp;' + m[4] + m[5]
+      tag = @ntag( res[idx], "span", class:"nowrap")
+      reStr = m[1] + tag + ( if m[3] isnt '.' then m[3] else '' )
+
       @text = @text.replace m[0] , reStr
 
     !!m
@@ -2597,8 +2803,10 @@ class Rule extends OpenQuote
       break if m
 
     if m
-      # '$m[1] . $this->tag(trim($m[2]) . " " . ($m[3] ? trim($m[3]) . " " : ""). $m[4], "span",  array("class" => "nowrap") ).$m[5] '
-      reStr = m[1] + m[2] + '&nbsp;' + m[4] + m[5]
+      content = @Lib.trim( m[2] ) + ' '
+      content += @Lib.trim( m[3] ) + ' ' if m[3]
+
+      reStr = m[1] + @ntag( content + m[4] , "span", {class:"nowrap"} ) + m[5]
       @text = @text.replace m[0] , reStr
 
     !!m
@@ -2765,6 +2973,38 @@ module.exports = Rule
 
 if typeof window isnt 'undefined'
   App.Rules['super_nbsp'] = Rule
+
+# Зависимости
+Quote = require( './quote') unless Quote
+
+###
+## Групповой Объект правил "Сокращения"
+###
+class Text extends Quote
+  description: "Текст и абзацы"
+  version:'0.0.0'
+  configName:'Text'
+
+
+  config:
+    on: true
+    log: true
+    debug:true
+
+  # Очередь правил
+  rules:[]
+
+  # Порядок выполнения
+  order:[
+    "auto_links",
+    "email",
+    "no_repeat_words",
+    ]
+
+module.exports = Text
+
+if typeof window isnt 'undefined'
+  App.Rules.Text = Text
 
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote

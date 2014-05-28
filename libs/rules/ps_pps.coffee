@@ -21,8 +21,10 @@ class Rule extends OpenQuote
       break if m
 
     if m
-      # '$m[1] . $this->tag(trim($m[2]) . " " . ($m[3] ? trim($m[3]) . " " : ""). $m[4], "span",  array("class" => "nowrap") ).$m[5] '
-      reStr = m[1] + m[2] + '&nbsp;' + m[4] + m[5]
+      content = @Lib.trim( m[2] ) + ' '
+      content += @Lib.trim( m[3] ) + ' ' if m[3]
+
+      reStr = m[1] + @ntag( content + m[4] , "span", {class:"nowrap"} ) + m[5]
       @text = @text.replace m[0] , reStr
 
     !!m

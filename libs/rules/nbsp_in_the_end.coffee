@@ -5,7 +5,7 @@ OpenQuote = require( './open_quote') unless OpenQuote
 # Правило
 ##
 class Rule extends OpenQuote
-  description: 'Привязка союзов и предлогов к предыдущим словам в случае конца предложения'
+  description: 'Обработка т.е.'
   version:'0.0.0'
   configName:'nbsp_in_the_end'
 
@@ -13,7 +13,7 @@ class Rule extends OpenQuote
 
     # Список правил
     rex = [
-      /([a-zа-яё0-9\-]{3,}) ([a-zа-яё]{1,2})\.( [A-ZА-ЯЁ]|$)/
+      /([a-zа-яё0-9\-]{3,})\s(те|т\.е|т\sе|т\s\.е)\.(\s[A-ZА-ЯЁ]|$)/
     ]
 
 
@@ -22,7 +22,9 @@ class Rule extends OpenQuote
       break if m
 
     if m
-      @text = @text.replace m[0] , "#{m[1]}&nbsp;#{m[2]}#{m[3]}"
+      console.log m
+      str = m[1] + @ntag( m[2], "span",  {class: "nowrap"})
+      @text = @text.replace m[0] , str
 
     !!m
 

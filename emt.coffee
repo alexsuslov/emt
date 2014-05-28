@@ -16,6 +16,7 @@ if isClient
       'EmtDate'
       'Etc'
       'NoBr'
+      'Text'
     ]
 
 

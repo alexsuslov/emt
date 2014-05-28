@@ -43,6 +43,31 @@ tests = [
     text: " 300 dpi 150 lpi "
     res: " 300&nbsp;dpi 150&nbsp;lpi "
   }
+  {
+    obj: require( '../libs/rules/ps_pps')
+    text: " P. S. , P.P.S. "
+    res: " <span class='nowrap'>P. S.</span> , <span class='nowrap'>P. P. S.</span> "
+  }
+  {
+    obj: require( '../libs/rules/nobr_vtch_itd_itp')
+    text: " и т. д. и т. п. в т.ч."
+    res: " <span class='nowrap'>и т. д.</span> <span class='nowrap'>и т. п.</span> <span class='nowrap'>и т. ч.</span>"
+  }
+  {
+    obj: require( '../libs/rules/nbsp_money_abbr')
+    text: " 40 тыс. руб. "
+    res: " 40&nbsp;тыс.&nbsp;руб. "
+  }
+  {
+    obj: require( '../libs/rules/nobr_gost')
+    text: " ГОСТ 123-123 "
+    res: " <span class='nowrap'>ГОСТ 123&ndash;123</span> "
+  }
+  {
+    obj: require( '../libs/rules/nbsp_in_the_end')
+    text: " тест те."
+    res: " тест<span class='nowrap'>те</span>"
+  }
 ]
 
 describe "Правило ", ->

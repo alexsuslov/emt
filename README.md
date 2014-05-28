@@ -13,7 +13,7 @@ git clone https://github.com/alexsuslov/emt.git
 cd emt
 npm install
 
-grunt
+grunt serve
 
 ```
 ## [Доки](http://alexsuslov.github.io/emt/)

@@ -1,5 +1,5 @@
 (function() {
-  var Abbr, App, Dash, EMTLib, EmtDate, Etc, NoBr, Numbers, OpenQuote, OpenQuoteAdv, Quote, Rule, chars_table, html4_char, isClient, module,
+  var Abbr, App, Dash, EMTLib, EmtDate, Etc, NoBr, Numbers, OpenQuote, OpenQuoteAdv, Quote, Rule, Text, chars_table, html4_char, isClient, module,
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -13,7 +13,7 @@
       text: '',
       Lib: {},
       Rules: {},
-      order: ['Quote', 'Abbr', 'Numbers', 'Dash', 'EmtDate', 'Etc', 'NoBr'],
+      order: ['Quote', 'Abbr', 'Numbers', 'Dash', 'EmtDate', 'Etc', 'NoBr', 'Text'],
       apply: function() {
         var rule, _i, _len, _ref;
         this.text = this.el.html();
@@ -1193,6 +1193,54 @@
       return Rule.__super__.constructor.apply(this, arguments);
     }
 
+    Rule.prototype.description = 'Выделение ссылок из текста';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'auto_links';
+
+    Rule.prototype.replace = function() {
+      var idx, m, pntM4, re, rex, str, subM4, _i, _len;
+      rex = [/(\s|^)(http|ftp|mailto|https)(:\/\/)([^\s\,\!\<]{4,})(\s|\.|\,|\!|\?|\<|$)/i];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        subM4 = m[4].substr(-1);
+        pntM4 = (subM4 === "." ? '.' : m[4]);
+        str = m[1] + this.ntag(pntM4, "a", {
+          href: m[2] + m[3] + pntM4
+        }) + (m[4].substr(-1) === "." ? "." : "") + m[5];
+        this.text = this.text.replace(m[0], str);
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['auto_links'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
     Rule.prototype.description = 'Замена x на символ × в размерных единицах';
 
     Rule.prototype.version = '0.0.0';
@@ -1489,6 +1537,52 @@
 
   if (typeof window !== 'undefined') {
     App.Rules['EmtDate'] = EmtDate;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Выделение эл. почты из текста';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'email';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, rex, tag, _i, _len;
+      rex = [/(\s|^|\&nbsp\;|\()([a-z0-9\-\_\.]{2,})\@([a-z0-9\-\.]{2,})\.([a-z]{2,6})(\)|\s|\.|\,|\!|\?|$|\<)/];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        tag = this.ntag(m[2] + "@" + m[3] + "." + m[4], "a", {
+          href: "mailto:" + m[2] + "@" + m[3] + "." + m[4]
+        });
+        this.text = this.text.replace(m[0], m[1] + tag + m[5]);
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['email'] = Rule;
   }
 
   if (!Quote) {
@@ -2414,15 +2508,15 @@
       return Rule.__super__.constructor.apply(this, arguments);
     }
 
-    Rule.prototype.description = 'Привязка союзов и предлогов к предыдущим словам в случае конца предложения';
+    Rule.prototype.description = 'Обработка т.е.';
 
     Rule.prototype.version = '0.0.0';
 
     Rule.prototype.configName = 'nbsp_in_the_end';
 
     Rule.prototype.replace = function() {
-      var idx, m, re, rex, _i, _len;
-      rex = [/([a-zа-яё0-9\-]{3,}) ([a-zа-яё]{1,2})\.( [A-ZА-ЯЁ]|$)/];
+      var idx, m, re, rex, str, _i, _len;
+      rex = [/([a-zа-яё0-9\-]{3,})\s(те|т\.е|т\sе|т\s\.е)\.(\s[A-ZА-ЯЁ]|$)/];
       for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
         re = rex[idx];
         m = this.text.match(re);
@@ -2431,7 +2525,11 @@
         }
       }
       if (m) {
-        this.text = this.text.replace(m[0], "" + m[1] + "&nbsp;" + m[2] + m[3]);
+        console.log(m);
+        str = m[1] + this.ntag(m[2], "span", {
+          "class": "nowrap"
+        });
+        this.text = this.text.replace(m[0], str);
       }
       return !!m;
     };
@@ -2444,6 +2542,50 @@
 
   if (typeof window !== 'undefined') {
     App.Rules['nbsp_in_the_end'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Форматирование денежных сокращений (расстановка пробелов и привязка названия валюты к числу)';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'nbsp_money_abbr';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, rex, str, _i, _len;
+      rex = [/(\d)((\040|\s)?(тыс|млн|млрд)\.?(\040|\&nbsp\;)?)?(\040|\&nbsp\;)?(руб\.|долл\.|евро|€|&euro;|\$|у[\.]? ?е[\.]?)/i];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        str = m[1] + (m[4] ? "&nbsp;" + m[4] + (m[4] === "тыс" ? '.' : '') : '') + "&nbsp;" + (m[7].match(/у[\\\\.]? ?е[\\\\.]?/i) ? "у.е." : m[7]);
+        this.text = this.text.replace(m[0], str);
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['nbsp_money_abbr'] = Rule;
   }
 
   if (!OpenQuote) {
@@ -2573,6 +2715,58 @@
 
   if (typeof window !== 'undefined') {
     App.Rules['nbsp_v_kak_to'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Удаление повторяющихся слов';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'email';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, res, rex, _i, _len;
+      rex = [/([а-яё]{3,})( |\t|\&nbsp\;)\1/i, /(\s|\&nbsp\;|^|\.|\!|\?)(([А-ЯЁ])([а-яё]{2,}))( |\t|\&nbsp\;)(([а-яё])\4)/];
+      res = [
+        function(m) {
+          return m[1];
+        }, (function(_this) {
+          return function(m) {
+            return m[1] + (m[7] === _this.Lib.strtolower(m[3]) ? m[2] : m[2] + m[5] + m[6]);
+          };
+        })(this)
+      ];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        this.text = this.text.replace(m[0], res[idx](m));
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['no_repeat_words'] = Rule;
   }
 
   if (!Quote) {
@@ -2762,6 +2956,63 @@
       return Rule.__super__.constructor.apply(this, arguments);
     }
 
+    Rule.prototype.description = 'Привязка сокращения ГОСТ к номеру';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'nobr_gost';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, res, rex, _i, _len;
+      rex = [/(\040|\t|\&nbsp\;|^)ГОСТ( |\&nbsp\;)?(\d+)((\-|\&minus\;|\&mdash\;)(\d+))?(( |\&nbsp\;)(\-|\&mdash\;))?/i, /(\040|\t|\&nbsp\;|^|\>)ГОСТ( |\&nbsp\;)?(\d+)(\-|\&minus\;|\&mdash\;)(\d+)/i];
+      res = [
+        (function(_this) {
+          return function(m) {
+            var mdash, ndash;
+            ndash = (m[6] ? "&ndash;" + m[6] : "");
+            mdash = (m[7] ? " &mdash;" : "");
+            return m[1] + _this.ntag("ГОСТ " + m[3] + ndash + mdash, "span", {
+              "class": "nowrap"
+            });
+          };
+        })(this), function(m) {
+          return "m[1]\"ГОСТ \"m[3]\"&ndash;\"m[5]";
+        }
+      ];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        this.text = this.text.replace(m[0], res[idx](m));
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['nbsp_money_abbr'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
     Rule.prototype.description = 'Расстановка пробелов в сокращениях г., ул., пер., д.';
 
     Rule.prototype.version = '0.0.0';
@@ -2861,8 +3112,9 @@
     Rule.prototype.configName = 'nobr_vtch_itd_itp';
 
     Rule.prototype.replace = function() {
-      var idx, m, re, reStr, rex, _i, _len;
-      rex = [/(^|\s|\&nbsp\;)и( |\&nbsp\;)т\.?[ ]?д(\.|$|\s|\&nbsp\;)/, /(^|\s|\&nbsp\;)и( |\&nbsp\;)т\.?[ ]?п(\.|$|\s|\&nbsp\;)/, /(^|\s|\&nbsp\;)в( |\&nbsp\;)т\.?[ ]?ч(\.|$|\s|\&nbsp\;)/];
+      var idx, m, re, reStr, res, rex, tag, _i, _len;
+      rex = [/(^|\s|\&nbsp\;)и(\s|\&nbsp\;)т\.?[ ]?д(\.|$|\s|\&nbsp\;)/, /(^|\s|\&nbsp\;)и(\s|\&nbsp\;)т\.?[ ]?п(\.|$|\s|\&nbsp\;)/, /(^|\s|\&nbsp\;)в(\s|\&nbsp\;)т\.?[ ]?ч(\.|$|\s|\&nbsp\;)/];
+      res = ["и т. д.", "и т. п.", "и т. ч."];
       for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
         re = rex[idx];
         m = this.text.match(re);
@@ -2871,7 +3123,10 @@
         }
       }
       if (m) {
-        reStr = m[1] + m[2] + '&nbsp;' + m[4] + m[5];
+        tag = this.ntag(res[idx], "span", {
+          "class": "nowrap"
+        });
+        reStr = m[1] + tag + (m[3] !== '.' ? m[3] : '');
         this.text = this.text.replace(m[0], reStr);
       }
       return !!m;
@@ -3178,7 +3433,7 @@
     Rule.prototype.configName = 'ps_pps';
 
     Rule.prototype.replace = function() {
-      var idx, m, re, reStr, rex, _i, _len;
+      var content, idx, m, re, reStr, rex, _i, _len;
       rex = [/(^|\040|\t|\>|\r|\n)(p\.\040?)(p\.\040?)?(s\.)([^\<])/i];
       for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
         re = rex[idx];
@@ -3188,7 +3443,13 @@
         }
       }
       if (m) {
-        reStr = m[1] + m[2] + '&nbsp;' + m[4] + m[5];
+        content = this.Lib.trim(m[2]) + ' ';
+        if (m[3]) {
+          content += this.Lib.trim(m[3]) + ' ';
+        }
+        reStr = m[1] + this.ntag(content + m[4], "span", {
+          "class": "nowrap"
+        }) + m[5];
         this.text = this.text.replace(m[0], reStr);
       }
       return !!m;
@@ -3380,6 +3641,48 @@
 
   if (typeof window !== 'undefined') {
     App.Rules['super_nbsp'] = Rule;
+  }
+
+  if (!Quote) {
+    Quote = require('./quote');
+  }
+
+
+  /*
+   *# Групповой Объект правил "Сокращения"
+   */
+
+  Text = (function(_super) {
+    __extends(Text, _super);
+
+    function Text() {
+      return Text.__super__.constructor.apply(this, arguments);
+    }
+
+    Text.prototype.description = "Текст и абзацы";
+
+    Text.prototype.version = '0.0.0';
+
+    Text.prototype.configName = 'Text';
+
+    Text.prototype.config = {
+      on: true,
+      log: true,
+      debug: true
+    };
+
+    Text.prototype.rules = [];
+
+    Text.prototype.order = ["auto_links", "email", "no_repeat_words"];
+
+    return Text;
+
+  })(Quote);
+
+  module.exports = Text;
+
+  if (typeof window !== 'undefined') {
+    App.Rules.Text = Text;
   }
 
   if (!OpenQuote) {
