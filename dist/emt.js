@@ -1,5 +1,5 @@
 (function() {
-  var Abbr, App, Dash, EMTLib, EmtDate, Etc, NoBr, Numbers, OpenQuote, OpenQuoteAdv, Quote, Rule, Text, chars_table, html4_char, isClient, module,
+  var Abbr, App, Dash, EMTLib, EmtDate, Etc, NoBr, Numbers, OpenQuote, OpenQuoteAdv, Quote, Rule, Symbol, Text, chars_table, html4_char, isClient, module,
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -13,7 +13,7 @@
       text: '',
       Lib: {},
       Rules: {},
-      order: ['Quote', 'Abbr', 'Numbers', 'Dash', 'EmtDate', 'Etc', 'NoBr', 'Text'],
+      order: ['Quote', 'Abbr', 'Numbers', 'Dash', 'EmtDate', 'Etc', 'NoBr', 'Text', 'Symbol'],
       apply: function() {
         var rule, _i, _len, _ref;
         this.text = this.el.html();
@@ -1193,6 +1193,103 @@
       return Rule.__super__.constructor.apply(this, arguments);
     }
 
+    Rule.prototype.description = 'Расстановка правильного апострофа в текстах';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'apostrophe';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, rex, _i, _len;
+      rex = [/(\s|^|\>|\&rsquo\;)([a-zа-яё]{1,})\'([a-zа-яё]+)/i];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        this.text = this.text.replace(m[0], "" + m[1] + m[2] + "&rsquo;" + m[3]);
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['apostrophe'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Замена стрелок вправо-влево на html коды';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'arrows_symbols';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, res, rex, _i, _len;
+      rex = [/(\s|\>|\&nbsp\;|^)\-\>($|\s|\&nbsp\;|\<)/, /(\s|\>|\&nbsp\;|^|;)\<\-(\s|\&nbsp\;|$)/, /→/, /←/];
+      res = [
+        function(m) {
+          return "" + m[1] + "&rarr;" + m[2];
+        }, function(m) {
+          return "" + m[1] + "&rarr;" + m[2];
+        }, function(m) {
+          return '&rarr;';
+        }, function(m) {
+          return '&larr;';
+        }
+      ];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        this.text = this.text.replace(m[0], res[idx](m));
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['arrows_symbols'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
     Rule.prototype.description = 'Выделение ссылок из текста';
 
     Rule.prototype.version = '0.0.0';
@@ -1455,6 +1552,56 @@
     App.Rules['close_quote_adv'] = Rule;
   }
 
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Замена (c) на символ копирайт';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'copy_replace';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, res, rex, _i, _len;
+      rex = [/\((c|с)\)\s+/i, /\((c|с)\)($|\.|,|!|\?)/i];
+      res = [
+        function(m) {
+          return '&copy;&nbsp;';
+        }, function(m) {
+          return "&copy;" + m[2];
+        }
+      ];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        this.text = this.text.replace(m[0], res[idx](m));
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['copy_replace'] = Rule;
+  }
+
   if (!Quote) {
     Quote = require('./quote');
   }
@@ -1550,6 +1697,52 @@
       return Rule.__super__.constructor.apply(this, arguments);
     }
 
+    Rule.prototype.description = 'Градусы по Фаренгейту';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'degree_f';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, rex, str, _i, _len;
+      rex = [/([0-9]+)F($|\s|\.|\,|\;|\:|\&nbsp\;|\?|\!)/];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        str = "" + this.ntag(m[1] + " &deg;F", "span", {
+          "class": "nowrap"
+        }) + m[2];
+        this.text = this.text.replace(m[0], str);
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['degree_f'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
     Rule.prototype.description = 'Выделение эл. почты из текста';
 
     Rule.prototype.version = '0.0.0';
@@ -1625,6 +1818,49 @@
 
   if (typeof window !== 'undefined') {
     App.Rules['Etc'] = Etc;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Символ евро';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'euro_symbol';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, rex, _i, _len;
+      rex = [/€/];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        this.text = this.text.replace(m[0], '&euro;');
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['euro_symbol'] = Rule;
   }
 
   if (!OpenQuote) {
@@ -2732,7 +2968,7 @@
 
     Rule.prototype.version = '0.0.0';
 
-    Rule.prototype.configName = 'email';
+    Rule.prototype.configName = 'no_repeat_words';
 
     Rule.prototype.replace = function() {
       var idx, m, re, res, rex, _i, _len;
@@ -3380,6 +3616,58 @@
       return Rule.__super__.constructor.apply(this, arguments);
     }
 
+    Rule.prototype.description = 'Простановка параграфов';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'paragraphs';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, res, rex, _i, _len;
+      rex = [/([а-яё]{3,})( |\t|\&nbsp\;)\1/i, /(\s|\&nbsp\;|^|\.|\!|\?)(([А-ЯЁ])([а-яё]{2,}))( |\t|\&nbsp\;)(([а-яё])\4)/];
+      res = [
+        function(m) {
+          return m[1];
+        }, (function(_this) {
+          return function(m) {
+            return m[1] + (m[7] === _this.Lib.strtolower(m[3]) ? m[2] : m[2] + m[5] + m[6]);
+          };
+        })(this)
+      ];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        this.text = this.text.replace(m[0], res[idx](m));
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['paragraphs'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
     Rule.prototype.description = 'Объединение в неразрывные конструкции номеров телефонов';
 
     Rule.prototype.version = '0.0.0';
@@ -3463,6 +3751,49 @@
 
   if (typeof window !== 'undefined') {
     App.Rules['ps_pps'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Замена (R) на символ зарегистрированной торговой марки';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'r_sign_replace';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, rex, _i, _len;
+      rex = [/(.|^)\(r\)(.|$)/i];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        this.text = this.text.replace(m[0], "" + m[1] + "&reg;" + m[2]);
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['r_sign_replace'] = Rule;
   }
 
 
@@ -3641,6 +3972,48 @@
 
   if (typeof window !== 'undefined') {
     App.Rules['super_nbsp'] = Rule;
+  }
+
+  if (!Quote) {
+    Quote = require('./quote');
+  }
+
+
+  /*
+   *# Групповой Объект правил "Сокращения"
+   */
+
+  Symbol = (function(_super) {
+    __extends(Symbol, _super);
+
+    function Symbol() {
+      return Symbol.__super__.constructor.apply(this, arguments);
+    }
+
+    Symbol.prototype.description = "Текст и абзацы";
+
+    Symbol.prototype.version = '0.0.0';
+
+    Symbol.prototype.configName = 'Symbol';
+
+    Symbol.prototype.config = {
+      on: true,
+      log: true,
+      debug: true
+    };
+
+    Symbol.prototype.rules = [];
+
+    Symbol.prototype.order = ["tm_replace", "r_sign_replace", "copy_replace", "apostrophe", "degree_f", "euro_symbol", "arrows_symbols"];
+
+    return Symbol;
+
+  })(Quote);
+
+  module.exports = Symbol;
+
+  if (typeof window !== 'undefined') {
+    App.Rules.Symbol = Symbol;
   }
 
   if (!Quote) {
@@ -3861,6 +4234,58 @@
 
   if (typeof window !== 'undefined') {
     App.Rules['time_interval'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+  Rule = (function(_super) {
+    __extends(Rule, _super);
+
+    function Rule() {
+      return Rule.__super__.constructor.apply(this, arguments);
+    }
+
+    Rule.prototype.description = 'Замена (tm) на символ торговой марки';
+
+    Rule.prototype.version = '0.0.0';
+
+    Rule.prototype.configName = 'tm_replace';
+
+    Rule.prototype.replace = function() {
+      var idx, m, re, res, rex, _i, _len;
+      rex = [/([\040\t])?\(tm\)/i];
+      res = [
+        function(m) {
+          return m[1];
+        }, (function(_this) {
+          return function(m) {
+            return m[1] + (m[7] === _this.Lib.strtolower(m[3]) ? m[2] : m[2] + m[5] + m[6]);
+          };
+        })(this)
+      ];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        this.text = this.text.replace(m[0], '&trade;');
+      }
+      return !!m;
+    };
+
+    return Rule;
+
+  })(OpenQuote);
+
+  module.exports = Rule;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['tm_replace'] = Rule;
   }
 
   if (!OpenQuote) {

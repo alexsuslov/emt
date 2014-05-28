@@ -5,23 +5,31 @@ OpenQuote = require( './open_quote') unless OpenQuote
 # Правило
 ##
 class Rule extends OpenQuote
-  description: 'Удаление повторяющихся слов'
+  description: 'Замена стрелок вправо-влево на html коды'
   version:'0.0.0'
-  configName:'no_repeat_words'
+  configName:'arrows_symbols'
 
   replace:->
 
     # Список правил
     rex = [
-      /([а-яё]{3,})( |\t|\&nbsp\;)\1/i
-      /(\s|\&nbsp\;|^|\.|\!|\?)(([А-ЯЁ])([а-яё]{2,}))( |\t|\&nbsp\;)(([а-яё])\4)/
+      /(\s|\>|\&nbsp\;|^)\-\>($|\s|\&nbsp\;|\<)/
+      /(\s|\>|\&nbsp\;|^|;)\<\-(\s|\&nbsp\;|$)/
+      /→/
+      /←/
     ]
     res = [
       (m)->
-        m[1]
+        "#{m[1]}&rarr;#{m[2]}"
     ,
-      (m)=>
-        m[1] + ( if m[7] is @Lib.strtolower( m[3]) then m[2] else m[2] + m[5] + m[6] )
+      (m)->
+        "#{m[1]}&rarr;#{m[2]}"
+    ,
+      (m)->
+        '&rarr;'
+    ,
+      (m)->
+        '&larr;'
     ]
 
     for re, idx in rex
@@ -29,7 +37,6 @@ class Rule extends OpenQuote
       break if m
 
     if m
-
       @text = @text.replace m[0] , res[idx] m
 
     !!m
@@ -37,4 +44,4 @@ class Rule extends OpenQuote
 module.exports = Rule
 
 if typeof window isnt 'undefined'
-  App.Rules['no_repeat_words'] = Rule
+  App.Rules['arrows_symbols'] = Rule

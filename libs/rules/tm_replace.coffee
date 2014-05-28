@@ -5,16 +5,15 @@ OpenQuote = require( './open_quote') unless OpenQuote
 # Правило
 ##
 class Rule extends OpenQuote
-  description: 'Удаление повторяющихся слов'
+  description: 'Замена (tm) на символ торговой марки'
   version:'0.0.0'
-  configName:'no_repeat_words'
+  configName:'tm_replace'
 
   replace:->
 
     # Список правил
     rex = [
-      /([а-яё]{3,})( |\t|\&nbsp\;)\1/i
-      /(\s|\&nbsp\;|^|\.|\!|\?)(([А-ЯЁ])([а-яё]{2,}))( |\t|\&nbsp\;)(([а-яё])\4)/
+      /([\040\t])?\(tm\)/i
     ]
     res = [
       (m)->
@@ -29,12 +28,11 @@ class Rule extends OpenQuote
       break if m
 
     if m
-
-      @text = @text.replace m[0] , res[idx] m
+      @text = @text.replace m[0] , '&trade;'
 
     !!m
 
 module.exports = Rule
 
 if typeof window isnt 'undefined'
-  App.Rules['no_repeat_words'] = Rule
+  App.Rules['tm_replace'] = Rule

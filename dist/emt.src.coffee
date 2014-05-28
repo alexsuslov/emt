@@ -17,6 +17,7 @@ if isClient
       'Etc'
       'NoBr'
       'Text'
+      'Symbol'
     ]
 
 
@@ -982,6 +983,86 @@ OpenQuote = require( './open_quote') unless OpenQuote
 # Правило
 ##
 class Rule extends OpenQuote
+  description: 'Расстановка правильного апострофа в текстах'
+  version:'0.0.0'
+  configName:'apostrophe'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /(\s|^|\>|\&rsquo\;)([a-zа-яё]{1,})\'([a-zа-яё]+)/i
+    ]
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+      @text = @text.replace m[0] , "#{m[1]}#{m[2]}&rsquo;#{m[3]}"
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['apostrophe'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Замена стрелок вправо-влево на html коды'
+  version:'0.0.0'
+  configName:'arrows_symbols'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /(\s|\>|\&nbsp\;|^)\-\>($|\s|\&nbsp\;|\<)/
+      /(\s|\>|\&nbsp\;|^|;)\<\-(\s|\&nbsp\;|$)/
+      /→/
+      /←/
+    ]
+    res = [
+      (m)->
+        "#{m[1]}&rarr;#{m[2]}"
+    ,
+      (m)->
+        "#{m[1]}&rarr;#{m[2]}"
+    ,
+      (m)->
+        '&rarr;'
+    ,
+      (m)->
+        '&larr;'
+    ]
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+      @text = @text.replace m[0] , res[idx] m
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['arrows_symbols'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
   description: 'Выделение ссылок из текста'
   version:'0.0.0'
   configName:'auto_links'
@@ -1195,6 +1276,42 @@ if typeof window isnt 'undefined'
   App.Rules['close_quote_adv'] = Rule
 
 # Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Замена (c) на символ копирайт'
+  version:'0.0.0'
+  configName:'copy_replace'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /\((c|с)\)\s+/i
+      /\((c|с)\)($|\.|,|!|\?)/i
+    ]
+    res  = [
+      (m)->'&copy;&nbsp;'
+      (m)->"&copy;#{m[2]}"
+    ]
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+      @text = @text.replace m[0] , res[idx] m
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['copy_replace'] = Rule
+
+# Зависимости
 Quote = require( './quote') unless Quote
 
 ###
@@ -1269,6 +1386,39 @@ OpenQuote = require( './open_quote') unless OpenQuote
 # Правило
 ##
 class Rule extends OpenQuote
+  description: 'Градусы по Фаренгейту'
+  version:'0.0.0'
+  configName:'degree_f'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /([0-9]+)F($|\s|\.|\,|\;|\:|\&nbsp\;|\?|\!)/
+    ]
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+      str = "" + @ntag( m[1] + " &deg;F", "span", {class:"nowrap"}) + m[2]
+      @text = @text.replace m[0] , str
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['degree_f'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
   description: 'Выделение эл. почты из текста'
   version:'0.0.0'
   configName:'email'
@@ -1326,6 +1476,38 @@ class Etc extends Quote
 module.exports = Etc
 if typeof window isnt 'undefined'
   App.Rules['Etc'] = Etc
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Символ евро'
+  version:'0.0.0'
+  configName:'euro_symbol'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /€/
+    ]
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+      @text = @text.replace m[0] , '&euro;'
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['euro_symbol'] = Rule
 
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
@@ -2232,7 +2414,7 @@ OpenQuote = require( './open_quote') unless OpenQuote
 class Rule extends OpenQuote
   description: 'Удаление повторяющихся слов'
   version:'0.0.0'
-  configName:'email'
+  configName:'no_repeat_words'
 
   replace:->
 
@@ -2743,6 +2925,47 @@ OpenQuote = require( './open_quote') unless OpenQuote
 # Правило
 ##
 class Rule extends OpenQuote
+  description: 'Простановка параграфов'
+  version:'0.0.0'
+  configName:'paragraphs'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /([а-яё]{3,})( |\t|\&nbsp\;)\1/i
+      /(\s|\&nbsp\;|^|\.|\!|\?)(([А-ЯЁ])([а-яё]{2,}))( |\t|\&nbsp\;)(([а-яё])\4)/
+    ]
+    res = [
+      (m)->
+        m[1]
+    ,
+      (m)=>
+        m[1] + ( if m[7] is @Lib.strtolower( m[3]) then m[2] else m[2] + m[5] + m[6] )
+    ]
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+
+      @text = @text.replace m[0] , res[idx] m
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['paragraphs'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
   description: 'Объединение в неразрывные конструкции номеров телефонов'
   version:'0.0.0'
   configName:'phone_builder'
@@ -2815,6 +3038,38 @@ module.exports = Rule
 
 if typeof window isnt 'undefined'
   App.Rules['ps_pps'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Замена (R) на символ зарегистрированной торговой марки'
+  version:'0.0.0'
+  configName:'r_sign_replace'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /(.|^)\(r\)(.|$)/i
+    ]
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+      @text = @text.replace m[0] , "#{m[1]}&reg;#{m[2]}"
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['r_sign_replace'] = Rule
 
 ###
 Индекс правил
@@ -2973,6 +3228,42 @@ module.exports = Rule
 
 if typeof window isnt 'undefined'
   App.Rules['super_nbsp'] = Rule
+
+# Зависимости
+Quote = require( './quote') unless Quote
+
+###
+## Групповой Объект правил "Сокращения"
+###
+class Symbol extends Quote
+  description: "Текст и абзацы"
+  version:'0.0.0'
+  configName:'Symbol'
+
+
+  config:
+    on: true
+    log: true
+    debug:true
+
+  # Очередь правил
+  rules:[]
+
+  # Порядок выполнения
+  order:[
+    "tm_replace",
+    "r_sign_replace",
+    "copy_replace",
+    "apostrophe",
+    "degree_f",
+    "euro_symbol",
+    "arrows_symbols",
+    ]
+
+module.exports = Symbol
+
+if typeof window isnt 'undefined'
+  App.Rules.Symbol = Symbol
 
 # Зависимости
 Quote = require( './quote') unless Quote
@@ -3139,6 +3430,45 @@ module.exports = Rule
 
 if typeof window isnt 'undefined'
   App.Rules['time_interval'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Замена (tm) на символ торговой марки'
+  version:'0.0.0'
+  configName:'tm_replace'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /([\040\t])?\(tm\)/i
+    ]
+    res = [
+      (m)->
+        m[1]
+    ,
+      (m)=>
+        m[1] + ( if m[7] is @Lib.strtolower( m[3]) then m[2] else m[2] + m[5] + m[6] )
+    ]
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+      @text = @text.replace m[0] , '&trade;'
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['tm_replace'] = Rule
 
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote

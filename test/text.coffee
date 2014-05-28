@@ -18,6 +18,16 @@ tests = [
     text: " привет привет "
     res: " привет "
   }
+  # {
+  #   obj: require( '../libs/rules/paragraphs')
+  #   text: " привет привет "
+  #   res: " привет "
+  # }
+  # {
+  #   obj: require( '../libs/rules/breakline')
+  #   text: " привет привет "
+  #   res: " привет "
+  # }
 ]
 
 describe "Правило ", ->

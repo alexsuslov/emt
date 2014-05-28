@@ -5,9 +5,9 @@ OpenQuote = require( './open_quote') unless OpenQuote
 # Правило
 ##
 class Rule extends OpenQuote
-  description: 'Удаление повторяющихся слов'
+  description: 'Простановка параграфов'
   version:'0.0.0'
-  configName:'no_repeat_words'
+  configName:'paragraphs'
 
   replace:->
 
@@ -37,4 +37,4 @@ class Rule extends OpenQuote
 module.exports = Rule
 
 if typeof window isnt 'undefined'
-  App.Rules['no_repeat_words'] = Rule
+  App.Rules['paragraphs'] = Rule
