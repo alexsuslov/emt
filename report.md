@@ -1,3 +1,4 @@
+[ 'тест те.', 'тест', 'те', '', index: 1, input: ' тест те.' ]
 # TOC
    - [Правило ](#-)
      - [Сокращения](#-)
@@ -8,6 +9,11 @@
        - [Установка пробельных символов в сокращении вольт](#-------)
        - [Привязка сокращений форм собственности к названиям организаций](#--------)
        - [Расстановка пробелов перед сокращениями dpi, lpi](#------dpi-lpi)
+       - [Объединение сокращений P.S., P.P.S.](#----ps-pps)
+       - [Объединение сокращений и т.д., и т.п., в т.ч.](#---------)
+       - [Форматирование денежных сокращений (расстановка пробелов и привязка названия валюты к числу)](#------------)
+       - [Привязка сокращения ГОСТ к номеру](#------)
+       - [Обработка т.е.](#---)
      - [Дефисы и тире](#---)
        - [Замена символа тире на html конструкцию](#--------html-)
        - [Тире после кавычек, скобочек, пунктуации](#--------)
@@ -40,6 +46,18 @@
      - [Кавычки](#-)
        - [Открывающая кавычка](#---)
        - [Закрывающая кавычка](#---)
+     - [Специальные символы](#--)
+       - [Замена (tm) на символ торговой марки](#----tm----)
+       - [Замена (R) на символ зарегистрированной торговой марки](#----r-----)
+       - [Замена (c) на символ копирайт](#----c---)
+       - [Расстановка правильного апострофа в текстах](#-------)
+       - [Градусы по Фаренгейту](#-----)
+       - [Символ евро](#----)
+       - [Замена стрелок вправо-влево на html коды](#--------html-)
+     - [Текст и абзацы](#---)
+       - [Выделение ссылок из текста](#-------)
+       - [Выделение эл. почты из текста](#--------)
+       - [Удаление повторяющихся слов](#------)
    - [EMTBase](#emtbase)
      - [add_safe_tag](#emtbase-add_safe_tag)
      - [add_safe_block](#emtbase-add_safe_block)
@@ -148,6 +166,56 @@ return assert.equal(test.res, rule.text);
 <a name="------dpi-lpi"></a>
 ### Расстановка пробелов перед сокращениями dpi, lpi
  300 dpi 150 lpi .
+
+```js
+rule.text = test.text;
+rule.apply();
+return assert.equal(test.res, rule.text);
+```
+
+<a name="----ps-pps"></a>
+### Объединение сокращений P.S., P.P.S.
+ P. S. , P.P.S. .
+
+```js
+rule.text = test.text;
+rule.apply();
+return assert.equal(test.res, rule.text);
+```
+
+<a name="---------"></a>
+### Объединение сокращений и т.д., и т.п., в т.ч.
+ и т. д. и т. п. в т.ч..
+
+```js
+rule.text = test.text;
+rule.apply();
+return assert.equal(test.res, rule.text);
+```
+
+<a name="------------"></a>
+### Форматирование денежных сокращений (расстановка пробелов и привязка названия валюты к числу)
+ 40 тыс. руб. .
+
+```js
+rule.text = test.text;
+rule.apply();
+return assert.equal(test.res, rule.text);
+```
+
+<a name="------"></a>
+### Привязка сокращения ГОСТ к номеру
+ ГОСТ 123-123 .
+
+```js
+rule.text = test.text;
+rule.apply();
+return assert.equal(test.res, rule.text);
+```
+
+<a name="---"></a>
+### Обработка т.е.
+ тест те..
 
 ```js
 rule.text = test.text;
@@ -774,6 +842,114 @@ return assert.equal(test.res, rule.text);
 <a name="---"></a>
 ### Закрывающая кавычка
 привет "test" привет.
+
+```js
+rule.text = test.text;
+rule.apply();
+return assert.equal(test.res, rule.text);
+```
+
+<a name="-"></a>
+# Правило 
+<a name="--"></a>
+## Специальные символы
+<a name="----tm----"></a>
+### Замена (tm) на символ торговой марки
+(tm).
+
+```js
+rule.text = test.text;
+rule.apply();
+return assert.equal(test.res, rule.text);
+```
+
+<a name="----r-----"></a>
+### Замена (R) на символ зарегистрированной торговой марки
+(r).
+
+```js
+rule.text = test.text;
+rule.apply();
+return assert.equal(test.res, rule.text);
+```
+
+<a name="----c---"></a>
+### Замена (c) на символ копирайт
+(c).
+
+```js
+rule.text = test.text;
+rule.apply();
+return assert.equal(test.res, rule.text);
+```
+
+<a name="-------"></a>
+### Расстановка правильного апострофа в текстах
+ тест'test.
+
+```js
+rule.text = test.text;
+rule.apply();
+return assert.equal(test.res, rule.text);
+```
+
+<a name="-----"></a>
+### Градусы по Фаренгейту
+ 40F .
+
+```js
+rule.text = test.text;
+rule.apply();
+return assert.equal(test.res, rule.text);
+```
+
+<a name="----"></a>
+### Символ евро
+ € .
+
+```js
+rule.text = test.text;
+rule.apply();
+return assert.equal(test.res, rule.text);
+```
+
+<a name="--------html-"></a>
+### Замена стрелок вправо-влево на html коды
+ <- -> → ←.
+
+```js
+rule.text = test.text;
+rule.apply();
+return assert.equal(test.res, rule.text);
+```
+
+<a name="-"></a>
+# Правило 
+<a name="---"></a>
+## Текст и абзацы
+<a name="-------"></a>
+### Выделение ссылок из текста
+ http://alexsuslov.github.io/emt/ .
+
+```js
+rule.text = test.text;
+rule.apply();
+return assert.equal(test.res, rule.text);
+```
+
+<a name="--------"></a>
+### Выделение эл. почты из текста
+ alexsuslov@github.com .
+
+```js
+rule.text = test.text;
+rule.apply();
+return assert.equal(test.res, rule.text);
+```
+
+<a name="------"></a>
+### Удаление повторяющихся слов
+ привет привет .
 
 ```js
 rule.text = test.text;
