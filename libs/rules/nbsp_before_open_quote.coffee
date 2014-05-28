@@ -5,29 +5,27 @@ OpenQuote = require( './open_quote') unless OpenQuote
 # Правило
 ##
 class Rule extends OpenQuote
-  description: 'Обработка т.е.'
+  description: 'Неразрывный пробел перед открывающей скобкой'
   version:'0.0.0'
-  configName:'nbsp_in_the_end'
+  configName:'nbsp_before_open_quote'
 
   replace:->
 
     # Список правил
     rex = [
-      /([a-zа-яё0-9\-]{3,})\s(те|т\.е|т\sе|т\s\.е)\.(\s[A-ZА-ЯЁ]|$)/
+      /(^|\s|\t|>)([a-zа-яё]{1,2})\s(\&laquo\;|\&bdquo\;)/i
     ]
-
 
     for re, idx in rex
       m = @text.match re
       break if m
 
     if m
-      str = m[1] + @ntag( m[2], "span",  {class: "nowrap"})
-      @text = @text.replace m[0] , str
+      @text = @text.replace m[0] ,  "#{m[1]}#{m[2]}&nbsp;#{m[3]}"
 
     !!m
 
 module.exports = Rule
 
 if typeof window isnt 'undefined'
-  App.Rules['nbsp_in_the_end'] = Rule
+  App.Rules['nbsp_before_open_quote'] = Rule

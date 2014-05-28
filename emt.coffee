@@ -18,6 +18,7 @@ if isClient
       'NoBr'
       'Text'
       'Symbol'
+      'Space'
     ]
 
 

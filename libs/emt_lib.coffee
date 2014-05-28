@@ -7,7 +7,7 @@ class EMTLib
   charsTable : chars_table
   html4_char_ents : html4_char
   domain_zones:[
-    "r","ру","com","ком","org","орг","уа","ua"
+    "ru","ру","com","ком","org","орг","уа","ua"
     ]
 
   # Типы кавычек
