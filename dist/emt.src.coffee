@@ -764,7 +764,9 @@ class OpenQuote
     return unless @config.on
     @multiply()
 
-  # Правило замены
+  # Правило для строки
+  # функция не должна править строку так чтобы повторно срабатывать
+  # @return false если правило не сработало
   replace:->
     self = @
 
@@ -823,6 +825,7 @@ class OpenQuote
     for attribute of attributes
       param = " #{attribute}='#{attributes[attribute]}'"
     "<#{tag}#{param}>#{content}</#{tag}>"
+
 module.exports = OpenQuote
 
 if typeof window isnt 'undefined'
@@ -1267,6 +1270,38 @@ module.exports = Rule
 
 if typeof window isnt 'undefined'
   App.Rules['arrows_symbols'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+###
+Правило
+
+###
+class AutoComma extends OpenQuote
+  description: 'Расстановка запятых перед а, но'
+  version:'0.0.0'
+  configName:'auto_comma'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /([a-zа-яё])(\s|&nbsp;)(но|а)(\s|&nbsp;)/i
+    ]
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+      @text = @text.replace m[0] , "#{m[1]},#{m[2]}#{m[3]}#{m[4]}"
+
+    !!m
+
+module.exports = AutoComma
+
+if typeof window isnt 'undefined'
+  App.Rules['auto_comma'] = AutoComma
 
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
@@ -1804,6 +1839,39 @@ if typeof window isnt 'undefined'
 
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
+###
+Правило DotOnEnd
+
+Точка в конце текста, если её там нет
+###
+class DotOnEnd extends OpenQuote
+  description: 'Точка в конце текста, если её там нет'
+  version:'0.0.0'
+  configName:'dot_on_end'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /([a-zа-яё0-9])(|\040|\t|\&nbsp\;)*$/i
+    ]
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+      @text = @text.replace m[0], "#{m[1]}."
+
+    !!m
+
+module.exports = DotOnEnd
+
+if typeof window isnt 'undefined'
+  App.Rules['dot_on_end'] = DotOnEnd
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
 
 ##
 # Правило
@@ -1935,6 +2003,193 @@ module.exports = Rule
 
 if typeof window isnt 'undefined'
   App.Rules['expand_no_nbsp_in_nobr'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+###
+Правило FixBrackets
+
+Лишние пробелы после открывающей скобочки и перед закрывающей
+###
+class FixBrackets extends OpenQuote
+  description: 'Лишние пробелы после открывающей скобочки и перед закрывающей'
+  version:'0.0.0'
+  configName:'fix_brackets'
+
+  # Правило для строки
+  # функция не должна править строку так чтобы повторно срабатывать
+  # @return false если правило не сработало
+  replace:->
+
+    # Список правил
+    rex = [
+      /(\()(\040|\t)+/
+      /(\040|\t)+(\))/
+    ]
+    res  = [
+      (m)->"#{m[1]}"
+    ,
+      (m)->"#{m[2]}"
+    ]
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+      @text = @text.replace m[0], res[idx] m
+
+    !!m
+
+module.exports = FixBrackets
+
+if typeof window isnt 'undefined'
+  App.Rules['fix_brackets'] = FixBrackets
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+###
+Правило FixBracketsSpace
+
+Пробел перед открывающей скобочкой
+###
+class FixBracketsSpace extends OpenQuote
+  description: 'Пробел перед открывающей скобочкой'
+  version:'0.0.0'
+  configName:'fix_brackets_space'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /([a-zа-яё0-9])(\()/i
+    ]
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+      @text = @text.replace m[0], "#{m[1]} #{m[2]}"
+
+    !!m
+
+module.exports = FixBracketsSpace
+
+if typeof window isnt 'undefined'
+  App.Rules['fix_brackets_space'] = FixBracketsSpace
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+###
+Правило FixExclQuestMarks
+
+Замена восклицательного и вопросительного знаков местами
+###
+class FixExclQuestMarks extends OpenQuote
+  description: 'Замена восклицательного и вопросительного знаков местами'
+  version:'0.0.0'
+  configName:'fix_excl_quest_marks'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /([a-zа-яё0-9])\!\?(\s|$|\<)/i
+    ]
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+      @text = @text.replace m[0], "#{m[1]}?!#{m[2]}"
+
+    !!m
+
+module.exports = FixExclQuestMarks
+
+if typeof window isnt 'undefined'
+  App.Rules['fix_excl_quest_marks'] = FixExclQuestMarks
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+###
+Правило FixPmarks
+
+Замена сдвоенных знаков препинания на одинарные
+###
+class FixPmarks extends OpenQuote
+  description: 'Замена сдвоенных знаков препинания на одинарные'
+  version:'0.0.0'
+  configName:'fix_pmarks'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /([^\!\?])\.\./
+      /([a-zа-яё0-9])(\!|\.)(\!|\.|\?)(\s|$|\<)/i
+      /([a-zа-яё0-9])(\?)(\?)(\s|$|\<)/i
+    ]
+    res = [
+      (m)->
+        "#{m[1]}."
+    ,
+      (m)->
+        "#{m[1]}#{m[2]}#{m[4]}"
+    ,
+      (m)->
+        "#{m[1]}#{m[2]}#{m[4]}"
+
+    ]
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+      @text = @text.replace m[0], res[idx] m
+
+    !!m
+
+module.exports = FixPmarks
+
+if typeof window isnt 'undefined'
+  App.Rules['fix_pmarks'] = FixPmarks
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+###
+Правило Hellip
+
+Замена трех точек на знак многоточия
+###
+class Hellip extends OpenQuote
+  description: 'Замена трех точек на знак многоточия'
+  version:'0.0.0'
+  configName:'hellip'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /\.\.\./i
+    ]
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+      @text = @text.replace m[0], "&hellip;"
+
+    !!m
+
+module.exports = Hellip
+
+if typeof window isnt 'undefined'
+  App.Rules['hellip'] = Hellip
 
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
@@ -3660,6 +3915,111 @@ module.exports = PsPps
 
 if typeof window isnt 'undefined'
   App.Rules['ps_pps'] = PsPps
+
+# Зависимости
+Quote = require( './quote') unless Quote
+###
+Групповой Объект
+
+Пунктуация и знаки препинания
+###
+class Punctmark extends Quote
+  description: "Пунктуация и знаки препинания"
+  version:'0.0.0'
+  configName:'Punctmark'
+
+
+  config:
+    on: true
+    log: true
+    debug:true
+
+  # Очередь правил
+  rules:[]
+
+  # Порядок выполнения
+  order:[
+    'auto_comma'
+    'punctuation_marks_limit'
+    'punctuation_marks_base_limit'
+    'hellip'
+    'fix_excl_quest_marks'
+    'fix_pmarks'
+    'fix_brackets'
+    'fix_brackets_space'
+    'dot_on_end'
+    ]
+
+module.exports = Punctmark
+
+if typeof window isnt 'undefined'
+  App.Rules.Punctmark = Punctmark
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+###
+Правило PunctuationMarksBaseLimit
+
+Лишние запятые, двоеточия, точки с запятой
+###
+class PunctuationMarksBaseLimit extends OpenQuote
+  description: 'Лишние запятые, двоеточия, точки с запятой'
+  version:'0.0.0'
+  configName:'punctuation_marks_base_limit'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /([\,]|[\:]|[\;]]){2,}/i
+    ]
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+      @text = @text.replace m[0] , "#{m[1]}"
+
+    !!m
+
+module.exports = PunctuationMarksBaseLimit
+
+if typeof window isnt 'undefined'
+  App.Rules['punctuation_marks_base_limit'] = PunctuationMarksBaseLimit
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+###
+Правило PunctuationMarksLimit
+
+Лишние восклицательные, вопросительные знаки и точки
+###
+class PunctuationMarksLimit extends OpenQuote
+  description: 'Лишние восклицательные, вопросительные знаки и точки'
+  version:'0.0.0'
+  configName:'punctuation_marks_limit'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /([\!\.\?]){4,}/i
+    ]
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+      @text = @text.replace m[0] , "#{m[1]}#{m[1]}#{m[1]}"
+
+    !!m
+
+module.exports = PunctuationMarksLimit
+
+if typeof window isnt 'undefined'
+  App.Rules['punctuation_marks_limit'] = PunctuationMarksLimit
 
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote

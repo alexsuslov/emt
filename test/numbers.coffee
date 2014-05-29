@@ -47,8 +47,8 @@ tests = [
 
 ]
 
-for test in tests
-  console.log new test.obj({}).configName
+# for test in tests
+#   console.log new test.obj({}).configName
 
 describe "Правило ", ->
   describe " Числа, дроби, математические знаки ", ->

@@ -1,5 +1,5 @@
 (function() {
-  var Abbr, AcuteAccent, App, Dash, EMTLib, EmtDate, Etc, NbspBeforeUnit, NbspBeforeWeightUnit, NbspInTheEnd, NbspMoneyAbbr, NbspOrgAbbr, NbspTe, NoBr, NobrAbbreviation, NobrAcronym, NobrBeforeUnitVolt, NobrGost, NobrLocations, NobrSmIm, NobrVtchItdItp, Numbers, OpenQuote, OpenQuoteAdv, PsPps, Quote, Rule, Space, Symbol, Text, chars_table, html4_char, isClient, module,
+  var Abbr, AcuteAccent, App, AutoComma, Dash, DotOnEnd, EMTLib, EmtDate, Etc, FixBrackets, FixBracketsSpace, FixExclQuestMarks, FixPmarks, Hellip, NbspBeforeUnit, NbspBeforeWeightUnit, NbspInTheEnd, NbspMoneyAbbr, NbspOrgAbbr, NbspTe, NoBr, NobrAbbreviation, NobrAcronym, NobrBeforeUnitVolt, NobrGost, NobrLocations, NobrSmIm, NobrVtchItdItp, Numbers, OpenQuote, OpenQuoteAdv, PsPps, Punctmark, PunctuationMarksBaseLimit, PunctuationMarksLimit, Quote, Rule, Space, Symbol, Text, chars_table, html4_char, isClient, module,
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -1582,6 +1582,54 @@
     OpenQuote = require('./open_quote');
   }
 
+
+  /*
+  Правило
+   */
+
+  AutoComma = (function(_super) {
+    __extends(AutoComma, _super);
+
+    function AutoComma() {
+      return AutoComma.__super__.constructor.apply(this, arguments);
+    }
+
+    AutoComma.prototype.description = 'Расстановка запятых перед а, но';
+
+    AutoComma.prototype.version = '0.0.0';
+
+    AutoComma.prototype.configName = 'auto_comma';
+
+    AutoComma.prototype.replace = function() {
+      var idx, m, re, rex, _i, _len;
+      rex = [/([a-zа-яё])(\s|&nbsp;)(но|а)(\s|&nbsp;)/i];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        this.text = this.text.replace(m[0], "" + m[1] + "," + m[2] + m[3] + m[4]);
+      }
+      return !!m;
+    };
+
+    return AutoComma;
+
+  })(OpenQuote);
+
+  module.exports = AutoComma;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['auto_comma'] = AutoComma;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
   Rule = (function(_super) {
     __extends(Rule, _super);
 
@@ -2270,6 +2318,56 @@
     OpenQuote = require('./open_quote');
   }
 
+
+  /*
+  Правило DotOnEnd
+  
+  Точка в конце текста, если её там нет
+   */
+
+  DotOnEnd = (function(_super) {
+    __extends(DotOnEnd, _super);
+
+    function DotOnEnd() {
+      return DotOnEnd.__super__.constructor.apply(this, arguments);
+    }
+
+    DotOnEnd.prototype.description = 'Точка в конце текста, если её там нет';
+
+    DotOnEnd.prototype.version = '0.0.0';
+
+    DotOnEnd.prototype.configName = 'dot_on_end';
+
+    DotOnEnd.prototype.replace = function() {
+      var idx, m, re, rex, _i, _len;
+      rex = [/([a-zа-яё0-9])(|\040|\t|\&nbsp\;)*$/i];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        this.text = this.text.replace(m[0], "" + m[1] + ".");
+      }
+      return !!m;
+    };
+
+    return DotOnEnd;
+
+  })(OpenQuote);
+
+  module.exports = DotOnEnd;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['dot_on_end'] = DotOnEnd;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
   Rule = (function(_super) {
     __extends(Rule, _super);
 
@@ -2424,6 +2522,272 @@
 
   if (typeof window !== 'undefined') {
     App.Rules['expand_no_nbsp_in_nobr'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+
+  /*
+  Правило FixBrackets
+  
+  Лишние пробелы после открывающей скобочки и перед закрывающей
+   */
+
+  FixBrackets = (function(_super) {
+    __extends(FixBrackets, _super);
+
+    function FixBrackets() {
+      return FixBrackets.__super__.constructor.apply(this, arguments);
+    }
+
+    FixBrackets.prototype.description = 'Лишние пробелы после открывающей скобочки и перед закрывающей';
+
+    FixBrackets.prototype.version = '0.0.0';
+
+    FixBrackets.prototype.configName = 'fix_brackets';
+
+    FixBrackets.prototype.replace = function() {
+      var idx, m, re, res, rex, _i, _len;
+      rex = [/(\()(\040|\t)+/, /(\040|\t)+(\))/];
+      res = [
+        function(m) {
+          return "" + m[1];
+        }, function(m) {
+          return "" + m[2];
+        }
+      ];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        this.text = this.text.replace(m[0], res[idx](m));
+      }
+      return !!m;
+    };
+
+    return FixBrackets;
+
+  })(OpenQuote);
+
+  module.exports = FixBrackets;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['fix_brackets'] = FixBrackets;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+
+  /*
+  Правило FixBracketsSpace
+  
+  Пробел перед открывающей скобочкой
+   */
+
+  FixBracketsSpace = (function(_super) {
+    __extends(FixBracketsSpace, _super);
+
+    function FixBracketsSpace() {
+      return FixBracketsSpace.__super__.constructor.apply(this, arguments);
+    }
+
+    FixBracketsSpace.prototype.description = 'Пробел перед открывающей скобочкой';
+
+    FixBracketsSpace.prototype.version = '0.0.0';
+
+    FixBracketsSpace.prototype.configName = 'fix_brackets_space';
+
+    FixBracketsSpace.prototype.replace = function() {
+      var idx, m, re, rex, _i, _len;
+      rex = [/([a-zа-яё0-9])(\()/i];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        this.text = this.text.replace(m[0], "" + m[1] + " " + m[2]);
+      }
+      return !!m;
+    };
+
+    return FixBracketsSpace;
+
+  })(OpenQuote);
+
+  module.exports = FixBracketsSpace;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['fix_brackets_space'] = FixBracketsSpace;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+
+  /*
+  Правило FixExclQuestMarks
+  
+  Замена восклицательного и вопросительного знаков местами
+   */
+
+  FixExclQuestMarks = (function(_super) {
+    __extends(FixExclQuestMarks, _super);
+
+    function FixExclQuestMarks() {
+      return FixExclQuestMarks.__super__.constructor.apply(this, arguments);
+    }
+
+    FixExclQuestMarks.prototype.description = 'Замена восклицательного и вопросительного знаков местами';
+
+    FixExclQuestMarks.prototype.version = '0.0.0';
+
+    FixExclQuestMarks.prototype.configName = 'fix_excl_quest_marks';
+
+    FixExclQuestMarks.prototype.replace = function() {
+      var idx, m, re, rex, _i, _len;
+      rex = [/([a-zа-яё0-9])\!\?(\s|$|\<)/i];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        this.text = this.text.replace(m[0], "" + m[1] + "?!" + m[2]);
+      }
+      return !!m;
+    };
+
+    return FixExclQuestMarks;
+
+  })(OpenQuote);
+
+  module.exports = FixExclQuestMarks;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['fix_excl_quest_marks'] = FixExclQuestMarks;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+
+  /*
+  Правило FixPmarks
+  
+  Замена сдвоенных знаков препинания на одинарные
+   */
+
+  FixPmarks = (function(_super) {
+    __extends(FixPmarks, _super);
+
+    function FixPmarks() {
+      return FixPmarks.__super__.constructor.apply(this, arguments);
+    }
+
+    FixPmarks.prototype.description = 'Замена сдвоенных знаков препинания на одинарные';
+
+    FixPmarks.prototype.version = '0.0.0';
+
+    FixPmarks.prototype.configName = 'fix_pmarks';
+
+    FixPmarks.prototype.replace = function() {
+      var idx, m, re, res, rex, _i, _len;
+      rex = [/([^\!\?])\.\./, /([a-zа-яё0-9])(\!|\.)(\!|\.|\?)(\s|$|\<)/i, /([a-zа-яё0-9])(\?)(\?)(\s|$|\<)/i];
+      res = [
+        function(m) {
+          return "" + m[1] + ".";
+        }, function(m) {
+          return "" + m[1] + m[2] + m[4];
+        }, function(m) {
+          return "" + m[1] + m[2] + m[4];
+        }
+      ];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        this.text = this.text.replace(m[0], res[idx](m));
+      }
+      return !!m;
+    };
+
+    return FixPmarks;
+
+  })(OpenQuote);
+
+  module.exports = FixPmarks;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['fix_pmarks'] = FixPmarks;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+
+  /*
+  Правило Hellip
+  
+  Замена трех точек на знак многоточия
+   */
+
+  Hellip = (function(_super) {
+    __extends(Hellip, _super);
+
+    function Hellip() {
+      return Hellip.__super__.constructor.apply(this, arguments);
+    }
+
+    Hellip.prototype.description = 'Замена трех точек на знак многоточия';
+
+    Hellip.prototype.version = '0.0.0';
+
+    Hellip.prototype.configName = 'hellip';
+
+    Hellip.prototype.replace = function() {
+      var idx, m, re, rex, _i, _len;
+      rex = [/\.\.\./i];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        this.text = this.text.replace(m[0], "&hellip;");
+      }
+      return !!m;
+    };
+
+    return Hellip;
+
+  })(OpenQuote);
+
+  module.exports = Hellip;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['hellip'] = Hellip;
   }
 
   if (!OpenQuote) {
@@ -4722,6 +5086,150 @@
 
   if (typeof window !== 'undefined') {
     App.Rules['ps_pps'] = PsPps;
+  }
+
+  if (!Quote) {
+    Quote = require('./quote');
+  }
+
+
+  /*
+  Групповой Объект
+  
+  Пунктуация и знаки препинания
+   */
+
+  Punctmark = (function(_super) {
+    __extends(Punctmark, _super);
+
+    function Punctmark() {
+      return Punctmark.__super__.constructor.apply(this, arguments);
+    }
+
+    Punctmark.prototype.description = "Пунктуация и знаки препинания";
+
+    Punctmark.prototype.version = '0.0.0';
+
+    Punctmark.prototype.configName = 'Punctmark';
+
+    Punctmark.prototype.config = {
+      on: true,
+      log: true,
+      debug: true
+    };
+
+    Punctmark.prototype.rules = [];
+
+    Punctmark.prototype.order = ['auto_comma', 'punctuation_marks_limit', 'punctuation_marks_base_limit', 'hellip', 'fix_excl_quest_marks', 'fix_pmarks', 'fix_brackets', 'fix_brackets_space', 'dot_on_end'];
+
+    return Punctmark;
+
+  })(Quote);
+
+  module.exports = Punctmark;
+
+  if (typeof window !== 'undefined') {
+    App.Rules.Punctmark = Punctmark;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+
+  /*
+  Правило PunctuationMarksBaseLimit
+  
+  Лишние запятые, двоеточия, точки с запятой
+   */
+
+  PunctuationMarksBaseLimit = (function(_super) {
+    __extends(PunctuationMarksBaseLimit, _super);
+
+    function PunctuationMarksBaseLimit() {
+      return PunctuationMarksBaseLimit.__super__.constructor.apply(this, arguments);
+    }
+
+    PunctuationMarksBaseLimit.prototype.description = 'Лишние запятые, двоеточия, точки с запятой';
+
+    PunctuationMarksBaseLimit.prototype.version = '0.0.0';
+
+    PunctuationMarksBaseLimit.prototype.configName = 'punctuation_marks_base_limit';
+
+    PunctuationMarksBaseLimit.prototype.replace = function() {
+      var idx, m, re, rex, _i, _len;
+      rex = [/([\,]|[\:]|[\;]]){2,}/i];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        this.text = this.text.replace(m[0], "" + m[1]);
+      }
+      return !!m;
+    };
+
+    return PunctuationMarksBaseLimit;
+
+  })(OpenQuote);
+
+  module.exports = PunctuationMarksBaseLimit;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['punctuation_marks_base_limit'] = PunctuationMarksBaseLimit;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+
+  /*
+  Правило PunctuationMarksLimit
+  
+  Лишние восклицательные, вопросительные знаки и точки
+   */
+
+  PunctuationMarksLimit = (function(_super) {
+    __extends(PunctuationMarksLimit, _super);
+
+    function PunctuationMarksLimit() {
+      return PunctuationMarksLimit.__super__.constructor.apply(this, arguments);
+    }
+
+    PunctuationMarksLimit.prototype.description = 'Лишние восклицательные, вопросительные знаки и точки';
+
+    PunctuationMarksLimit.prototype.version = '0.0.0';
+
+    PunctuationMarksLimit.prototype.configName = 'punctuation_marks_limit';
+
+    PunctuationMarksLimit.prototype.replace = function() {
+      var idx, m, re, rex, _i, _len;
+      rex = [/([\!\.\?]){4,}/i];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        this.text = this.text.replace(m[0], "" + m[1] + m[1] + m[1]);
+      }
+      return !!m;
+    };
+
+    return PunctuationMarksLimit;
+
+  })(OpenQuote);
+
+  module.exports = PunctuationMarksLimit;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['punctuation_marks_limit'] = PunctuationMarksLimit;
   }
 
   if (!OpenQuote) {

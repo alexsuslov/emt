@@ -73,7 +73,9 @@ class OpenQuote
     return unless @config.on
     @multiply()
 
-  # Правило замены
+  # Правило для строки
+  # функция не должна править строку так чтобы повторно срабатывать
+  # @return false если правило не сработало
   replace:->
     self = @
 
@@ -132,6 +134,7 @@ class OpenQuote
     for attribute of attributes
       param = " #{attribute}='#{attributes[attribute]}'"
     "<#{tag}#{param}>#{content}</#{tag}>"
+
 module.exports = OpenQuote
 
 if typeof window isnt 'undefined'
