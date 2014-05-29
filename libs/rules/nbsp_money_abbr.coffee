@@ -1,10 +1,12 @@
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
 
-##
-# Правило
-##
-class Rule extends OpenQuote
+###
+ Правило NbspMoneyAbbr
+
+ Форматирование денежных сокращений (расстановка пробелов и привязка названия валюты к числу
+###
+class NbspMoneyAbbr extends OpenQuote
   description: 'Форматирование денежных сокращений (расстановка пробелов и привязка названия валюты к числу)'
   version:'0.0.0'
   configName:'nbsp_money_abbr'
@@ -15,7 +17,6 @@ class Rule extends OpenQuote
     rex = [
       /(\d)((\040|\s)?(тыс|млн|млрд)\.?(\040|\&nbsp\;)?)?(\040|\&nbsp\;)?(руб\.|долл\.|евро|€|&euro;|\$|у[\.]? ?е[\.]?)/i
     ]
-
 
     for re, idx in rex
       m = @text.match re
@@ -28,13 +29,11 @@ class Rule extends OpenQuote
         if m[7].match /у[\\\\.]? ?е[\\\\.]?/i then "у.е." else m[7]
         )
 
-
-
       @text = @text.replace m[0] , str
 
     !!m
 
-module.exports = Rule
+module.exports = NbspMoneyAbbr
 
 if typeof window isnt 'undefined'
-  App.Rules['nbsp_money_abbr'] = Rule
+  App.Rules['nbsp_money_abbr'] = NbspMoneyAbbr

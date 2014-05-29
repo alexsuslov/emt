@@ -1,16 +1,17 @@
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
 
-##
-# Правило
-##
-class Rule extends OpenQuote
+###
+Правило NobrGost
+
+Привязка сокращения ГОСТ к номеру
+###
+class NobrGost extends OpenQuote
   description: 'Привязка сокращения ГОСТ к номеру'
   version:'0.0.0'
   configName:'nobr_gost'
 
   replace:->
-
     # Список правил
     rex = [
       /(\040|\t|\&nbsp\;|^)ГОСТ( |\&nbsp\;)?(\d+)((\-|\&minus\;|\&mdash\;)(\d+))?(( |\&nbsp\;)(\-|\&mdash\;))?/i
@@ -36,7 +37,7 @@ class Rule extends OpenQuote
 
     !!m
 
-module.exports = Rule
+module.exports = NobrGost
 
 if typeof window isnt 'undefined'
-  App.Rules['nbsp_money_abbr'] = Rule
+  App.Rules['nbsp_money_abbr'] = NobrGost

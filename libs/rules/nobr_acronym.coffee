@@ -1,10 +1,10 @@
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
-
-##
-# Правило
-##
-class Rule extends OpenQuote
+###
+Правило NobrAcronym
+Расстановка пробелов перед сокращениями гл., стр., рис., илл., ст., п.
+###
+class NobrAcronym extends OpenQuote
   description: 'Расстановка пробелов перед сокращениями гл., стр., рис., илл., ст., п.'
   version:'0.0.0'
   configName:'nobr_acronym'
@@ -25,8 +25,8 @@ class Rule extends OpenQuote
 
     !!m
 
-module.exports = Rule
+module.exports = NobrAcronym
 if typeof window isnt 'undefined'
-  App.Rules['nobr_acronym'] = Rule
+  App.Rules['nobr_acronym'] = NobrAcronym
 
 

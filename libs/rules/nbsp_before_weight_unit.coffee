@@ -1,10 +1,10 @@
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
 
-##
-# Правило
-##
-class Rule extends OpenQuote
+###
+Правило NbspBeforeWeightUnit
+###
+class NbspBeforeWeightUnit extends OpenQuote
   description: 'Замена символов и привязка сокращений в весовых величинах: г, кг, мг…'
   version:'0.0.0'
   configName:'nbsp_before_weight_unit'
@@ -14,7 +14,6 @@ class Rule extends OpenQuote
     rex = [
       /(\s|^|\>|\&nbsp\;|\,)(\d+)(\s)?(г|кг|мг|т)(\s|\.|\!|\?|\,|$|\&nbsp\;|\;)/i
     ]
-
 
     for re, idx in rex
       m = @text.match re
@@ -26,7 +25,7 @@ class Rule extends OpenQuote
 
     !!m
 
-module.exports = Rule
+module.exports = NbspBeforeWeightUnit
 
 if typeof window isnt 'undefined'
-  App.Rules['nbsp_before_weight_unit'] = Rule
+  App.Rules['nbsp_before_weight_unit'] = NbspBeforeWeightUnit

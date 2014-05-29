@@ -1,10 +1,9 @@
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
-
-##
-# Правило
-##
-class Rule extends OpenQuote
+### Правило NbspBeforeUnit
+Замена символов и привязка сокращений в весовых величинах: г, кг, мг…
+###
+class NbspBeforeUnit extends OpenQuote
   description: 'Замена символов и привязка сокращений в весовых величинах: г, кг, мг…'
   version:'0.0.0'
   configName:'nbsp_before_unit'
@@ -38,7 +37,7 @@ class Rule extends OpenQuote
 
     !!m
 
-module.exports = Rule
+module.exports = NbspBeforeUnit
 
 if typeof window isnt 'undefined'
-  App.Rules['nbsp_before_unit'] = Rule
+  App.Rules['nbsp_before_unit'] = NbspBeforeUnit

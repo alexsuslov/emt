@@ -1,10 +1,12 @@
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
 
-##
-# Правило
-##
-class Rule extends OpenQuote
+###
+Правило PsPps
+
+Объединение сокращений P.S., P.P.S.
+###
+class PsPps extends OpenQuote
   description: 'Объединение сокращений P.S., P.P.S.'
   version:'0.0.0'
   configName:'ps_pps'
@@ -29,7 +31,7 @@ class Rule extends OpenQuote
 
     !!m
 
-module.exports = Rule
+module.exports = PsPps
 
 if typeof window isnt 'undefined'
-  App.Rules['ps_pps'] = Rule
+  App.Rules['ps_pps'] = PsPps

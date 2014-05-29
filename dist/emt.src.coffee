@@ -1118,9 +1118,8 @@ if typeof window isnt 'undefined'
 
 # Зависимости
 Quote = require( './quote') unless Quote
-
 ###
-## Групповой Объект правил "Сокращения"
+Групповой Объект правил Сокращения
 ###
 class Abbr extends Quote
   description: "Сокращения"
@@ -1161,11 +1160,10 @@ if typeof window isnt 'undefined'
 
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
-
-##
-# Правило
-##
-class Rule extends OpenQuote
+###
+Правило Акцент AcuteAccent
+###
+class AcuteAccent extends OpenQuote
   description: 'Акцент'
   version:'0.0.0'
   configName:'acute_accent'
@@ -1176,21 +1174,19 @@ class Rule extends OpenQuote
      /([уеыаоэяиюё])\`([а-яё])/i
     ]
 
-
     for re, idx in rex
       m = @text.match re
       break if m
 
     if m
-
       @text = @text.replace m[0] , "#{m[1]}&#769;#{m[2]}"
 
     !!m
 
-module.exports = Rule
+module.exports = AcuteAccent
 
 if typeof window isnt 'undefined'
-  App.Rules['acute_accent'] = Rule
+  App.Rules['acute_accent'] = AcuteAccent
 
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
@@ -2614,11 +2610,10 @@ if typeof window isnt 'undefined'
 
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
-
-##
-# Правило
-##
-class Rule extends OpenQuote
+### Правило NbspBeforeUnit
+Замена символов и привязка сокращений в весовых величинах: г, кг, мг…
+###
+class NbspBeforeUnit extends OpenQuote
   description: 'Замена символов и привязка сокращений в весовых величинах: г, кг, мг…'
   version:'0.0.0'
   configName:'nbsp_before_unit'
@@ -2652,18 +2647,18 @@ class Rule extends OpenQuote
 
     !!m
 
-module.exports = Rule
+module.exports = NbspBeforeUnit
 
 if typeof window isnt 'undefined'
-  App.Rules['nbsp_before_unit'] = Rule
+  App.Rules['nbsp_before_unit'] = NbspBeforeUnit
 
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
 
-##
-# Правило
-##
-class Rule extends OpenQuote
+###
+Правило NbspBeforeWeightUnit
+###
+class NbspBeforeWeightUnit extends OpenQuote
   description: 'Замена символов и привязка сокращений в весовых величинах: г, кг, мг…'
   version:'0.0.0'
   configName:'nbsp_before_weight_unit'
@@ -2673,7 +2668,6 @@ class Rule extends OpenQuote
     rex = [
       /(\s|^|\>|\&nbsp\;|\,)(\d+)(\s)?(г|кг|мг|т)(\s|\.|\!|\?|\,|$|\&nbsp\;|\;)/i
     ]
-
 
     for re, idx in rex
       m = @text.match re
@@ -2685,10 +2679,10 @@ class Rule extends OpenQuote
 
     !!m
 
-module.exports = Rule
+module.exports = NbspBeforeWeightUnit
 
 if typeof window isnt 'undefined'
-  App.Rules['nbsp_before_weight_unit'] = Rule
+  App.Rules['nbsp_before_weight_unit'] = NbspBeforeWeightUnit
 
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
@@ -2726,10 +2720,12 @@ if typeof window isnt 'undefined'
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
 
-##
-# Правило
-##
-class Rule extends OpenQuote
+###
+Правило NbspInTheEnd
+
+Привязка союзов и предлогов к предыдущим словам в случае конца предложения
+###
+class NbspInTheEnd extends OpenQuote
   description: 'Привязка союзов и предлогов к предыдущим словам в случае конца предложения'
   version:'0.0.0'
   configName:'nbsp_in_the_end'
@@ -2751,18 +2747,20 @@ class Rule extends OpenQuote
 
     !!m
 
-module.exports = Rule
+module.exports = NbspInTheEnd
 
 if typeof window isnt 'undefined'
-  App.Rules['nbsp_in_the_end'] = Rule
+  App.Rules['nbsp_in_the_end'] = NbspInTheEnd
 
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
 
-##
-# Правило
-##
-class Rule extends OpenQuote
+###
+ Правило NbspMoneyAbbr
+
+ Форматирование денежных сокращений (расстановка пробелов и привязка названия валюты к числу
+###
+class NbspMoneyAbbr extends OpenQuote
   description: 'Форматирование денежных сокращений (расстановка пробелов и привязка названия валюты к числу)'
   version:'0.0.0'
   configName:'nbsp_money_abbr'
@@ -2773,7 +2771,6 @@ class Rule extends OpenQuote
     rex = [
       /(\d)((\040|\s)?(тыс|млн|млрд)\.?(\040|\&nbsp\;)?)?(\040|\&nbsp\;)?(руб\.|долл\.|евро|€|&euro;|\$|у[\.]? ?е[\.]?)/i
     ]
-
 
     for re, idx in rex
       m = @text.match re
@@ -2786,24 +2783,21 @@ class Rule extends OpenQuote
         if m[7].match /у[\\\\.]? ?е[\\\\.]?/i then "у.е." else m[7]
         )
 
-
-
       @text = @text.replace m[0] , str
 
     !!m
 
-module.exports = Rule
+module.exports = NbspMoneyAbbr
 
 if typeof window isnt 'undefined'
-  App.Rules['nbsp_money_abbr'] = Rule
+  App.Rules['nbsp_money_abbr'] = NbspMoneyAbbr
 
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
-
-##
-# Правило
-##
-class Rule extends OpenQuote
+###
+Правило NbspOrgAbbr
+###
+class NbspOrgAbbr extends OpenQuote
   description: 'Привязка сокращений форм собственности к названиям организаций'
   version:'0.0.0'
   configName:'nbsp_org_abbr'
@@ -2813,7 +2807,6 @@ class Rule extends OpenQuote
     rex = [
       /([^a-zA-Zа-яёА-ЯЁ]|^)(ООО|ЗАО|ОАО|НИИ|ПБОЮЛ)\s([a-zA-Zа-яёА-ЯЁ]|\"|\&laquo\;|\&bdquo\;|<)/
     ]
-
 
     for re, idx in rex
       m = @text.match re
@@ -2825,10 +2818,10 @@ class Rule extends OpenQuote
 
     !!m
 
-module.exports = Rule
+module.exports = NbspOrgAbbr
 
 if typeof window isnt 'undefined'
-  App.Rules['nbsp_org_abbr'] = Rule
+  App.Rules['nbsp_org_abbr'] = NbspOrgAbbr
 
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
@@ -2866,10 +2859,12 @@ if typeof window isnt 'undefined'
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
 
-##
-# Правило
-##
-class Rule extends OpenQuote
+###
+Правило NbspTe
+
+Обработка т.е.
+###
+class NbspTe extends OpenQuote
   description: 'Обработка т.е.'
   version:'0.0.0'
   configName:'nbsp_te'
@@ -2892,10 +2887,10 @@ class Rule extends OpenQuote
 
     !!m
 
-module.exports = Rule
+module.exports = NbspTe
 
 if typeof window isnt 'undefined'
-  App.Rules['nbsp_te'] = Rule
+  App.Rules['nbsp_te'] = NbspTe
 
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
@@ -3041,10 +3036,12 @@ if typeof window isnt 'undefined'
 
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
-##
-# Правило "Закрывающая кавычка"
-##
-class Rule extends OpenQuote
+###
+Правило NobrAbbreviation
+
+Расстановка пробелов перед сокращениями dpi, lpi
+###
+class NobrAbbreviation extends OpenQuote
   description: 'Расстановка пробелов перед сокращениями dpi, lpi'
   version:'0.0.0'
   configName:'nobr_abbreviation'
@@ -3069,18 +3066,18 @@ class Rule extends OpenQuote
 
     !!m
 
-module.exports = Rule
+module.exports = NobrAbbreviation
 
 if typeof window isnt 'undefined'
-  App.Rules['nobr_abbreviation'] = Rule
+  App.Rules['nobr_abbreviation'] = NobrAbbreviation
 
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
-
-##
-# Правило
-##
-class Rule extends OpenQuote
+###
+Правило NobrAcronym
+Расстановка пробелов перед сокращениями гл., стр., рис., илл., ст., п.
+###
+class NobrAcronym extends OpenQuote
   description: 'Расстановка пробелов перед сокращениями гл., стр., рис., илл., ст., п.'
   version:'0.0.0'
   configName:'nobr_acronym'
@@ -3101,29 +3098,30 @@ class Rule extends OpenQuote
 
     !!m
 
-module.exports = Rule
+module.exports = NobrAcronym
 if typeof window isnt 'undefined'
-  App.Rules['nobr_acronym'] = Rule
+  App.Rules['nobr_acronym'] = NobrAcronym
 
 
 
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
+###
+Правило NobrBeforeUnitVolt
 
-##
-# Правило
-##
-class Rule extends OpenQuote
+Установка пробельных символов в сокращении вольт
+###
+class NobrBeforeUnitVolt extends OpenQuote
   description: 'Установка пробельных символов в сокращении вольт'
   version:'0.0.0'
   configName:'nobr_before_unit_volt'
+
 
   replace:->
     # Список правил
     rex = [
       /(\d+)([вВ]|\s[вВ])(\s|\.|\!|\?|\,|$)/
     ]
-
 
     for re, idx in rex
       m = @text.match re
@@ -3136,24 +3134,25 @@ class Rule extends OpenQuote
 
     !!m
 
-module.exports = Rule
+module.exports = NobrBeforeUnitVolt
 
 if typeof window isnt 'undefined'
-  App.Rules['nobr_before_unit_volt'] = Rule
+  App.Rules['nobr_before_unit_volt'] = NobrBeforeUnitVolt
 
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
 
-##
-# Правило
-##
-class Rule extends OpenQuote
+###
+Правило NobrGost
+
+Привязка сокращения ГОСТ к номеру
+###
+class NobrGost extends OpenQuote
   description: 'Привязка сокращения ГОСТ к номеру'
   version:'0.0.0'
   configName:'nobr_gost'
 
   replace:->
-
     # Список правил
     rex = [
       /(\040|\t|\&nbsp\;|^)ГОСТ( |\&nbsp\;)?(\d+)((\-|\&minus\;|\&mdash\;)(\d+))?(( |\&nbsp\;)(\-|\&mdash\;))?/i
@@ -3179,18 +3178,18 @@ class Rule extends OpenQuote
 
     !!m
 
-module.exports = Rule
+module.exports = NobrGost
 
 if typeof window isnt 'undefined'
-  App.Rules['nbsp_money_abbr'] = Rule
+  App.Rules['nbsp_money_abbr'] = NobrGost
 
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
-
-##
-# Правило
-##
-class Rule extends OpenQuote
+###
+Правило NobrLocations
+Расстановка пробелов в сокращениях г., ул., пер., д.
+###
+class NobrLocations extends OpenQuote
   description: 'Расстановка пробелов в сокращениях г., ул., пер., д.'
   version:'0.0.0'
   configName:'nobr_locations'
@@ -3202,7 +3201,6 @@ class Rule extends OpenQuote
       /(\s|^|\>)(б\-р|пр\-кт)(\040|\t)*([а-яё0-9a-z]+)(\s|\.|\,|\?|\!|$)/i
       /(\s|^|\>)(д|кв|эт)\.(\040|\t)*(\d+)(\s|\.|\,|\?|\!|$)/i
     ]
-
 
     for re, idx in rex
       m = @text.match re
@@ -3218,18 +3216,19 @@ class Rule extends OpenQuote
 
     !!m
 
-module.exports = Rule
+module.exports = NobrLocations
 
 if typeof window isnt 'undefined'
-  App.Rules['nobr_locations'] = Rule
+  App.Rules['nobr_locations'] = NobrLocations
 
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
 
-##
-# Правило
-##
-class Rule extends OpenQuote
+###
+Правило NobrSmIm
+Расстановка пробелов перед сокращениями см., им.
+###
+class NobrSmIm extends OpenQuote
   description: 'Расстановка пробелов перед сокращениями см., им.'
   version:'0.0.0'
   configName:'nobr_sm_im'
@@ -3250,9 +3249,9 @@ class Rule extends OpenQuote
 
     !!m
 
-module.exports = Rule
+module.exports = NobrSmIm
 if typeof window isnt 'undefined'
-  App.Rules['nobr_sm_im'] = Rule
+  App.Rules['nobr_sm_im'] = NobrSmIm
 
 
 # Зависимости
@@ -3290,10 +3289,12 @@ if typeof window isnt 'undefined'
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
 
-##
-# Правило
-##
-class Rule extends OpenQuote
+###
+Правило NobrVtchItdItp
+
+Объединение сокращений и т.д., и т.п., в т.ч.
+###
+class NobrVtchItdItp extends OpenQuote
   description: 'Объединение сокращений и т.д., и т.п., в т.ч.'
   version:'0.0.0'
   configName:'nobr_vtch_itd_itp'
@@ -3324,10 +3325,10 @@ class Rule extends OpenQuote
 
     !!m
 
-module.exports = Rule
+module.exports = NobrVtchItdItp
 
 if typeof window isnt 'undefined'
-  App.Rules['nobr_vtch_itd_itp'] = Rule
+  App.Rules['nobr_vtch_itd_itp'] = NobrVtchItdItp
 
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
@@ -3626,10 +3627,12 @@ if typeof window isnt 'undefined'
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
 
-##
-# Правило
-##
-class Rule extends OpenQuote
+###
+Правило PsPps
+
+Объединение сокращений P.S., P.P.S.
+###
+class PsPps extends OpenQuote
   description: 'Объединение сокращений P.S., P.P.S.'
   version:'0.0.0'
   configName:'ps_pps'
@@ -3654,10 +3657,10 @@ class Rule extends OpenQuote
 
     !!m
 
-module.exports = Rule
+module.exports = PsPps
 
 if typeof window isnt 'undefined'
-  App.Rules['ps_pps'] = Rule
+  App.Rules['ps_pps'] = PsPps
 
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote

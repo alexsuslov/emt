@@ -1,10 +1,9 @@
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
-
-##
-# Правило
-##
-class Rule extends OpenQuote
+###
+Правило NbspOrgAbbr
+###
+class NbspOrgAbbr extends OpenQuote
   description: 'Привязка сокращений форм собственности к названиям организаций'
   version:'0.0.0'
   configName:'nbsp_org_abbr'
@@ -14,7 +13,6 @@ class Rule extends OpenQuote
     rex = [
       /([^a-zA-Zа-яёА-ЯЁ]|^)(ООО|ЗАО|ОАО|НИИ|ПБОЮЛ)\s([a-zA-Zа-яёА-ЯЁ]|\"|\&laquo\;|\&bdquo\;|<)/
     ]
-
 
     for re, idx in rex
       m = @text.match re
@@ -26,7 +24,7 @@ class Rule extends OpenQuote
 
     !!m
 
-module.exports = Rule
+module.exports = NbspOrgAbbr
 
 if typeof window isnt 'undefined'
-  App.Rules['nbsp_org_abbr'] = Rule
+  App.Rules['nbsp_org_abbr'] = NbspOrgAbbr

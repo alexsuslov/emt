@@ -1,10 +1,12 @@
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
 
-##
-# Правило
-##
-class Rule extends OpenQuote
+###
+Правило NobrVtchItdItp
+
+Объединение сокращений и т.д., и т.п., в т.ч.
+###
+class NobrVtchItdItp extends OpenQuote
   description: 'Объединение сокращений и т.д., и т.п., в т.ч.'
   version:'0.0.0'
   configName:'nobr_vtch_itd_itp'
@@ -35,7 +37,7 @@ class Rule extends OpenQuote
 
     !!m
 
-module.exports = Rule
+module.exports = NobrVtchItdItp
 
 if typeof window isnt 'undefined'
-  App.Rules['nobr_vtch_itd_itp'] = Rule
+  App.Rules['nobr_vtch_itd_itp'] = NobrVtchItdItp

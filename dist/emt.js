@@ -1,5 +1,5 @@
 (function() {
-  var Abbr, App, Dash, EMTLib, EmtDate, Etc, NoBr, Numbers, OpenQuote, OpenQuoteAdv, Quote, Rule, Space, Symbol, Text, chars_table, html4_char, isClient, module,
+  var Abbr, AcuteAccent, App, Dash, EMTLib, EmtDate, Etc, NbspBeforeUnit, NbspBeforeWeightUnit, NbspInTheEnd, NbspMoneyAbbr, NbspOrgAbbr, NbspTe, NoBr, NobrAbbreviation, NobrAcronym, NobrBeforeUnitVolt, NobrGost, NobrLocations, NobrSmIm, NobrVtchItdItp, Numbers, OpenQuote, OpenQuoteAdv, PsPps, Quote, Rule, Space, Symbol, Text, chars_table, html4_char, isClient, module,
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -1397,7 +1397,7 @@
 
 
   /*
-   *# Групповой Объект правил "Сокращения"
+  Групповой Объект правил Сокращения
    */
 
   Abbr = (function(_super) {
@@ -1437,20 +1437,25 @@
     OpenQuote = require('./open_quote');
   }
 
-  Rule = (function(_super) {
-    __extends(Rule, _super);
 
-    function Rule() {
-      return Rule.__super__.constructor.apply(this, arguments);
+  /*
+  Правило Акцент AcuteAccent
+   */
+
+  AcuteAccent = (function(_super) {
+    __extends(AcuteAccent, _super);
+
+    function AcuteAccent() {
+      return AcuteAccent.__super__.constructor.apply(this, arguments);
     }
 
-    Rule.prototype.description = 'Акцент';
+    AcuteAccent.prototype.description = 'Акцент';
 
-    Rule.prototype.version = '0.0.0';
+    AcuteAccent.prototype.version = '0.0.0';
 
-    Rule.prototype.configName = 'acute_accent';
+    AcuteAccent.prototype.configName = 'acute_accent';
 
-    Rule.prototype.replace = function() {
+    AcuteAccent.prototype.replace = function() {
       var idx, m, re, rex, _i, _len;
       rex = [/([уеыаоэяиюё])\`([а-яё])/i];
       for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
@@ -1466,14 +1471,14 @@
       return !!m;
     };
 
-    return Rule;
+    return AcuteAccent;
 
   })(OpenQuote);
 
-  module.exports = Rule;
+  module.exports = AcuteAccent;
 
   if (typeof window !== 'undefined') {
-    App.Rules['acute_accent'] = Rule;
+    App.Rules['acute_accent'] = AcuteAccent;
   }
 
   if (!OpenQuote) {
@@ -3286,20 +3291,25 @@
     OpenQuote = require('./open_quote');
   }
 
-  Rule = (function(_super) {
-    __extends(Rule, _super);
 
-    function Rule() {
-      return Rule.__super__.constructor.apply(this, arguments);
+  /* Правило NbspBeforeUnit
+  Замена символов и привязка сокращений в весовых величинах: г, кг, мг…
+   */
+
+  NbspBeforeUnit = (function(_super) {
+    __extends(NbspBeforeUnit, _super);
+
+    function NbspBeforeUnit() {
+      return NbspBeforeUnit.__super__.constructor.apply(this, arguments);
     }
 
-    Rule.prototype.description = 'Замена символов и привязка сокращений в весовых величинах: г, кг, мг…';
+    NbspBeforeUnit.prototype.description = 'Замена символов и привязка сокращений в весовых величинах: г, кг, мг…';
 
-    Rule.prototype.version = '0.0.0';
+    NbspBeforeUnit.prototype.version = '0.0.0';
 
-    Rule.prototype.configName = 'nbsp_before_unit';
+    NbspBeforeUnit.prototype.configName = 'nbsp_before_unit';
 
-    Rule.prototype.replace = function() {
+    NbspBeforeUnit.prototype.replace = function() {
       var idx, m, re, rex, strs, _i, _len;
       rex = [/(\s|^|\>|\&nbsp\;|\,)(\d+)(\s)?(м|мм|см|дм|км|гм|km|dm|cm|mm)(\s|\.|\!|\?|\,|$|\&plusmn\;|\;)/i, /(\s|^|\>|\&nbsp\;|\,)(\d+)(\s)?(м|мм|см|дм|км|гм|km|dm|cm|mm)([32]|&sup3;|&sup2;)(\s|\.|\!|\?|\,|$|\&plusmn\;|\;)/i];
       strs = [
@@ -3329,34 +3339,39 @@
       return !!m;
     };
 
-    return Rule;
+    return NbspBeforeUnit;
 
   })(OpenQuote);
 
-  module.exports = Rule;
+  module.exports = NbspBeforeUnit;
 
   if (typeof window !== 'undefined') {
-    App.Rules['nbsp_before_unit'] = Rule;
+    App.Rules['nbsp_before_unit'] = NbspBeforeUnit;
   }
 
   if (!OpenQuote) {
     OpenQuote = require('./open_quote');
   }
 
-  Rule = (function(_super) {
-    __extends(Rule, _super);
 
-    function Rule() {
-      return Rule.__super__.constructor.apply(this, arguments);
+  /*
+  Правило NbspBeforeWeightUnit
+   */
+
+  NbspBeforeWeightUnit = (function(_super) {
+    __extends(NbspBeforeWeightUnit, _super);
+
+    function NbspBeforeWeightUnit() {
+      return NbspBeforeWeightUnit.__super__.constructor.apply(this, arguments);
     }
 
-    Rule.prototype.description = 'Замена символов и привязка сокращений в весовых величинах: г, кг, мг…';
+    NbspBeforeWeightUnit.prototype.description = 'Замена символов и привязка сокращений в весовых величинах: г, кг, мг…';
 
-    Rule.prototype.version = '0.0.0';
+    NbspBeforeWeightUnit.prototype.version = '0.0.0';
 
-    Rule.prototype.configName = 'nbsp_before_weight_unit';
+    NbspBeforeWeightUnit.prototype.configName = 'nbsp_before_weight_unit';
 
-    Rule.prototype.replace = function() {
+    NbspBeforeWeightUnit.prototype.replace = function() {
       var idx, m, re, rex, _i, _len;
       rex = [/(\s|^|\>|\&nbsp\;|\,)(\d+)(\s)?(г|кг|мг|т)(\s|\.|\!|\?|\,|$|\&nbsp\;|\;)/i];
       for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
@@ -3372,14 +3387,14 @@
       return !!m;
     };
 
-    return Rule;
+    return NbspBeforeWeightUnit;
 
   })(OpenQuote);
 
-  module.exports = Rule;
+  module.exports = NbspBeforeWeightUnit;
 
   if (typeof window !== 'undefined') {
-    App.Rules['nbsp_before_weight_unit'] = Rule;
+    App.Rules['nbsp_before_weight_unit'] = NbspBeforeWeightUnit;
   }
 
   if (!OpenQuote) {
@@ -3428,20 +3443,27 @@
     OpenQuote = require('./open_quote');
   }
 
-  Rule = (function(_super) {
-    __extends(Rule, _super);
 
-    function Rule() {
-      return Rule.__super__.constructor.apply(this, arguments);
+  /*
+  Правило NbspInTheEnd
+  
+  Привязка союзов и предлогов к предыдущим словам в случае конца предложения
+   */
+
+  NbspInTheEnd = (function(_super) {
+    __extends(NbspInTheEnd, _super);
+
+    function NbspInTheEnd() {
+      return NbspInTheEnd.__super__.constructor.apply(this, arguments);
     }
 
-    Rule.prototype.description = 'Привязка союзов и предлогов к предыдущим словам в случае конца предложения';
+    NbspInTheEnd.prototype.description = 'Привязка союзов и предлогов к предыдущим словам в случае конца предложения';
 
-    Rule.prototype.version = '0.0.0';
+    NbspInTheEnd.prototype.version = '0.0.0';
 
-    Rule.prototype.configName = 'nbsp_in_the_end';
+    NbspInTheEnd.prototype.configName = 'nbsp_in_the_end';
 
-    Rule.prototype.replace = function() {
+    NbspInTheEnd.prototype.replace = function() {
       var idx, m, re, rex, _i, _len;
       rex = [/([a-zа-яё0-9\-]{3,})\s([a-zа-яё]{1,2})\.(\s[A-ZА-ЯЁ]|$)/];
       for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
@@ -3457,34 +3479,41 @@
       return !!m;
     };
 
-    return Rule;
+    return NbspInTheEnd;
 
   })(OpenQuote);
 
-  module.exports = Rule;
+  module.exports = NbspInTheEnd;
 
   if (typeof window !== 'undefined') {
-    App.Rules['nbsp_in_the_end'] = Rule;
+    App.Rules['nbsp_in_the_end'] = NbspInTheEnd;
   }
 
   if (!OpenQuote) {
     OpenQuote = require('./open_quote');
   }
 
-  Rule = (function(_super) {
-    __extends(Rule, _super);
 
-    function Rule() {
-      return Rule.__super__.constructor.apply(this, arguments);
+  /*
+   Правило NbspMoneyAbbr
+  
+   Форматирование денежных сокращений (расстановка пробелов и привязка названия валюты к числу
+   */
+
+  NbspMoneyAbbr = (function(_super) {
+    __extends(NbspMoneyAbbr, _super);
+
+    function NbspMoneyAbbr() {
+      return NbspMoneyAbbr.__super__.constructor.apply(this, arguments);
     }
 
-    Rule.prototype.description = 'Форматирование денежных сокращений (расстановка пробелов и привязка названия валюты к числу)';
+    NbspMoneyAbbr.prototype.description = 'Форматирование денежных сокращений (расстановка пробелов и привязка названия валюты к числу)';
 
-    Rule.prototype.version = '0.0.0';
+    NbspMoneyAbbr.prototype.version = '0.0.0';
 
-    Rule.prototype.configName = 'nbsp_money_abbr';
+    NbspMoneyAbbr.prototype.configName = 'nbsp_money_abbr';
 
-    Rule.prototype.replace = function() {
+    NbspMoneyAbbr.prototype.replace = function() {
       var idx, m, re, rex, str, _i, _len;
       rex = [/(\d)((\040|\s)?(тыс|млн|млрд)\.?(\040|\&nbsp\;)?)?(\040|\&nbsp\;)?(руб\.|долл\.|евро|€|&euro;|\$|у[\.]? ?е[\.]?)/i];
       for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
@@ -3501,34 +3530,39 @@
       return !!m;
     };
 
-    return Rule;
+    return NbspMoneyAbbr;
 
   })(OpenQuote);
 
-  module.exports = Rule;
+  module.exports = NbspMoneyAbbr;
 
   if (typeof window !== 'undefined') {
-    App.Rules['nbsp_money_abbr'] = Rule;
+    App.Rules['nbsp_money_abbr'] = NbspMoneyAbbr;
   }
 
   if (!OpenQuote) {
     OpenQuote = require('./open_quote');
   }
 
-  Rule = (function(_super) {
-    __extends(Rule, _super);
 
-    function Rule() {
-      return Rule.__super__.constructor.apply(this, arguments);
+  /*
+  Правило NbspOrgAbbr
+   */
+
+  NbspOrgAbbr = (function(_super) {
+    __extends(NbspOrgAbbr, _super);
+
+    function NbspOrgAbbr() {
+      return NbspOrgAbbr.__super__.constructor.apply(this, arguments);
     }
 
-    Rule.prototype.description = 'Привязка сокращений форм собственности к названиям организаций';
+    NbspOrgAbbr.prototype.description = 'Привязка сокращений форм собственности к названиям организаций';
 
-    Rule.prototype.version = '0.0.0';
+    NbspOrgAbbr.prototype.version = '0.0.0';
 
-    Rule.prototype.configName = 'nbsp_org_abbr';
+    NbspOrgAbbr.prototype.configName = 'nbsp_org_abbr';
 
-    Rule.prototype.replace = function() {
+    NbspOrgAbbr.prototype.replace = function() {
       var idx, m, re, reStr, rex, _i, _len;
       rex = [/([^a-zA-Zа-яёА-ЯЁ]|^)(ООО|ЗАО|ОАО|НИИ|ПБОЮЛ)\s([a-zA-Zа-яёА-ЯЁ]|\"|\&laquo\;|\&bdquo\;|<)/];
       for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
@@ -3545,14 +3579,14 @@
       return !!m;
     };
 
-    return Rule;
+    return NbspOrgAbbr;
 
   })(OpenQuote);
 
-  module.exports = Rule;
+  module.exports = NbspOrgAbbr;
 
   if (typeof window !== 'undefined') {
-    App.Rules['nbsp_org_abbr'] = Rule;
+    App.Rules['nbsp_org_abbr'] = NbspOrgAbbr;
   }
 
   if (!OpenQuote) {
@@ -3602,20 +3636,27 @@
     OpenQuote = require('./open_quote');
   }
 
-  Rule = (function(_super) {
-    __extends(Rule, _super);
 
-    function Rule() {
-      return Rule.__super__.constructor.apply(this, arguments);
+  /*
+  Правило NbspTe
+  
+  Обработка т.е.
+   */
+
+  NbspTe = (function(_super) {
+    __extends(NbspTe, _super);
+
+    function NbspTe() {
+      return NbspTe.__super__.constructor.apply(this, arguments);
     }
 
-    Rule.prototype.description = 'Обработка т.е.';
+    NbspTe.prototype.description = 'Обработка т.е.';
 
-    Rule.prototype.version = '0.0.0';
+    NbspTe.prototype.version = '0.0.0';
 
-    Rule.prototype.configName = 'nbsp_te';
+    NbspTe.prototype.configName = 'nbsp_te';
 
-    Rule.prototype.replace = function() {
+    NbspTe.prototype.replace = function() {
       var idx, m, re, rex, str, _i, _len;
       rex = [/([a-zа-яё0-9\-]{3,})\s(те|т\.е|т\sе|т\s\.е)\.(\s[A-ZА-ЯЁ]|$)/];
       for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
@@ -3634,14 +3675,14 @@
       return !!m;
     };
 
-    return Rule;
+    return NbspTe;
 
   })(OpenQuote);
 
-  module.exports = Rule;
+  module.exports = NbspTe;
 
   if (typeof window !== 'undefined') {
-    App.Rules['nbsp_te'] = Rule;
+    App.Rules['nbsp_te'] = NbspTe;
   }
 
   if (!OpenQuote) {
@@ -3827,20 +3868,27 @@
     OpenQuote = require('./open_quote');
   }
 
-  Rule = (function(_super) {
-    __extends(Rule, _super);
 
-    function Rule() {
-      return Rule.__super__.constructor.apply(this, arguments);
+  /*
+  Правило NobrAbbreviation
+  
+  Расстановка пробелов перед сокращениями dpi, lpi
+   */
+
+  NobrAbbreviation = (function(_super) {
+    __extends(NobrAbbreviation, _super);
+
+    function NobrAbbreviation() {
+      return NobrAbbreviation.__super__.constructor.apply(this, arguments);
     }
 
-    Rule.prototype.description = 'Расстановка пробелов перед сокращениями dpi, lpi';
+    NobrAbbreviation.prototype.description = 'Расстановка пробелов перед сокращениями dpi, lpi';
 
-    Rule.prototype.version = '0.0.0';
+    NobrAbbreviation.prototype.version = '0.0.0';
 
-    Rule.prototype.configName = 'nobr_abbreviation';
+    NobrAbbreviation.prototype.configName = 'nobr_abbreviation';
 
-    Rule.prototype.replace = function() {
+    NobrAbbreviation.prototype.replace = function() {
       var m, re, reStr, rex, self, use, _i, _len;
       self = this;
       use = 0;
@@ -3859,34 +3907,40 @@
       return !!m;
     };
 
-    return Rule;
+    return NobrAbbreviation;
 
   })(OpenQuote);
 
-  module.exports = Rule;
+  module.exports = NobrAbbreviation;
 
   if (typeof window !== 'undefined') {
-    App.Rules['nobr_abbreviation'] = Rule;
+    App.Rules['nobr_abbreviation'] = NobrAbbreviation;
   }
 
   if (!OpenQuote) {
     OpenQuote = require('./open_quote');
   }
 
-  Rule = (function(_super) {
-    __extends(Rule, _super);
 
-    function Rule() {
-      return Rule.__super__.constructor.apply(this, arguments);
+  /*
+  Правило NobrAcronym
+  Расстановка пробелов перед сокращениями гл., стр., рис., илл., ст., п.
+   */
+
+  NobrAcronym = (function(_super) {
+    __extends(NobrAcronym, _super);
+
+    function NobrAcronym() {
+      return NobrAcronym.__super__.constructor.apply(this, arguments);
     }
 
-    Rule.prototype.description = 'Расстановка пробелов перед сокращениями гл., стр., рис., илл., ст., п.';
+    NobrAcronym.prototype.description = 'Расстановка пробелов перед сокращениями гл., стр., рис., илл., ст., п.';
 
-    Rule.prototype.version = '0.0.0';
+    NobrAcronym.prototype.version = '0.0.0';
 
-    Rule.prototype.configName = 'nobr_acronym';
+    NobrAcronym.prototype.configName = 'nobr_acronym';
 
-    Rule.prototype.replace = function() {
+    NobrAcronym.prototype.replace = function() {
       var m, re, reStr, rex, _i, _len;
       rex = [/(\s|^|\>|\()(гл|стр|рис|илл?|ст|п|с)\.(\040|\t)*(\d+)(\&nbsp\;|\s|\.|\,|\?|\!|$)/i];
       for (_i = 0, _len = rex.length; _i < _len; _i++) {
@@ -3903,34 +3957,41 @@
       return !!m;
     };
 
-    return Rule;
+    return NobrAcronym;
 
   })(OpenQuote);
 
-  module.exports = Rule;
+  module.exports = NobrAcronym;
 
   if (typeof window !== 'undefined') {
-    App.Rules['nobr_acronym'] = Rule;
+    App.Rules['nobr_acronym'] = NobrAcronym;
   }
 
   if (!OpenQuote) {
     OpenQuote = require('./open_quote');
   }
 
-  Rule = (function(_super) {
-    __extends(Rule, _super);
 
-    function Rule() {
-      return Rule.__super__.constructor.apply(this, arguments);
+  /*
+  Правило NobrBeforeUnitVolt
+  
+  Установка пробельных символов в сокращении вольт
+   */
+
+  NobrBeforeUnitVolt = (function(_super) {
+    __extends(NobrBeforeUnitVolt, _super);
+
+    function NobrBeforeUnitVolt() {
+      return NobrBeforeUnitVolt.__super__.constructor.apply(this, arguments);
     }
 
-    Rule.prototype.description = 'Установка пробельных символов в сокращении вольт';
+    NobrBeforeUnitVolt.prototype.description = 'Установка пробельных символов в сокращении вольт';
 
-    Rule.prototype.version = '0.0.0';
+    NobrBeforeUnitVolt.prototype.version = '0.0.0';
 
-    Rule.prototype.configName = 'nobr_before_unit_volt';
+    NobrBeforeUnitVolt.prototype.configName = 'nobr_before_unit_volt';
 
-    Rule.prototype.replace = function() {
+    NobrBeforeUnitVolt.prototype.replace = function() {
       var idx, m, re, reStr, rex, _i, _len;
       rex = [/(\d+)([вВ]|\s[вВ])(\s|\.|\!|\?|\,|$)/];
       for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
@@ -3947,34 +4008,41 @@
       return !!m;
     };
 
-    return Rule;
+    return NobrBeforeUnitVolt;
 
   })(OpenQuote);
 
-  module.exports = Rule;
+  module.exports = NobrBeforeUnitVolt;
 
   if (typeof window !== 'undefined') {
-    App.Rules['nobr_before_unit_volt'] = Rule;
+    App.Rules['nobr_before_unit_volt'] = NobrBeforeUnitVolt;
   }
 
   if (!OpenQuote) {
     OpenQuote = require('./open_quote');
   }
 
-  Rule = (function(_super) {
-    __extends(Rule, _super);
 
-    function Rule() {
-      return Rule.__super__.constructor.apply(this, arguments);
+  /*
+  Правило NobrGost
+  
+  Привязка сокращения ГОСТ к номеру
+   */
+
+  NobrGost = (function(_super) {
+    __extends(NobrGost, _super);
+
+    function NobrGost() {
+      return NobrGost.__super__.constructor.apply(this, arguments);
     }
 
-    Rule.prototype.description = 'Привязка сокращения ГОСТ к номеру';
+    NobrGost.prototype.description = 'Привязка сокращения ГОСТ к номеру';
 
-    Rule.prototype.version = '0.0.0';
+    NobrGost.prototype.version = '0.0.0';
 
-    Rule.prototype.configName = 'nobr_gost';
+    NobrGost.prototype.configName = 'nobr_gost';
 
-    Rule.prototype.replace = function() {
+    NobrGost.prototype.replace = function() {
       var idx, m, re, res, rex, _i, _len;
       rex = [/(\040|\t|\&nbsp\;|^)ГОСТ( |\&nbsp\;)?(\d+)((\-|\&minus\;|\&mdash\;)(\d+))?(( |\&nbsp\;)(\-|\&mdash\;))?/i, /(\040|\t|\&nbsp\;|^|\>)ГОСТ( |\&nbsp\;)?(\d+)(\-|\&minus\;|\&mdash\;)(\d+)/i];
       res = [
@@ -4004,34 +4072,40 @@
       return !!m;
     };
 
-    return Rule;
+    return NobrGost;
 
   })(OpenQuote);
 
-  module.exports = Rule;
+  module.exports = NobrGost;
 
   if (typeof window !== 'undefined') {
-    App.Rules['nbsp_money_abbr'] = Rule;
+    App.Rules['nbsp_money_abbr'] = NobrGost;
   }
 
   if (!OpenQuote) {
     OpenQuote = require('./open_quote');
   }
 
-  Rule = (function(_super) {
-    __extends(Rule, _super);
 
-    function Rule() {
-      return Rule.__super__.constructor.apply(this, arguments);
+  /*
+  Правило NobrLocations
+  Расстановка пробелов в сокращениях г., ул., пер., д.
+   */
+
+  NobrLocations = (function(_super) {
+    __extends(NobrLocations, _super);
+
+    function NobrLocations() {
+      return NobrLocations.__super__.constructor.apply(this, arguments);
     }
 
-    Rule.prototype.description = 'Расстановка пробелов в сокращениях г., ул., пер., д.';
+    NobrLocations.prototype.description = 'Расстановка пробелов в сокращениях г., ул., пер., д.';
 
-    Rule.prototype.version = '0.0.0';
+    NobrLocations.prototype.version = '0.0.0';
 
-    Rule.prototype.configName = 'nobr_locations';
+    NobrLocations.prototype.configName = 'nobr_locations';
 
-    Rule.prototype.replace = function() {
+    NobrLocations.prototype.replace = function() {
       var idx, m, re, reStr, rex, _i, _len;
       rex = [/(\s|^|\>)(г|ул|пер|просп|пл|бул|наб|пр|ш|туп)\.(\040|\t)*([а-яё0-9a-z]+)(\s|\.|\,|\?|\!|$)/i, /(\s|^|\>)(б\-р|пр\-кт)(\040|\t)*([а-яё0-9a-z]+)(\s|\.|\,|\?|\!|$)/i, /(\s|^|\>)(д|кв|эт)\.(\040|\t)*(\d+)(\s|\.|\,|\?|\!|$)/i];
       for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
@@ -4052,34 +4126,40 @@
       return !!m;
     };
 
-    return Rule;
+    return NobrLocations;
 
   })(OpenQuote);
 
-  module.exports = Rule;
+  module.exports = NobrLocations;
 
   if (typeof window !== 'undefined') {
-    App.Rules['nobr_locations'] = Rule;
+    App.Rules['nobr_locations'] = NobrLocations;
   }
 
   if (!OpenQuote) {
     OpenQuote = require('./open_quote');
   }
 
-  Rule = (function(_super) {
-    __extends(Rule, _super);
 
-    function Rule() {
-      return Rule.__super__.constructor.apply(this, arguments);
+  /*
+  Правило NobrSmIm
+  Расстановка пробелов перед сокращениями см., им.
+   */
+
+  NobrSmIm = (function(_super) {
+    __extends(NobrSmIm, _super);
+
+    function NobrSmIm() {
+      return NobrSmIm.__super__.constructor.apply(this, arguments);
     }
 
-    Rule.prototype.description = 'Расстановка пробелов перед сокращениями см., им.';
+    NobrSmIm.prototype.description = 'Расстановка пробелов перед сокращениями см., им.';
 
-    Rule.prototype.version = '0.0.0';
+    NobrSmIm.prototype.version = '0.0.0';
 
-    Rule.prototype.configName = 'nobr_sm_im';
+    NobrSmIm.prototype.configName = 'nobr_sm_im';
 
-    Rule.prototype.replace = function() {
+    NobrSmIm.prototype.replace = function() {
       var m, re, reStr, rex, _i, _len;
       rex = [/(\s|^|\>|\()(см|им)\.(\040|\t)*([а-яё0-9a-z]+)(\s|\.|\,|\?|\!|$)/i];
       for (_i = 0, _len = rex.length; _i < _len; _i++) {
@@ -4096,14 +4176,14 @@
       return !!m;
     };
 
-    return Rule;
+    return NobrSmIm;
 
   })(OpenQuote);
 
-  module.exports = Rule;
+  module.exports = NobrSmIm;
 
   if (typeof window !== 'undefined') {
-    App.Rules['nobr_sm_im'] = Rule;
+    App.Rules['nobr_sm_im'] = NobrSmIm;
   }
 
   if (!OpenQuote) {
@@ -4153,20 +4233,27 @@
     OpenQuote = require('./open_quote');
   }
 
-  Rule = (function(_super) {
-    __extends(Rule, _super);
 
-    function Rule() {
-      return Rule.__super__.constructor.apply(this, arguments);
+  /*
+  Правило NobrVtchItdItp
+  
+  Объединение сокращений и т.д., и т.п., в т.ч.
+   */
+
+  NobrVtchItdItp = (function(_super) {
+    __extends(NobrVtchItdItp, _super);
+
+    function NobrVtchItdItp() {
+      return NobrVtchItdItp.__super__.constructor.apply(this, arguments);
     }
 
-    Rule.prototype.description = 'Объединение сокращений и т.д., и т.п., в т.ч.';
+    NobrVtchItdItp.prototype.description = 'Объединение сокращений и т.д., и т.п., в т.ч.';
 
-    Rule.prototype.version = '0.0.0';
+    NobrVtchItdItp.prototype.version = '0.0.0';
 
-    Rule.prototype.configName = 'nobr_vtch_itd_itp';
+    NobrVtchItdItp.prototype.configName = 'nobr_vtch_itd_itp';
 
-    Rule.prototype.replace = function() {
+    NobrVtchItdItp.prototype.replace = function() {
       var idx, m, re, reStr, res, rex, tag, _i, _len;
       rex = [/(^|\s|\&nbsp\;)и(\s|\&nbsp\;)т\.?[ ]?д(\.|$|\s|\&nbsp\;)/, /(^|\s|\&nbsp\;)и(\s|\&nbsp\;)т\.?[ ]?п(\.|$|\s|\&nbsp\;)/, /(^|\s|\&nbsp\;)в(\s|\&nbsp\;)т\.?[ ]?ч(\.|$|\s|\&nbsp\;)/];
       res = ["и т. д.", "и т. п.", "и т. ч."];
@@ -4187,14 +4274,14 @@
       return !!m;
     };
 
-    return Rule;
+    return NobrVtchItdItp;
 
   })(OpenQuote);
 
-  module.exports = Rule;
+  module.exports = NobrVtchItdItp;
 
   if (typeof window !== 'undefined') {
-    App.Rules['nobr_vtch_itd_itp'] = Rule;
+    App.Rules['nobr_vtch_itd_itp'] = NobrVtchItdItp;
   }
 
   if (!OpenQuote) {
@@ -4584,20 +4671,27 @@
     OpenQuote = require('./open_quote');
   }
 
-  Rule = (function(_super) {
-    __extends(Rule, _super);
 
-    function Rule() {
-      return Rule.__super__.constructor.apply(this, arguments);
+  /*
+  Правило PsPps
+  
+  Объединение сокращений P.S., P.P.S.
+   */
+
+  PsPps = (function(_super) {
+    __extends(PsPps, _super);
+
+    function PsPps() {
+      return PsPps.__super__.constructor.apply(this, arguments);
     }
 
-    Rule.prototype.description = 'Объединение сокращений P.S., P.P.S.';
+    PsPps.prototype.description = 'Объединение сокращений P.S., P.P.S.';
 
-    Rule.prototype.version = '0.0.0';
+    PsPps.prototype.version = '0.0.0';
 
-    Rule.prototype.configName = 'ps_pps';
+    PsPps.prototype.configName = 'ps_pps';
 
-    Rule.prototype.replace = function() {
+    PsPps.prototype.replace = function() {
       var content, idx, m, re, reStr, rex, _i, _len;
       rex = [/(^|\040|\t|\>|\r|\n)(p\.\040?)(p\.\040?)?(s\.)([^\<])/i];
       for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
@@ -4620,14 +4714,14 @@
       return !!m;
     };
 
-    return Rule;
+    return PsPps;
 
   })(OpenQuote);
 
-  module.exports = Rule;
+  module.exports = PsPps;
 
   if (typeof window !== 'undefined') {
-    App.Rules['ps_pps'] = Rule;
+    App.Rules['ps_pps'] = PsPps;
   }
 
   if (!OpenQuote) {

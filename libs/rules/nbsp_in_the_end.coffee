@@ -1,10 +1,12 @@
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
 
-##
-# Правило
-##
-class Rule extends OpenQuote
+###
+Правило NbspInTheEnd
+
+Привязка союзов и предлогов к предыдущим словам в случае конца предложения
+###
+class NbspInTheEnd extends OpenQuote
   description: 'Привязка союзов и предлогов к предыдущим словам в случае конца предложения'
   version:'0.0.0'
   configName:'nbsp_in_the_end'
@@ -26,7 +28,7 @@ class Rule extends OpenQuote
 
     !!m
 
-module.exports = Rule
+module.exports = NbspInTheEnd
 
 if typeof window isnt 'undefined'
-  App.Rules['nbsp_in_the_end'] = Rule
+  App.Rules['nbsp_in_the_end'] = NbspInTheEnd

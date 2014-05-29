@@ -1,8 +1,7 @@
 # Зависимости
 Quote = require( './quote') unless Quote
-
 ###
-## Групповой Объект правил "Сокращения"
+Групповой Объект правил Сокращения
 ###
 class Abbr extends Quote
   description: "Сокращения"

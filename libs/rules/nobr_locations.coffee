@@ -1,10 +1,10 @@
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
-
-##
-# Правило
-##
-class Rule extends OpenQuote
+###
+Правило NobrLocations
+Расстановка пробелов в сокращениях г., ул., пер., д.
+###
+class NobrLocations extends OpenQuote
   description: 'Расстановка пробелов в сокращениях г., ул., пер., д.'
   version:'0.0.0'
   configName:'nobr_locations'
@@ -16,7 +16,6 @@ class Rule extends OpenQuote
       /(\s|^|\>)(б\-р|пр\-кт)(\040|\t)*([а-яё0-9a-z]+)(\s|\.|\,|\?|\!|$)/i
       /(\s|^|\>)(д|кв|эт)\.(\040|\t)*(\d+)(\s|\.|\,|\?|\!|$)/i
     ]
-
 
     for re, idx in rex
       m = @text.match re
@@ -32,7 +31,7 @@ class Rule extends OpenQuote
 
     !!m
 
-module.exports = Rule
+module.exports = NobrLocations
 
 if typeof window isnt 'undefined'
-  App.Rules['nobr_locations'] = Rule
+  App.Rules['nobr_locations'] = NobrLocations

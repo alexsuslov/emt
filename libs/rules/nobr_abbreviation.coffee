@@ -1,9 +1,11 @@
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
-##
-# Правило "Закрывающая кавычка"
-##
-class Rule extends OpenQuote
+###
+Правило NobrAbbreviation
+
+Расстановка пробелов перед сокращениями dpi, lpi
+###
+class NobrAbbreviation extends OpenQuote
   description: 'Расстановка пробелов перед сокращениями dpi, lpi'
   version:'0.0.0'
   configName:'nobr_abbreviation'
@@ -28,7 +30,7 @@ class Rule extends OpenQuote
 
     !!m
 
-module.exports = Rule
+module.exports = NobrAbbreviation
 
 if typeof window isnt 'undefined'
-  App.Rules['nobr_abbreviation'] = Rule
+  App.Rules['nobr_abbreviation'] = NobrAbbreviation

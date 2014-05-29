@@ -1,10 +1,11 @@
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
 
-##
-# Правило
-##
-class Rule extends OpenQuote
+###
+Правило NobrSmIm
+Расстановка пробелов перед сокращениями см., им.
+###
+class NobrSmIm extends OpenQuote
   description: 'Расстановка пробелов перед сокращениями см., им.'
   version:'0.0.0'
   configName:'nobr_sm_im'
@@ -25,7 +26,7 @@ class Rule extends OpenQuote
 
     !!m
 
-module.exports = Rule
+module.exports = NobrSmIm
 if typeof window isnt 'undefined'
-  App.Rules['nobr_sm_im'] = Rule
+  App.Rules['nobr_sm_im'] = NobrSmIm
 
