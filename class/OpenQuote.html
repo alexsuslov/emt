@@ -162,12 +162,13 @@
     <span class='signature'>
       <a href='#replace-dynamic'>
         #
-(void)
+(?)
 <b>replace</b><span>()</span>
       </a>
     </span>
     <span class='desc'>
-      Правило замены 
+      Правило для строки функция не должна править строку так чтобы повторно срабатывать
+
     </span>
   </li>
   <li>
@@ -280,14 +281,26 @@
   <div class='method_details'>
     <p class='signature' id='replace-dynamic'>
       #
-(void)
+(?)
 <b>replace</b><span>()</span>
       <br>
     </p>
     <div class='docstring'>
-  <p>Правило замены</p>
+  <p>Правило для строки
+функция не должна править строку так чтобы повторно срабатывать</p>
 </div>
 <div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>?</tt>
+      )
+      &mdash;
+      <span class='desc'>false если правило не сработало </span>
+    </li>
+  </ul>
 </div>
   </div>
   <div class='method_details'>
@@ -399,7 +412,7 @@
 </div>
     </div>
     <div id='footer'>
-  May 29, 14 16:22:43 by
+  May 29, 14 17:15:12 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>
