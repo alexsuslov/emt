@@ -1,5 +1,5 @@
 (function() {
-  var Abbr, AcuteAccent, App, AutoComma, Dash, DotOnEnd, EMTLib, EmtDate, Etc, FixBrackets, FixBracketsSpace, FixExclQuestMarks, FixPmarks, Hellip, NbspBeforeUnit, NbspBeforeWeightUnit, NbspInTheEnd, NbspMoneyAbbr, NbspOrgAbbr, NbspTe, NoBr, NobrAbbreviation, NobrAcronym, NobrBeforeUnitVolt, NobrGost, NobrLocations, NobrSmIm, NobrVtchItdItp, Numbers, OpenQuote, OpenQuoteAdv, PsPps, Punctmark, PunctuationMarksBaseLimit, PunctuationMarksLimit, Quote, Rule, Space, Symbol, Text, chars_table, html4_char, isClient, module,
+  var Abbr, AcuteAccent, App, AutoComma, Dash, DotOnEnd, EMTLib, EmtDate, Etc, FixBrackets, FixBracketsSpace, FixExclQuestMarks, FixPmarks, Hellip, MinusBetweenNums, NbspBeforeUnit, NbspBeforeWeightUnit, NbspInTheEnd, NbspMoneyAbbr, NbspOrgAbbr, NbspTe, NoBr, NobrAbbreviation, NobrAcronym, NobrBeforeUnitVolt, NobrGost, NobrLocations, NobrSmIm, NobrVtchItdItp, Numbers, OaObracketComa, OaOquote, OpenQuote, OpenQuoteAdv, PsPps, Punctmark, PunctuationMarksBaseLimit, PunctuationMarksLimit, Quote, Rule, Space, Symbol, Text, chars_table, html4_char, isClient, module,
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -898,6 +898,9 @@
       start = new Date().getTime();
       while (this.replace()) {
         this.used += 1;
+        if (this.used > 4096) {
+          break;
+        }
       }
       this.profiling = new Date().getTime() - start;
       return this;
@@ -3409,20 +3412,27 @@
     OpenQuote = require('./open_quote');
   }
 
-  Rule = (function(_super) {
-    __extends(Rule, _super);
 
-    function Rule() {
-      return Rule.__super__.constructor.apply(this, arguments);
+  /*
+  Правило MinusBetweenNums
+  
+  Расстановка знака минус между числами
+   */
+
+  MinusBetweenNums = (function(_super) {
+    __extends(MinusBetweenNums, _super);
+
+    function MinusBetweenNums() {
+      return MinusBetweenNums.__super__.constructor.apply(this, arguments);
     }
 
-    Rule.prototype.description = 'Расстановка знака минус между числами';
+    MinusBetweenNums.prototype.description = 'Расстановка знака минус между числами';
 
-    Rule.prototype.version = '0.0.0';
+    MinusBetweenNums.prototype.version = '0.0.0';
 
-    Rule.prototype.configName = 'minus_between_nums';
+    MinusBetweenNums.prototype.configName = 'minus_between_nums';
 
-    Rule.prototype.replace = function() {
+    MinusBetweenNums.prototype.replace = function() {
       var idx, m, re, rex, _i, _len;
       rex = [/(\d+)\-(\d)/i];
       for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
@@ -3437,14 +3447,14 @@
       }
     };
 
-    return Rule;
+    return MinusBetweenNums;
 
   })(OpenQuote);
 
-  module.exports = Rule;
+  module.exports = MinusBetweenNums;
 
   if (typeof window !== 'undefined') {
-    App.Rules['auto_times_x'] = Rule;
+    App.Rules['minus_between_nums'] = MinusBetweenNums;
   }
 
   if (!OpenQuote) {
@@ -4838,6 +4848,148 @@
 
   if (typeof window !== 'undefined') {
     App.Rules['numeric_sup'] = Rule;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+
+  /*
+  Правило OaObracketComa
+  
+  Оптическое выравнивание для пунктуации (скобка и запятая)
+   */
+
+  OaObracketComa = (function(_super) {
+    __extends(OaObracketComa, _super);
+
+    function OaObracketComa() {
+      return OaObracketComa.__super__.constructor.apply(this, arguments);
+    }
+
+    OaObracketComa.prototype.description = 'Оптическое выравнивание для пунктуации (скобка и запятая)';
+
+    OaObracketComa.prototype.version = '0.0.0';
+
+    OaObracketComa.prototype.configName = 'oa_obracket_coma';
+
+    OaObracketComa.prototype.replace = function() {
+      var idx, m, re, res, rex, _i, _len;
+      rex = [/(\040|\&nbsp\;|\t)\(/i, /(\n|\r|^)\(/i, /([а-яёa-z0-9]+)\,(\040+)/i];
+      res = [
+        (function(_this) {
+          return function(m) {
+            return _this.ntag(m[1], "span", {
+              "class": "oa_obracket_sp_s"
+            }) + _this.ntag("(", "span", {
+              "class": "oa_obracket_sp_b"
+            });
+          };
+        })(this), (function(_this) {
+          return function(m) {
+            return m[1] + _this.ntag("(", "span", {
+              "class": "oa_obracket_nl_b"
+            });
+          };
+        })(this), (function(_this) {
+          return function(m) {
+            return m[1] + _this.ntag(",", "span", {
+              "class": "oa_comma_b"
+            }) + _this.ntag(" ", "span", {
+              "class": "oa_comma_e"
+            });
+          };
+        })(this)
+      ];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        this.text = this.text.replace(m[0], res[idx](m));
+      }
+      return !!m;
+    };
+
+    return OaObracketComa;
+
+  })(OpenQuote);
+
+  module.exports = OaObracketComa;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['oa_obracket_coma'] = OaObracketComa;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+
+  /*
+  Правило OaOquote
+  
+  Расстановка знака минус между числами
+   */
+
+  OaOquote = (function(_super) {
+    __extends(OaOquote, _super);
+
+    function OaOquote() {
+      return OaOquote.__super__.constructor.apply(this, arguments);
+    }
+
+    OaOquote.prototype.description = 'Оптическое выравнивание открывающей кавычки';
+
+    OaOquote.prototype.version = '0.0.0';
+
+    OaOquote.prototype.configName = 'oa_oquote';
+
+    OaOquote.prototype.replace = function() {
+      var idx, m, re, res, rex, _i, _len;
+      rex = [/([a-zа-яё\-]{3,})(\040|\&nbsp\;|\t)(\&laquo\;)/i, /(\n|\r|^)(\&laquo\;)/i];
+      res = [
+        (function(_this) {
+          return function(m) {
+            return m[1] + _this.ntag(m[2], "span", {
+              "class": "oa_oqoute_sp_s"
+            }) + _this.ntag(m[3], "span", {
+              "class": "oa_oqoute_sp_q"
+            });
+          };
+        })(this), (function(_this) {
+          return function(m) {
+            return m[1] + _this.ntag(m[2], "span", {
+              "class": "oa_oquote_nl"
+            });
+          };
+        })(this)
+      ];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        this.text = this.text.replace(m[0], res[idx](m));
+      }
+      return !!m;
+    };
+
+    return OaOquote;
+
+  })(OpenQuote);
+
+  module.exports = OaOquote;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['oa_oquote'] = OaOquote;
   }
 
   if (!OpenQuote) {

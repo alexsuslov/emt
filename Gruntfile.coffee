@@ -65,12 +65,12 @@ module.exports = (grunt)->
 
 
 
-    # uglify:
-    #   translate:
-    #     files:
-    #       'js/emt.min.js':[
-    #         'js/translate.js'
-    #       ]
+    uglify:
+      translate:
+        files:
+          'dist/emt.min.js':[
+            'dist/emt.js'
+          ]
     # concat:
     #   options:
     #     separator: '; ; ; ;;; ;;; ;;; ; ; ;'
@@ -108,7 +108,7 @@ module.exports = (grunt)->
   grunt.registerTask('default', [
     'coffeelint'
     'coffee'
-    # 'uglify'
+    'uglify'
     # 'concat'
     'codo'
     'mochaTest:md'

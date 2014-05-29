@@ -1,16 +1,17 @@
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
+###
+Правило MinusBetweenNums
 
-##
-# Правило
-##
-class Rule extends OpenQuote
+Расстановка знака минус между числами
+###
+class MinusBetweenNums extends OpenQuote
   description: 'Расстановка знака минус между числами'
   version:'0.0.0'
   configName:'minus_between_nums'
 
+  # Замена
   replace:->
-
     # Список правил
     rex = [
       /(\d+)\-(\d)/i
@@ -26,7 +27,7 @@ class Rule extends OpenQuote
 
     # !!m
 
-module.exports = Rule
+module.exports = MinusBetweenNums
 
 if typeof window isnt 'undefined'
-  App.Rules['auto_times_x'] = Rule
+  App.Rules['minus_between_nums'] = MinusBetweenNums

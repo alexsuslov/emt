@@ -756,6 +756,8 @@ class OpenQuote
     start = new Date().getTime()
     while @replace()
       @used += 1
+      # защита от бесконечного цикла
+      break if @used > 4096
     @profiling = new Date().getTime() - start
     @
 
@@ -2657,17 +2659,18 @@ if typeof window isnt 'undefined'
 
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
+###
+Правило MinusBetweenNums
 
-##
-# Правило
-##
-class Rule extends OpenQuote
+Расстановка знака минус между числами
+###
+class MinusBetweenNums extends OpenQuote
   description: 'Расстановка знака минус между числами'
   version:'0.0.0'
   configName:'minus_between_nums'
 
+  # Замена
   replace:->
-
     # Список правил
     rex = [
       /(\d+)\-(\d)/i
@@ -2683,10 +2686,10 @@ class Rule extends OpenQuote
 
     # !!m
 
-module.exports = Rule
+module.exports = MinusBetweenNums
 
 if typeof window isnt 'undefined'
-  App.Rules['auto_times_x'] = Rule
+  App.Rules['minus_between_nums'] = MinusBetweenNums
 
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
@@ -3734,6 +3737,94 @@ module.exports = Rule
 
 if typeof window isnt 'undefined'
   App.Rules['numeric_sup'] = Rule
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+###
+Правило OaObracketComa
+
+Оптическое выравнивание для пунктуации (скобка и запятая)
+###
+class OaObracketComa extends OpenQuote
+  description: 'Оптическое выравнивание для пунктуации (скобка и запятая)'
+  version:'0.0.0'
+  configName:'oa_obracket_coma'
+
+  # Замена
+  replace:->
+    # Список правил
+    rex = [
+      /(\040|\&nbsp\;|\t)\(/i
+      /(\n|\r|^)\(/i
+      /([а-яёa-z0-9]+)\,(\040+)/i
+    ]
+    res = [
+      (m)=>
+        @ntag( m[1], "span", {class:"oa_obracket_sp_s"}) + @ntag("(", "span", {class:"oa_obracket_sp_b"})
+    ,
+      (m)=>
+        m[1] + @ntag( "(", "span", {class:"oa_obracket_nl_b"})
+    ,
+      (m)=>
+        m[1] + @ntag(",", "span", {class:"oa_comma_b"}) + @ntag(" ", "span", {class:"oa_comma_e"})
+    ]
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+
+      @text = @text.replace m[0] , res[idx] m
+
+    !!m
+
+module.exports = OaObracketComa
+
+if typeof window isnt 'undefined'
+  App.Rules['oa_obracket_coma'] = OaObracketComa
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+###
+Правило OaOquote
+
+Расстановка знака минус между числами
+###
+class OaOquote extends OpenQuote
+  description: 'Оптическое выравнивание открывающей кавычки'
+  version:'0.0.0'
+  configName:'oa_oquote'
+
+  # Замена
+  replace:->
+    # Список правил
+    rex = [
+      /([a-zа-яё\-]{3,})(\040|\&nbsp\;|\t)(\&laquo\;)/i
+      /(\n|\r|^)(\&laquo\;)/i
+    ]
+    res = [
+      (m)=>
+        m[1] + @ntag( m[2], "span", {class:"oa_oqoute_sp_s"} ) + @ntag( m[3], "span", {class:"oa_oqoute_sp_q"} )
+    ,
+      (m)=>
+        m[1] + @ntag(m[2], "span", {class:"oa_oquote_nl"} )
+    ]
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+
+      @text = @text.replace m[0] , res[idx] m
+
+    !!m
+
+module.exports = OaOquote
+
+if typeof window isnt 'undefined'
+  App.Rules['oa_oquote'] = OaOquote
 
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote

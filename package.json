@@ -1,8 +1,8 @@
 {
     "name": "emt",
-    "version": "0.0.0",
+    "version": "0.1.0",
     "description": "tipograf",
-    "main": "emt.coffee",
+    "main": "dist/emt.min.js",
     "scripts": {
         "test": "mocha --compilers coffee:coffee-script/register "
     },

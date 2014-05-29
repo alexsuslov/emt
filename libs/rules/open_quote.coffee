@@ -65,6 +65,8 @@ class OpenQuote
     start = new Date().getTime()
     while @replace()
       @used += 1
+      # защита от бесконечного цикла
+      break if @used > 4096
     @profiling = new Date().getTime() - start
     @
 
