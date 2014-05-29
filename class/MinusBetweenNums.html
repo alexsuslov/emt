@@ -19,23 +19,29 @@
       Index
     </a>
     &raquo;
-    <span class='title'>Quote</span>
+    <span class='title'>MinusBetweenNums</span>
   </div>
 </div>
     <div id='content'>
       <h1>
         Class:
-        Quote
+        MinusBetweenNums
       </h1>
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>libs&#47;rules&#47;quote.coffee</td>
+          <td>libs&#47;rules&#47;minus_between_nums.coffee</td>
+        </tr>
+        <tr>
+          <td>Inherits:</td>
+          <td>
+            <a href='../class/OpenQuote.html'>OpenQuote</a>
+          </td>
         </tr>
       </table>
       <h2>Overview</h2>
       <div class='docstring'>
-  <h2 id="-">Групповой Объект правил &quot;Кавычки&quot;</h2><p>используется как объект расширения для остальных груп правил</p>
+  <p>Правило MinusBetweenNums</p><p>Расстановка знака минус между числами</p>
 </div>
 <div class='tags'>
 </div>
@@ -46,7 +52,7 @@
     =
   </dt>
   <dd>
-    <pre><code class='coffeescript'>&quot;Кавычки&quot;</code></pre>
+    <pre><code class='coffeescript'>&#39;Расстановка знака минус между числами&#39;</code></pre>
     
   </dd>
   <dt id='version-variable'>
@@ -62,104 +68,65 @@
     =
   </dt>
   <dd>
-    <pre><code class='coffeescript'>&#39;Quote&#39;</code></pre>
-    <div class='docstring'>
-  <p>Имя конфига</p>
-</div>
-<div class='tags'>
-</div>
-  </dd>
-  <dt id='config-variable'>
-    config
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>{
-  on: true,
-  log: false,
-  debug: false
-}</code></pre>
-    <div class='docstring'>
-  <p>Конфиг для теста</p>
-</div>
-<div class='tags'>
-</div>
-  </dd>
-  <dt id='rules-variable'>
-    rules
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>[]</code></pre>
-    <div class='docstring'>
-  <p>Очередь правил</p>
-</div>
-<div class='tags'>
-</div>
-  </dd>
-  <dt id='order-variable'>
-    order
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>[&quot;quotes_outside_a&quot;, &quot;open_quote&quot;, &quot;close_quote&quot;, &quot;close_quote_adv&quot;, &quot;open_quote_adv&quot;, &quot;quotation&quot;]</code></pre>
-    <div class='docstring'>
-  <p>Порядок выполнения</p>
-</div>
-<div class='tags'>
-</div>
+    <pre><code class='coffeescript'>&#39;minus_between_nums&#39;</code></pre>
+    
   </dd>
 </dl>
+      <h3 class='inherited'>
+        Variable inherited from
+        <a href='../class/OpenQuote.html'>OpenQuote</a>
+      </h3>
+      <p class='inherited'>
+        <a href='../class/OpenQuote.html#used-variable'>used</a>
+        <a href='../class/OpenQuote.html#timer-variable'>timer</a>
+        <a href='../class/OpenQuote.html#description-variable'>description</a>
+        <a href='../class/OpenQuote.html#version-variable'>version</a>
+        <a href='../class/OpenQuote.html#configName-variable'>configName</a>
+        <a href='../class/OpenQuote.html#text-variable'>text</a>
+        <a href='../class/OpenQuote.html#config-variable'>config</a>
+      </p>
       <h2>Instance Method Summary</h2>
       <ul class='summary'>
   <li>
     <span class='signature'>
-      <a href='#apply-dynamic'>
+      <a href='#replace-dynamic'>
         #
 (void)
-<b>apply</b><span>()</span>
+<b>replace</b><span>()</span>
       </a>
     </span>
     <span class='desc'>
-      Применение правил @text 
+      Замена 
     </span>
   </li>
 </ul>
-      <h2>Constructor Details</h2>
-      <div class='methods'>
-  <div class='method_details'>
-    <p class='signature' id='constructor-dynamic'>
-      #
-(void)
-<b>constructor</b><span>(opt)</span>
-      <br>
-    </p>
-    <div class='docstring'>
-  <p>Конструктор</p><ul>
-<li>Настраивает конфиг</li>
-<li>Замыкает на себя text</li>
-<li>Создает список правил согласно прядка</li>
-</ul><p>@param opt[object]</p><ul>
-<li>Lib[Object] обязательно</li>
-<li>text[String] строка</li>
-</ul>
-
-</div>
-<div class='tags'>
-</div>
-  </div>
-</div>
+      <h2>
+        <small>Inherited Method Summary</small>
+        <h3 class='inherited'>
+          Methods inherited from
+          <a href='../class/OpenQuote.html'>OpenQuote</a>
+        </h3>
+        <p class='inherited'>
+          <a href='../class/OpenQuote.html#logger-dynamic'>#logger</a>
+          <a href='../class/OpenQuote.html#debug-dynamic'>#debug</a>
+          <a href='../class/OpenQuote.html#multiply-dynamic'>#multiply</a>
+          <a href='../class/OpenQuote.html#apply-dynamic'>#apply</a>
+          <a href='../class/OpenQuote.html#replace-dynamic'>#replace</a>
+          <a href='../class/OpenQuote.html#tag-dynamic'>#tag</a>
+          <a href='../class/OpenQuote.html#ntag-dynamic'>#ntag</a>
+        </p>
+      </h2>
       <h2>Instance Method Details</h2>
       <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='apply-dynamic'>
+    <p class='signature' id='replace-dynamic'>
       #
 (void)
-<b>apply</b><span>()</span>
+<b>replace</b><span>()</span>
       <br>
     </p>
     <div class='docstring'>
-  <p>Применение правил @text</p>
+  <p>Замена</p>
 </div>
 <div class='tags'>
 </div>
@@ -167,7 +134,7 @@
 </div>
     </div>
     <div id='footer'>
-  May 29, 14 18:37:51 by
+  May 29, 14 18:37:50 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>
