@@ -1,3 +1,11 @@
+minus_between_nums
+auto_times_x
+simple_fraction
+thinsp_between_number_triads
+thinsp_between_no_and_number
+thinsp_between_sect_and_number
+numeric_sub
+numeric_sup
 # TOC
    - [Правило ](#-)
      - [Сокращения](#-)
@@ -29,11 +37,18 @@
        - [Привязка года к дате](#-------)
      - [Прочее](#-)
        - [Акцент](#--)
+       - [Надстрочный текст после символа ^](#------)
+       - [Тире между диапазоном веков](#-----)
+       - [Тире между диапозоном веков](#-----)
      - [Неразрывные конструкции](#--)
        - [Привязка союзов и предлогов к написанным после словам](#----------)
        - [Неразрывный пробел в как то](#-------)
        - [Неразрывный пробел перед частицей](#------)
        - [Привязка градусов к числу](#------)
+       - [Привязка союзов и предлогов к предыдущим словам в случае конца предложения](#-------------)
+       - [Объединение в неразрывные конструкции номеров телефонов](#--------)
+       - [Объединение IP-адресов](#----ip-)
+       - [Привязка инициалов к фамилиям](#------)
      - [ Числа, дроби, математические знаки ](#-----)
        - [Расстановка знака минус между числами](#---------)
        - [Замена x на символ × в размерных единицах](#------x------)
@@ -366,6 +381,14 @@ return assert.equal(test.res, rule.text);
 
 <a name="-------"></a>
 ### Привязка года к дате
+ 24.03.1999 .
+
+```js
+rule.text = test.text;
+rule.apply();
+return assert.equal(test.res, rule.text);
+```
+
 <a name="emtbase"></a>
 # EMTBase
 is present EMTretQuote.
@@ -711,6 +734,36 @@ rule.apply();
 return assert.equal(test.res, rule.text);
 ```
 
+<a name="------"></a>
+### Надстрочный текст после символа ^
+ приве ^т .
+
+```js
+rule.text = test.text;
+rule.apply();
+return assert.equal(test.res, rule.text);
+```
+
+<a name="-----"></a>
+### Тире между диапазоном веков
+ X-V в .
+
+```js
+rule.text = test.text;
+rule.apply();
+return assert.equal(test.res, rule.text);
+```
+
+<a name="-----"></a>
+### Тире между диапозоном веков
+ 10:00-20:00 .
+
+```js
+rule.text = test.text;
+rule.apply();
+return assert.equal(test.res, rule.text);
+```
+
 <a name="-"></a>
 # Правило 
 <a name="--"></a>
@@ -748,6 +801,46 @@ return assert.equal(test.res, rule.text);
 <a name="------"></a>
 ### Привязка градусов к числу
  10 &deg;С .
+
+```js
+rule.text = test.text;
+rule.apply();
+return assert.equal(test.res, rule.text);
+```
+
+<a name="-------------"></a>
+### Привязка союзов и предлогов к предыдущим словам в случае конца предложения
+ссс cc. Dfdfd.
+
+```js
+rule.text = test.text;
+rule.apply();
+return assert.equal(test.res, rule.text);
+```
+
+<a name="--------"></a>
+### Объединение в неразрывные конструкции номеров телефонов
++7 123 123 12-12, 123 12-12..
+
+```js
+rule.text = test.text;
+rule.apply();
+return assert.equal(test.res, rule.text);
+```
+
+<a name="----ip-"></a>
+### Объединение IP-адресов
+123.123.123.123.
+
+```js
+rule.text = test.text;
+rule.apply();
+return assert.equal(test.res, rule.text);
+```
+
+<a name="------"></a>
+### Привязка инициалов к фамилиям
+ Ccccc A.A. .
 
 ```js
 rule.text = test.text;
