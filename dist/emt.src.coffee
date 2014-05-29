@@ -2876,7 +2876,6 @@ class NbspTe extends OpenQuote
       /([a-zа-яё0-9\-]{3,})\s(те|т\.е|т\sе|т\s\.е)\.(\s[A-ZА-ЯЁ]|$)/
     ]
 
-
     for re, idx in rex
       m = @text.match re
       break if m
