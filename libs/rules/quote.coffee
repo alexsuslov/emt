@@ -19,12 +19,12 @@ class Quote
 
   # Порядок выполнения
   order:[
-      # "quotes_outside_a"
+      "quotes_outside_a"
       "open_quote"
       "close_quote"
-      # "close_quote_adv"
-      # "open_quote_adv"
-      # "quotation"
+      "close_quote_adv"
+      "open_quote_adv"
+      "quotation"
     ]
 
   ###

@@ -21,8 +21,8 @@ class Rule extends OpenQuote
       break if m
 
     if m
-      # '$m[1] . $this->tag($m[2]."&mdash;".$m[4],"span", array("class"=>"nowrap")).$m[5]'
-      @text = @text.replace m[0] , "#{m[1]}&#769;#{m[2]}"
+      str = m[1] + @ntag(m[2] + "&mdash;" + m[4], "span", {class:"nowrap"}) + m[5]
+      @text = @text.replace m[0] , str
 
     !!m
 

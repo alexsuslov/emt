@@ -21,8 +21,8 @@ class Rule extends OpenQuote
       break if m
 
     if m
-      # '"" . $this->tag($this->tag($m[3],"small"),"sup") . $m[4]'
-      @text = @text.replace m[0] , "#{m[1]}&#769;#{m[2]}"
+      str = @ntag( @ntag( m[3], "small"), "sup" ) + m[4]
+      @text = @text.replace m[0] , str
 
     !!m
 

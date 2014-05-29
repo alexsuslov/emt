@@ -64,11 +64,14 @@ tests = [
     res: " <span class='nowrap'>ГОСТ 123&ndash;123</span> "
   }
   {
-    obj: require( '../libs/rules/nbsp_in_the_end')
+    obj: require( '../libs/rules/nbsp_te')
     text: " тест те."
     res: " тест<span class='nowrap'>те</span>"
   }
 ]
+
+# for test in tests
+#   console.log new test.obj({}).configName
 
 describe "Правило ", ->
   describe "Сокращения", ->

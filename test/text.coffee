@@ -30,6 +30,9 @@ tests = [
   # }
 ]
 
+# for test in tests
+#   console.log new test.obj({}).configName
+
 describe "Правило ", ->
   describe "Текст и абзацы", ->
     for test in tests

@@ -20,19 +20,20 @@ class Abbr extends Quote
 
   # Порядок выполнения
   order:[
-    "nobr_abbreviation",
     "nobr_acronym",
     "nobr_sm_im",
     "nobr_locations",
     "nbsp_before_unit",
     "nbsp_before_weight_unit",
     "nobr_before_unit_volt",
+    "nbsp_org_abbr",
+    "nobr_abbreviation",
     "ps_pps",
     "nobr_vtch_itd_itp",
-    "nbsp_te",
     "nbsp_money_abbr",
-    "nbsp_org_abbr",
     "nobr_gost"
+    "nbsp_in_the_end"
+    "nbsp_te",
     ]
 
 module.exports = Abbr

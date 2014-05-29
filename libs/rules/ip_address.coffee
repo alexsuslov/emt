@@ -11,30 +11,30 @@ class Rule extends OpenQuote
 
   replace:->
 
-    # # Список правил
-    # rex = [
-    #   /(\s|\&nbsp\;|^)(\d{0,3}\.\d{0,3}\.\d{0,3}\.\d{0,3})/i
-    # ]
+    # Список правил
+    rex = [
+      /(\s|\&nbsp\;|^)(\d{0,3}\.\d{0,3}\.\d{0,3}\.\d{0,3})/i
+    ]
 
+    for re, idx in rex
+      m = @text.match re
+      break if m
 
+    if m
+      strIp = @nowrap_ip_address m[2]
 
-    # for re, idx in rex
-    #   m = @text.match re
-    #   break if m
+      if strIp
+        @text = @text.replace m[0] , strIp
+      else
+        return false
 
-    # if m
-    #   # '$m[1]  .
-    #   # (
-    #   #   ($m[1] == ">" || $m[11] == "<") ? $m[2]." ".$m[4]." ".$m[6]."-".$m[8]."-".$m[10] :$this->tag($m[2]." ".$m[4]." ".$m[6]."-".$m[8]."-".$m[10], "span", array("class"=>"nowrap")
-    #   #     )
-    #   #   ).$m[11]',
-    #   # '$m[1]  .(($m[1] == ">" || $m[11] == "<") ? $m[2]." ".$m[4]." ".$m[6]."-".$m[8]."-".$m[10] :$this->tag($m[2]." ".$m[4]." ".$m[6]."-".$m[8]."-".$m[10], "span", array("class"=>"nowrap"))  ).$m[11]'
-    #   if idx is 0
-    #     str = m[1]
+    !!m
 
-    #   @text = @text.replace m[0] , str
-
-    # !!m
+  nowrap_ip_address:(ip)->
+    triads = ip.split '.'
+    for triad in triads
+      return false unless 0 <= parseInt( triad ) <= 255
+    @ntag triads.join('.'), 'span', class: "nowrap"
 
 module.exports = Rule
 

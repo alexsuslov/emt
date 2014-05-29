@@ -45,6 +45,10 @@ tests = [
   }
 ]
 
+# for test in tests
+#   console.log new test.obj({Lib:{}}).configName
+
+
 describe "Правило ", ->
   describe "Дефисы и тире", ->
     for test in tests

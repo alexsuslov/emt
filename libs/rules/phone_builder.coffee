@@ -13,27 +13,50 @@ class Rule extends OpenQuote
 
     # Список правил
     rex = [
-      /([^\d\+]|^)([\+]?[0-9]{1,3})( |\&nbsp\;|\&thinsp\;)([0-9]{3,4}|\([0-9]{3,4}\))( |\&nbsp\;|\&thinsp\;)([0-9]{2,3})(-|\&minus\;)([0-9]{2})(-|\&minus\;)([0-9]{2})([^\d]|$)/
-      /([^\d\+]|^)([\+]?[0-9]{1,3})( |\&nbsp\;|\&thinsp\;)([0-9]{3,4}|[0-9]{3,4})( |\&nbsp\;|\&thinsp\;)([0-9]{2,3})(-|\&minus\;)([0-9]{2})(-|\&minus\;)([0-9]{2})([^\d]|$)/
+      /(^|\>|\s)(\+)([0-9]{1})(\(|\s)([0-9]{3})(\)|\s)([0-9]{1,3})(\.|\,|\s|\-)([0-9]{2,3})(\s|\-)([0-9]{2,3})($|\<|\s)/
+      /(^|\>|\s)([0-9]{3})(\s|\-)([0-9]{2,3})(\s|\-)([0-9]{2,3})(\.|\,|$|\<|\s)/
     ]
+    res = [
+      (m)=>
+        m[4] = '('
+        m[6] = ')'
+        m[8] = '&nbsp;'
+        m[10] = '-'
+        m.splice 0, 1
 
+        @ntag m.join(''), "span", {class:"nowrap"}
+    ,
+      (m)=>
+        first = ''
+        if m[1] is '>'
+          m[1] = ''
+          first = '>'
+
+        last = ''
+        if m[7] is '<'
+          m[7] = ''
+          last = '<'
+
+        m[3] = '&nbsp;'
+        m[5] = '-'
+
+        m.splice 0, 1
+
+
+        first + @ntag( m.join(''), "span", {class:"nowrap"} ) + last
+    ]
 
 
     for re, idx in rex
       m = @text.match re
+      if m
+        m = false if m[1] is '>' and m[12] is '<'
+        m = false if m[1] is '>' and m[7] is '<'
       break if m
 
     if m
-      # '$m[1]  .
-      # (
-      #   ($m[1] == ">" || $m[11] == "<") ? $m[2]." ".$m[4]." ".$m[6]."-".$m[8]."-".$m[10] :$this->tag($m[2]." ".$m[4]." ".$m[6]."-".$m[8]."-".$m[10], "span", array("class"=>"nowrap")
-      #     )
-      #   ).$m[11]',
-      # '$m[1]  .(($m[1] == ">" || $m[11] == "<") ? $m[2]." ".$m[4]." ".$m[6]."-".$m[8]."-".$m[10] :$this->tag($m[2]." ".$m[4]." ".$m[6]."-".$m[8]."-".$m[10], "span", array("class"=>"nowrap"))  ).$m[11]'
-      if idx is 0
-        str = m[1]
 
-      @text = @text.replace m[0] , str
+      @text = @text.replace re , res[idx] m
 
     !!m
 

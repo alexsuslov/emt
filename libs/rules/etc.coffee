@@ -20,7 +20,10 @@ class Etc extends Quote
 
   # Порядок выполнения
   order:[
-    "acute_accent"
+      'acute_accent'
+      'word_sup'
+      'century_period'
+      'time_interval'
     ]
 
 module.exports = Etc

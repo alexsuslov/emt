@@ -1006,6 +1006,300 @@
 
 
   /*
+  Правило "Открывающая кавычка"
+  используется как объект расширения для остальных правил
+   */
+
+  OpenQuote = (function() {
+    OpenQuote.prototype.used = 0;
+
+    OpenQuote.prototype.timer = 0;
+
+    OpenQuote.prototype.description = "Открывающая кавычка";
+
+    OpenQuote.prototype.version = '0.0.0';
+
+    OpenQuote.prototype.configName = 'open_quote';
+
+    OpenQuote.prototype.text = '';
+
+    OpenQuote.prototype.config = {
+      on: true,
+      log: false,
+      debug: false
+    };
+
+
+    /*
+    Конструктор
+    @param opt[object]
+    - Lib[Object] обязательно
+    - text[String] строка
+     */
+
+    function OpenQuote(opt) {
+      var _ref;
+      this.opt = opt;
+      if ((_ref = this.opt.config) != null ? _ref[this.configName] : void 0) {
+        this.config = this.opt.config[this.configName];
+      }
+      if (this.opt.Lib) {
+        this.Lib = this.opt.Lib;
+      } else {
+        this.logger('error', 'No lib');
+      }
+      if (this.opt.text) {
+        this.text = this.opt.text;
+      }
+      this;
+    }
+
+
+    /*
+    Логер
+    @param level[string] error|warning|info| debug
+    @param message[string] сообщение
+    @param obj[obj] object ошибки
+     */
+
+    OpenQuote.prototype.logger = function(level, message, obj) {
+      if (!this.config.log) {
+        return;
+      }
+      if (level === 'error') {
+        throw new Error(message);
+      }
+      if (level === 'warning' || level === 'info') {
+        console.log(new Date(+(" " + level + ": " + message)));
+      }
+      if (level === 'debug') {
+        console.log("" + level + ": " + message, obj);
+      }
+      return this;
+    };
+
+
+    /*
+    Debug
+    @param level[string] error|warning|info
+    @param message[string] сообщение
+    @param obj[obj] object ошибки
+     */
+
+    OpenQuote.prototype.debug = function(obj) {
+      if (!this.config.debug) {
+        return;
+      }
+      this.logger('debug', this.configName, obj);
+      return this;
+    };
+
+    OpenQuote.prototype.multiply = function() {
+      var start;
+      start = new Date().getTime();
+      while (this.replace()) {
+        this.used += 1;
+      }
+      this.profiling = new Date().getTime() - start;
+      return this;
+    };
+
+    OpenQuote.prototype.apply = function() {
+      if (!this.config.on) {
+        return;
+      }
+      return this.multiply();
+    };
+
+    OpenQuote.prototype.replace = function() {
+      var m, re, self, str;
+      self = this;
+      re = /(^|\(|\s|\>|-)(\"|\\\")(\S+)/i;
+      m = this.text.match(re);
+      if (m) {
+        str = m[1] + this.Lib.QUOTE_FIRS_OPEN + m[3];
+        this.text = this.text.replace(re, str);
+      }
+      return !!m;
+    };
+
+
+    /*
+    Создание защищенного тега с содержимым
+    
+    @see  EMT_lib::build_safe_tag
+    @param  [string] $content
+    @param  [string] $tag
+    @param  [array] $attribute
+    @return   [string]
+     */
+
+    OpenQuote.prototype.tag = function(content, tag, attribute) {
+      var classname, layout, style_inline, _ref;
+      if (attribute == null) {
+        attribute = {};
+      }
+      classname = '';
+      if (tag == null) {
+        tag = 'span';
+      }
+      if (attribute["class"]) {
+        classname = attribute["class"];
+      }
+      if (classname === "nowrap") {
+        if (!this.is_on('nowrap')) {
+          tag = "nobr";
+          attribute = {};
+        }
+      }
+      if ((_ref = this.classes) != null ? _ref[classname] : void 0) {
+        style_inline = this.classes[classname];
+      }
+      if (style_inline) {
+        attribute['__style'] = style_inline;
+      }
+      if (this.class_layout_prefix) {
+        classname = this.class_layout_prefix + classname;
+      }
+      attribute["class"] = classname;
+      if (this.use_layout) {
+        layout = this.use_layout;
+      }
+      return this.Lib.build_safe_tag(content, tag, attribute, layout);
+    };
+
+
+    /*
+    Создание тега с содержимым
+    
+    @see  EMT_lib::build_safe_tag
+    @param  [string] $content
+    @param  [string] $tag
+    @param  [array] $attribute
+    @return   [string]
+     */
+
+    OpenQuote.prototype.ntag = function(content, tag, attributes) {
+      var attribute, classname, param;
+      if (attributes == null) {
+        attributes = {};
+      }
+      classname = '';
+      if (tag == null) {
+        tag = 'span';
+      }
+      param = '';
+      for (attribute in attributes) {
+        param = " " + attribute + "='" + attributes[attribute] + "'";
+      }
+      return "<" + tag + param + ">" + content + "</" + tag + ">";
+    };
+
+    return OpenQuote;
+
+  })();
+
+  module.exports = OpenQuote;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['open_quote'] = OpenQuote;
+  }
+
+
+  /*
+   *# Групповой Объект правил "Кавычки"
+  используется как объект расширения для остальных груп правил
+   */
+
+  Quote = (function() {
+    Quote.prototype.description = "Кавычки";
+
+    Quote.prototype.version = '0.0.0';
+
+    Quote.prototype.configName = 'Quote';
+
+    Quote.prototype.config = {
+      on: true,
+      log: false,
+      debug: false
+    };
+
+    Quote.prototype.rules = [];
+
+    Quote.prototype.order = ["quotes_outside_a", "open_quote", "close_quote", "close_quote_adv", "open_quote_adv", "quotation"];
+
+
+    /*
+    Конструктор
+    - Настраивает конфиг
+    - Замыкает на себя text
+    - Создает список правил согласно прядка
+    
+    @param opt[object]
+    - Lib[Object] обязательно
+    - text[String] строка
+     */
+
+    function Quote(opt) {
+      var ruleName, _i, _len, _ref, _ref1;
+      this.opt = opt;
+      if ((_ref = this.opt.config) != null ? _ref[this.configName] : void 0) {
+        this.config = this.opt.config[this.configName];
+      }
+      if (this.opt.Rules) {
+        this.Rules = this.opt.Rules;
+      }
+      if (!this.config.on) {
+        return;
+      }
+      if (this.opt.Lib) {
+        this.Lib = this.opt.Lib;
+      } else {
+        this.logger('error', 'No lib');
+      }
+      if (this.opt.text) {
+        this.text = this.opt.text;
+      }
+      _ref1 = this.order;
+      for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+        ruleName = _ref1[_i];
+        if (this.Rules[ruleName]) {
+          this.rules.push(new this.Rules[ruleName]({
+            Lib: this.Lib
+          }));
+        }
+      }
+      this;
+    }
+
+    Quote.prototype.apply = function() {
+      var rule, _i, _len, _ref, _results;
+      if (!this.config.on) {
+        return;
+      }
+      _ref = this.rules;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        rule = _ref[_i];
+        rule.text = this.text;
+        rule.apply();
+        _results.push(this.text = rule.text);
+      }
+      return _results;
+    };
+
+    return Quote;
+
+  })();
+
+  module.exports = Quote;
+
+  if (typeof window !== 'undefined') {
+    App.Rules.Quote = Quote;
+  }
+
+
+  /*
    *# Групповой Объект правил "Кавычки"
   используется как объект расширения для остальных груп правил
    */
@@ -1127,7 +1421,7 @@
 
     Abbr.prototype.rules = [];
 
-    Abbr.prototype.order = ["nobr_abbreviation", "nobr_acronym", "nobr_sm_im", "nobr_locations", "nbsp_before_unit", "nbsp_before_weight_unit", "nobr_before_unit_volt", "ps_pps", "nobr_vtch_itd_itp", "nbsp_te", "nbsp_money_abbr", "nbsp_org_abbr", "nobr_gost"];
+    Abbr.prototype.order = ["nobr_acronym", "nobr_sm_im", "nobr_locations", "nbsp_before_unit", "nbsp_before_weight_unit", "nobr_before_unit_volt", "nbsp_org_abbr", "nobr_abbreviation", "ps_pps", "nobr_vtch_itd_itp", "nbsp_money_abbr", "nobr_gost", "nbsp_in_the_end", "nbsp_te"];
 
     return Abbr;
 
@@ -1571,14 +1865,14 @@
       return Rule.__super__.constructor.apply(this, arguments);
     }
 
-    Rule.prototype.description = 'Тире между диапозоном веков';
+    Rule.prototype.description = 'Тире между диапазоном веков';
 
     Rule.prototype.version = '0.0.0';
 
     Rule.prototype.configName = 'century_period';
 
     Rule.prototype.replace = function() {
-      var idx, m, re, rex, _i, _len;
+      var idx, m, re, rex, str, _i, _len;
       rex = [/(\040|\t|\&nbsp\;|^)([XIV]{1,5})(-|\&mdash\;)([XIV]{1,5})(( |\&nbsp\;)?(в\.в\.|вв\.|вв|в\.|в))/];
       for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
         re = rex[idx];
@@ -1588,7 +1882,10 @@
         }
       }
       if (m) {
-        this.text = this.text.replace(m[0], "" + m[1] + "&#769;" + m[2]);
+        str = m[1] + this.ntag(m[2] + "&mdash;" + m[4] + " вв.", "span", {
+          "class": "nowrap"
+        });
+        this.text = this.text.replace(m[0], str);
       }
       return !!m;
     };
@@ -1864,7 +2161,7 @@
 
     Dash.prototype.rules = [];
 
-    Dash.prototype.order = ["mdash_symbol_to_html_mdash", "mdash", "mdash_2", "mdash_3", "iz_za_pod", "to_libo_nibud", "koe_kak", "ka_de_kas"];
+    Dash.prototype.order = ["mdash_2_html", "mdash", "mdash_2", "mdash_3", "iz_za_pod", "to_libo_nibud", "koe_kak", "ka_de_kas"];
 
     return Dash;
 
@@ -1906,7 +2203,7 @@
 
     EmtDate.prototype.rules = [];
 
-    EmtDate.prototype.order = ["years", "mdash_month_interval", "space_posle_goda", "nbsp_posle_goda_abbr"];
+    EmtDate.prototype.order = ['years', 'mdash_month_interval', 'space_posle_goda', 'nbsp_posle_goda_abbr', 'nobr_year_in_date'];
 
     return EmtDate;
 
@@ -2040,7 +2337,7 @@
 
     Etc.prototype.rules = [];
 
-    Etc.prototype.order = ["acute_accent"];
+    Etc.prototype.order = ['acute_accent', 'word_sup', 'century_period', 'time_interval'];
 
     return Etc;
 
@@ -2225,7 +2522,40 @@
 
     Rule.prototype.configName = 'ip_address';
 
-    Rule.prototype.replace = function() {};
+    Rule.prototype.replace = function() {
+      var idx, m, re, rex, strIp, _i, _len;
+      rex = [/(\s|\&nbsp\;|^)(\d{0,3}\.\d{0,3}\.\d{0,3}\.\d{0,3})/i];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        strIp = this.nowrap_ip_address(m[2]);
+        if (strIp) {
+          this.text = this.text.replace(m[0], strIp);
+        } else {
+          return false;
+        }
+      }
+      return !!m;
+    };
+
+    Rule.prototype.nowrap_ip_address = function(ip) {
+      var triad, triads, _i, _len, _ref;
+      triads = ip.split('.');
+      for (_i = 0, _len = triads.length; _i < _len; _i++) {
+        triad = triads[_i];
+        if (!((0 <= (_ref = parseInt(triad)) && _ref <= 255))) {
+          return false;
+        }
+      }
+      return this.ntag(triads.join('.'), 'span', {
+        "class": "nowrap"
+      });
+    };
 
     return Rule;
 
@@ -3105,15 +3435,15 @@
       return Rule.__super__.constructor.apply(this, arguments);
     }
 
-    Rule.prototype.description = 'Обработка т.е.';
+    Rule.prototype.description = 'Привязка союзов и предлогов к предыдущим словам в случае конца предложения';
 
     Rule.prototype.version = '0.0.0';
 
     Rule.prototype.configName = 'nbsp_in_the_end';
 
     Rule.prototype.replace = function() {
-      var idx, m, re, rex, str, _i, _len;
-      rex = [/([a-zа-яё0-9\-]{3,})\s(те|т\.е|т\sе|т\s\.е)\.(\s[A-ZА-ЯЁ]|$)/];
+      var idx, m, re, rex, _i, _len;
+      rex = [/([a-zа-яё0-9\-]{3,})\s([a-zа-яё]{1,2})\.(\s[A-ZА-ЯЁ]|$)/];
       for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
         re = rex[idx];
         m = this.text.match(re);
@@ -3122,10 +3452,7 @@
         }
       }
       if (m) {
-        str = m[1] + this.ntag(m[2], "span", {
-          "class": "nowrap"
-        });
-        this.text = this.text.replace(m[0], str);
+        this.text = this.text.replace(m[0], "" + m[1] + "&nbsp;" + m[2] + "." + m[3]);
       }
       return !!m;
     };
@@ -3286,7 +3613,7 @@
 
     Rule.prototype.version = '0.0.0';
 
-    Rule.prototype.configName = 'nbsp_in_the_end';
+    Rule.prototype.configName = 'nbsp_te';
 
     Rule.prototype.replace = function() {
       var idx, m, re, rex, str, _i, _len;
@@ -3314,7 +3641,7 @@
   module.exports = Rule;
 
   if (typeof window !== 'undefined') {
-    App.Rules['nbsp_in_the_end'] = Rule;
+    App.Rules['nbsp_te'] = Rule;
   }
 
   if (!OpenQuote) {
@@ -3484,7 +3811,7 @@
 
     NoBr.prototype.rules = [];
 
-    NoBr.prototype.order = ["super_nbsp", "nbsp_v_kak_to", "nbsp_before_particle", "nbsp_celcius"];
+    NoBr.prototype.order = ["super_nbsp", "nbsp_v_kak_to", "nbsp_before_particle", "nbsp_celcius", "nbsp_in_the_end", "phone_builder", "ip_address", "spaces_nobr_in_surname_abbr"];
 
     return NoBr;
 
@@ -3888,8 +4215,27 @@
     Rule.prototype.configName = 'nobr_year_in_date';
 
     Rule.prototype.replace = function() {
-      var idx, m, re, rex, _i, _len;
+      var idx, m, re, res, rex, _i, _len;
       rex = [/(\s|\&nbsp\;)([0-9]{2}\.[0-9]{2}\.([0-9]{2})?[0-9]{2})(\s|\&nbsp\;)?г(\.|\s|\&nbsp\;)/i, /(\s|\&nbsp\;)([0-9]{2}\.[0-9]{2}\.([0-9]{2})?[0-9]{2})(\s|\&nbsp\;|\.(\s|\&nbsp\;|$)|$)/i];
+      res = [
+        (function(_this) {
+          return function(m) {
+            var tag;
+            tag = _this.ntag(m[2] + " г.", "span", {
+              "class": "nowrap"
+            });
+            return m[1] + tag + (m[5] === "." ? "" : " ");
+          };
+        })(this), (function(_this) {
+          return function(m) {
+            var tag;
+            tag = _this.ntag(m[2] + " г.", "span", {
+              "class": "nowrap"
+            });
+            return m[1] + tag + m[4];
+          };
+        })(this)
+      ];
       for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
         re = rex[idx];
         m = this.text.match(re);
@@ -3898,7 +4244,7 @@
         }
       }
       if (m) {
-        this.text = this.text.replace(m[0], "" + m[1] + "&mdash;" + m[8]);
+        this.text = this.text.replace(m[0], res[idx](m));
       }
       return !!m;
     };
@@ -4167,20 +4513,59 @@
     Rule.prototype.configName = 'phone_builder';
 
     Rule.prototype.replace = function() {
-      var idx, m, re, rex, str, _i, _len;
-      rex = [/([^\d\+]|^)([\+]?[0-9]{1,3})( |\&nbsp\;|\&thinsp\;)([0-9]{3,4}|\([0-9]{3,4}\))( |\&nbsp\;|\&thinsp\;)([0-9]{2,3})(-|\&minus\;)([0-9]{2})(-|\&minus\;)([0-9]{2})([^\d]|$)/, /([^\d\+]|^)([\+]?[0-9]{1,3})( |\&nbsp\;|\&thinsp\;)([0-9]{3,4}|[0-9]{3,4})( |\&nbsp\;|\&thinsp\;)([0-9]{2,3})(-|\&minus\;)([0-9]{2})(-|\&minus\;)([0-9]{2})([^\d]|$)/];
+      var idx, m, re, res, rex, _i, _len;
+      rex = [/(^|\>|\s)(\+)([0-9]{1})(\(|\s)([0-9]{3})(\)|\s)([0-9]{1,3})(\.|\,|\s|\-)([0-9]{2,3})(\s|\-)([0-9]{2,3})($|\<|\s)/, /(^|\>|\s)([0-9]{3})(\s|\-)([0-9]{2,3})(\s|\-)([0-9]{2,3})(\.|\,|$|\<|\s)/];
+      res = [
+        (function(_this) {
+          return function(m) {
+            m[4] = '(';
+            m[6] = ')';
+            m[8] = '&nbsp;';
+            m[10] = '-';
+            m.splice(0, 1);
+            return _this.ntag(m.join(''), "span", {
+              "class": "nowrap"
+            });
+          };
+        })(this), (function(_this) {
+          return function(m) {
+            var first, last;
+            first = '';
+            if (m[1] === '>') {
+              m[1] = '';
+              first = '>';
+            }
+            last = '';
+            if (m[7] === '<') {
+              m[7] = '';
+              last = '<';
+            }
+            m[3] = '&nbsp;';
+            m[5] = '-';
+            m.splice(0, 1);
+            return first + _this.ntag(m.join(''), "span", {
+              "class": "nowrap"
+            }) + last;
+          };
+        })(this)
+      ];
       for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
         re = rex[idx];
         m = this.text.match(re);
+        if (m) {
+          if (m[1] === '>' && m[12] === '<') {
+            m = false;
+          }
+          if (m[1] === '>' && m[7] === '<') {
+            m = false;
+          }
+        }
         if (m) {
           break;
         }
       }
       if (m) {
-        if (idx === 0) {
-          str = m[1];
-        }
-        this.text = this.text.replace(m[0], str);
+        this.text = this.text.replace(re, res[idx](m));
       }
       return !!m;
     };
@@ -4416,7 +4801,7 @@
 
     Space.prototype.rules = [];
 
-    Space.prototype.order = ["nobr_twosym_abbr", "remove_space_before_punctuationmarks", "autospace_after_comma", "autospace_after_pmarks", "autospace_after_dot", "autospace_after_hellips", "many_spaces_to_one", "clear_percent", "nbsp_before_open_quote", "nbsp_before_month", "spaces_on_end"];
+    Space.prototype.order = ['nobr_twosym_abbr', 'remove_space_before_punctuationmarks', 'autospace_after_comma', 'autospace_after_pmarks', 'autospace_after_dot', 'autospace_after_hellips', 'many_spaces_to_one', 'clear_percent', 'nbsp_before_open_quote', 'nbsp_before_month', 'spaces_on_end'];
 
     return Space;
 
@@ -4443,7 +4828,7 @@
 
     Rule.prototype.version = '0.0.0';
 
-    Rule.prototype.configName = 'simple_fraction';
+    Rule.prototype.configName = 'space_posle_goda';
 
     Rule.prototype.replace = function() {
       var idx, m, re, rex, _i, _len;
@@ -4468,7 +4853,7 @@
   module.exports = Rule;
 
   if (typeof window !== 'undefined') {
-    App.Rules['simple_fraction'] = Rule;
+    App.Rules['space_posle_goda'] = Rule;
   }
 
   if (!OpenQuote) {
@@ -4482,15 +4867,40 @@
       return Rule.__super__.constructor.apply(this, arguments);
     }
 
-    Rule.prototype.description = 'Объединение IP-адресов';
+    Rule.prototype.description = 'Привязка инициалов к фамилиям';
 
     Rule.prototype.version = '0.0.0';
 
     Rule.prototype.configName = 'spaces_nobr_in_surname_abbr';
 
     Rule.prototype.replace = function() {
-      var rex;
-      return rex = [/(\s|^|\.|\,|\;|\:|\?|\!|\&nbsp\;)([A-ZА-ЯЁ])\.?(\s|\&nbsp\;)?([A-ZА-ЯЁ])(\.(\s|\&nbsp\;)?|(\s|\&nbsp\;))([A-ZА-ЯЁ][a-zа-яё]+)(\s|$|\.|\,|\;|\:|\?|\!|\&nbsp\;)/, /(\s|^|\.|\,|\;|\:|\?|\!|\&nbsp\;)([A-ZА-ЯЁ][a-zа-яё]+)(\s|\&nbsp\;)([A-ZА-ЯЁ])\.?(\s|\&nbsp\;)?([A-ZА-ЯЁ])\.?(\s|$|\.|\,|\;|\:|\?|\!|\&nbsp\;)/];
+      var idx, m, re, res, rex, _i, _len;
+      rex = [/(\s|^|\.|\,|\;|\:|\?|\!|\&nbsp\;)([A-ZА-ЯЁ])\.?(\s|\&nbsp\;)?([A-ZА-ЯЁ])(\.(\s|\&nbsp\;)?|(\s|\&nbsp\;))([A-ZА-ЯЁ][a-zа-яё]+)(\s||\.|\,|\;|\:|\?|\!|\&nbsp\;)/, /(\s|^|\.|\,|\;|\:|\?|\!|\&nbsp\;)([A-ZА-ЯЁ][a-zа-яё]+)(\s|\&nbsp\;)([A-ZА-ЯЁ])\.?(\s|\&nbsp\;)?([A-ZА-ЯЁ])\.?(\s|$|\.|\,|\;|\:|\?|\!|\&nbsp\;)/];
+      res = [
+        (function(_this) {
+          return function(m) {
+            return m[1] + _this.ntag(m[2] + ". " + m[4] + ". " + m[8], "span", {
+              "class": "nowrap"
+            }) + m[9];
+          };
+        })(this), (function(_this) {
+          return function(m) {
+            return m[1] + _this.ntag(m[2] + " " + m[4] + ". " + m[6] + ".", "span", {
+              "class": "nowrap"
+            }) + m[7];
+          };
+        })(this)
+      ];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        return this.text = this.text.replace(m[0], res[idx](m));
+      }
     };
 
     return Rule;
@@ -4666,7 +5076,7 @@
 
     Text.prototype.rules = [];
 
-    Text.prototype.order = ["auto_links", "email", "no_repeat_words"];
+    Text.prototype.order = ["auto_links", "email", "no_repeat_words", 'paragraphs', 'breakline'];
 
     return Text;
 
@@ -4831,7 +5241,7 @@
     Rule.prototype.configName = 'time_interval';
 
     Rule.prototype.replace = function() {
-      var idx, m, re, rex, _i, _len;
+      var idx, m, re, rex, str, _i, _len;
       rex = [/([^\d\>]|^)([\d]{1,2}\:[\d]{2})(-|\&mdash\;|\&minus\;)([\d]{1,2}\:[\d]{2})([^\d\<]|$)/i];
       for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
         re = rex[idx];
@@ -4841,7 +5251,10 @@
         }
       }
       if (m) {
-        this.text = this.text.replace(m[0], "" + m[1] + "&#769;" + m[2]);
+        str = m[1] + this.ntag(m[2] + "&mdash;" + m[4], "span", {
+          "class": "nowrap"
+        }) + m[5];
+        this.text = this.text.replace(m[0], str);
       }
       return !!m;
     };
@@ -4976,7 +5389,7 @@
     Rule.prototype.configName = 'word_sup';
 
     Rule.prototype.replace = function() {
-      var idx, m, re, rex, _i, _len;
+      var idx, m, re, rex, str, _i, _len;
       rex = [/((\s|\&nbsp\;|^)+)\^([a-zа-яё0-9\.\:\,\-]+)(\s|\&nbsp\;|$|\.$)/i];
       for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
         re = rex[idx];
@@ -4986,7 +5399,8 @@
         }
       }
       if (m) {
-        this.text = this.text.replace(m[0], "" + m[1] + "&#769;" + m[2]);
+        str = this.ntag(this.ntag(m[3], "small"), "sup") + m[4];
+        this.text = this.text.replace(m[0], str);
       }
       return !!m;
     };

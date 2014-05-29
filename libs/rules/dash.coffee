@@ -20,7 +20,7 @@ class Dash extends Quote
 
   # Порядок выполнения
   order:[
-    "mdash_symbol_to_html_mdash",
+    "mdash_2_html",
     "mdash",
     "mdash_2",
     "mdash_3",

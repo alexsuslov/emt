@@ -5,7 +5,7 @@ OpenQuote = require( './open_quote') unless OpenQuote
 # Правило
 ##
 class Rule extends OpenQuote
-  description: 'Тире между диапозоном веков'
+  description: 'Тире между диапазоном веков'
   version:'0.0.0'
   configName:'century_period'
 
@@ -21,8 +21,8 @@ class Rule extends OpenQuote
       break if m
 
     if m
-      # '$m[1] .$this->tag($m[2]."&mdash;".$m[4]." вв.","span", array("class"=>"nowrap"))'
-      @text = @text.replace m[0] , "#{m[1]}&#769;#{m[2]}"
+      str = m[1] + @ntag( m[2] + "&mdash;"+ m[4] + " вв.","span", {class:"nowrap"})
+      @text = @text.replace m[0] , str
 
     !!m
 

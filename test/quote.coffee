@@ -16,6 +16,9 @@ tests = [
 
 ]
 
+# for test in tests
+#   console.log new test.obj({}).configName
+
 describe "Правило ", ->
   describe "Кавычки", ->
     for test in tests

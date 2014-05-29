@@ -65,6 +65,9 @@ tests = [
   # }
 ]
 
+# for test in tests
+#   console.log new test.obj({}).configName
+
 describe "Правило ", ->
   describe "Расстановка и удаление пробелов", ->
     for test in tests

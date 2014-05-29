@@ -5,7 +5,7 @@ OpenQuote = require( './open_quote') unless OpenQuote
 # Правило
 ##
 class Rule extends OpenQuote
-  description: 'Объединение IP-адресов'
+  description: 'Привязка инициалов к фамилиям'
   version:'0.0.0'
   configName:'spaces_nobr_in_surname_abbr'
 
@@ -13,23 +13,24 @@ class Rule extends OpenQuote
 
     # Список правил
     rex = [
-      /(\s|^|\.|\,|\;|\:|\?|\!|\&nbsp\;)([A-ZА-ЯЁ])\.?(\s|\&nbsp\;)?([A-ZА-ЯЁ])(\.(\s|\&nbsp\;)?|(\s|\&nbsp\;))([A-ZА-ЯЁ][a-zа-яё]+)(\s|$|\.|\,|\;|\:|\?|\!|\&nbsp\;)/
+      /(\s|^|\.|\,|\;|\:|\?|\!|\&nbsp\;)([A-ZА-ЯЁ])\.?(\s|\&nbsp\;)?([A-ZА-ЯЁ])(\.(\s|\&nbsp\;)?|(\s|\&nbsp\;))([A-ZА-ЯЁ][a-zа-яё]+)(\s||\.|\,|\;|\:|\?|\!|\&nbsp\;)/
       /(\s|^|\.|\,|\;|\:|\?|\!|\&nbsp\;)([A-ZА-ЯЁ][a-zа-яё]+)(\s|\&nbsp\;)([A-ZА-ЯЁ])\.?(\s|\&nbsp\;)?([A-ZА-ЯЁ])\.?(\s|$|\.|\,|\;|\:|\?|\!|\&nbsp\;)/
     ]
+    res = [
+      (m)=>
+        m[1] + @ntag(m[2] + ". " + m[4] + ". " + m[8], "span", {class:"nowrap"}) + m[9]
+    ,
+      (m)=>
+        m[1] + @ntag(m[2] + " " + m[4] + ". " + m[6] + ".", "span",  {class:"nowrap"}) + m[7]
+    ]
 
+    for re, idx in rex
+      m = @text.match re
+      break if m
 
+    if m
 
-    # for re, idx in rex
-    #   m = @text.match re
-    #   break if m
-
-    # if m
-    #   # '$m[1].$this->tag($m[2].". ".$m[4].". ".$m[8], "span",  array("class" => "nowrap")).$m[9]',
-    #   # '$m[1].$this->tag($m[2]." ".$m[4].". ".$m[6].".", "span",  array("class" => "nowrap")).$m[7]'
-    #   if idx is 0
-    #     str = m[1]
-
-    #   @text = @text.replace m[0] , str
+      @text = @text.replace m[0] , res[idx] m
 
     # !!m
 

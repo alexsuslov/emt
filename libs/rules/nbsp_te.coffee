@@ -7,7 +7,7 @@ OpenQuote = require( './open_quote') unless OpenQuote
 class Rule extends OpenQuote
   description: 'Обработка т.е.'
   version:'0.0.0'
-  configName:'nbsp_in_the_end'
+  configName:'nbsp_te'
 
   replace:->
 
@@ -30,4 +30,4 @@ class Rule extends OpenQuote
 module.exports = Rule
 
 if typeof window isnt 'undefined'
-  App.Rules['nbsp_in_the_end'] = Rule
+  App.Rules['nbsp_te'] = Rule

@@ -23,6 +23,8 @@ class Text extends Quote
     "auto_links",
     "email",
     "no_repeat_words",
+    'paragraphs'
+    'breakline'
     ]
 
 module.exports = Text

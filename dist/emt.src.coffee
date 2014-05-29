@@ -805,6 +805,7 @@ class OpenQuote
       layout = @use_layout
 
     return @Lib.build_safe_tag content, tag, attribute, layout
+
   ###
   Создание тега с содержимым
 
@@ -827,6 +828,219 @@ module.exports = OpenQuote
 if typeof window isnt 'undefined'
   App.Rules['open_quote'] = OpenQuote
 
+
+###
+Правило "Открывающая кавычка"
+используется как объект расширения для остальных правил
+###
+class OpenQuote
+  used:0
+  timer:0
+  description: "Открывающая кавычка"
+  version:'0.0.0'
+  configName:'open_quote'
+  text:''
+  config:
+    on: on
+    log: off
+    debug: off
+
+  ###
+  Конструктор
+  @param opt[object]
+  - Lib[Object] обязательно
+  - text[String] строка
+  ###
+  constructor:(@opt)->
+    @config = @opt.config[@configName] if @opt.config?[@configName]
+    if @opt.Lib
+      @Lib = @opt.Lib
+    else
+      @logger 'error', 'No lib'
+
+    @text = @opt.text if @opt.text
+    @
+
+
+  ###
+  Логер
+  @param level[string] error|warning|info| debug
+  @param message[string] сообщение
+  @param obj[obj] object ошибки
+  ###
+  logger:(level, message, obj)->
+    return unless  @config.log
+
+    throw new Error message if level is 'error'
+
+    if level in ['warning','info']
+      console.log new Date +" #{level}: #{message}"
+
+    console.log "#{level}: #{message}", obj if level is 'debug'
+    @
+
+  ###
+  Debug
+  @param level[string] error|warning|info
+  @param message[string] сообщение
+  @param obj[obj] object ошибки
+  ###
+  debug:(obj)->
+    return unless  @config.debug
+    @logger 'debug', @configName, obj
+    @
+
+  # Цикл применения правила
+  # сохраняет время работы в @profiling
+  multiply:()->
+    start = new Date().getTime()
+    while @replace()
+      @used += 1
+    @profiling = new Date().getTime() - start
+    @
+
+  # Применение правила для text
+  apply:->
+    return unless @config.on
+    @multiply()
+
+  # Правило замены
+  replace:->
+    self = @
+
+    # Правило
+    re = /(^|\(|\s|\>|-)(\"|\\\")(\S+)/i
+    m = @text.match re
+    if m
+      str = m[1] + @Lib.QUOTE_FIRS_OPEN + m[3]
+      # Замена
+      @text = @text.replace re , str
+    !!m
+  ###
+  Создание защищенного тега с содержимым
+
+  @see  EMT_lib::build_safe_tag
+  @param  [string] $content
+  @param  [string] $tag
+  @param  [array] $attribute
+  @return   [string]
+  ###
+  tag:(content, tag, attribute )->
+    attribute ?= {}
+    classname = ''
+    tag ?= 'span'
+    classname = attribute.class if attribute.class
+    if classname is "nowrap"
+      unless @is_on 'nowrap'
+        tag = "nobr"
+        attribute = {}
+
+    style_inline = @classes[classname] if @classes?[classname]
+    attribute['__style'] = style_inline if style_inline
+
+    classname = @class_layout_prefix + classname if @class_layout_prefix
+    attribute.class = classname
+
+    if @use_layout
+      layout = @use_layout
+
+    return @Lib.build_safe_tag content, tag, attribute, layout
+  ###
+  Создание тега с содержимым
+
+  @see  EMT_lib::build_safe_tag
+  @param  [string] $content
+  @param  [string] $tag
+  @param  [array] $attribute
+  @return   [string]
+  ###
+  ntag:(content, tag, attributes )->
+    attributes ?= {}
+    classname = ''
+    tag ?= 'span'
+    param = ''
+    for attribute of attributes
+      param = " #{attribute}='#{attributes[attribute]}'"
+    "<#{tag}#{param}>#{content}</#{tag}>"
+module.exports = OpenQuote
+
+if typeof window isnt 'undefined'
+  App.Rules['open_quote'] = OpenQuote
+
+
+###
+## Групповой Объект правил "Кавычки"
+используется как объект расширения для остальных груп правил
+###
+class Quote
+  description: "Кавычки"
+  version:'0.0.0'
+  # Имя конфига
+  configName:'Quote'
+
+  # Конфиг для теста
+  config:
+    on:     on
+    log:    off
+    debug:  off
+
+  # Очередь правил
+  rules:[]
+
+  # Порядок выполнения
+  order:[
+      "quotes_outside_a"
+      "open_quote"
+      "close_quote"
+      "close_quote_adv"
+      "open_quote_adv"
+      "quotation"
+    ]
+
+  ###
+  Конструктор
+  - Настраивает конфиг
+  - Замыкает на себя text
+  - Создает список правил согласно прядка
+
+  @param opt[object]
+  - Lib[Object] обязательно
+  - text[String] строка
+  ###
+  constructor:(@opt)->
+    @config = @opt.config[@configName] if @opt.config?[@configName]
+    @Rules = @opt.Rules if @opt.Rules
+    # Уходим если группа правил отключена
+    return unless @config.on
+
+    if @opt.Lib
+      @Lib = @opt.Lib
+    else
+      @logger 'error', 'No lib'
+
+    @text = @opt.text if @opt.text
+
+    # Добавляю правила в очередь
+    for ruleName in @order
+      if @Rules[ruleName]
+        @rules.push new @Rules[ruleName]
+          Lib: @Lib
+    @
+
+
+  # Применение правил @text
+  apply:->
+    # Уходим если группа правил отключена
+    return unless @config.on
+    for rule in @rules
+      rule.text = @text
+      rule.apply()
+      @text = rule.text
+
+module.exports = Quote
+
+if typeof window isnt 'undefined'
+  App.Rules.Quote = Quote
 
 ###
 ## Групповой Объект правил "Кавычки"
@@ -924,19 +1138,20 @@ class Abbr extends Quote
 
   # Порядок выполнения
   order:[
-    "nobr_abbreviation",
     "nobr_acronym",
     "nobr_sm_im",
     "nobr_locations",
     "nbsp_before_unit",
     "nbsp_before_weight_unit",
     "nobr_before_unit_volt",
+    "nbsp_org_abbr",
+    "nobr_abbreviation",
     "ps_pps",
     "nobr_vtch_itd_itp",
-    "nbsp_te",
     "nbsp_money_abbr",
-    "nbsp_org_abbr",
     "nobr_gost"
+    "nbsp_in_the_end"
+    "nbsp_te",
     ]
 
 module.exports = Abbr
@@ -1284,7 +1499,7 @@ OpenQuote = require( './open_quote') unless OpenQuote
 # Правило
 ##
 class Rule extends OpenQuote
-  description: 'Тире между диапозоном веков'
+  description: 'Тире между диапазоном веков'
   version:'0.0.0'
   configName:'century_period'
 
@@ -1300,8 +1515,8 @@ class Rule extends OpenQuote
       break if m
 
     if m
-      # '$m[1] .$this->tag($m[2]."&mdash;".$m[4]." вв.","span", array("class"=>"nowrap"))'
-      @text = @text.replace m[0] , "#{m[1]}&#769;#{m[2]}"
+      str = m[1] + @ntag( m[2] + "&mdash;"+ m[4] + " вв.","span", {class:"nowrap"})
+      @text = @text.replace m[0] , str
 
     !!m
 
@@ -1511,7 +1726,7 @@ class Dash extends Quote
 
   # Порядок выполнения
   order:[
-    "mdash_symbol_to_html_mdash",
+    "mdash_2_html",
     "mdash",
     "mdash_2",
     "mdash_3",
@@ -1547,10 +1762,11 @@ class EmtDate extends Quote
 
   # Порядок выполнения
   order:[
-    "years",
-    "mdash_month_interval",
-    "space_posle_goda",
-    "nbsp_posle_goda_abbr",
+      'years'
+      'mdash_month_interval'
+      'space_posle_goda'
+      'nbsp_posle_goda_abbr'
+      'nobr_year_in_date'
     ]
 
 module.exports = EmtDate
@@ -1648,7 +1864,10 @@ class Etc extends Quote
 
   # Порядок выполнения
   order:[
-    "acute_accent"
+      'acute_accent'
+      'word_sup'
+      'century_period'
+      'time_interval'
     ]
 
 module.exports = Etc
@@ -1800,30 +2019,30 @@ class Rule extends OpenQuote
 
   replace:->
 
-    # # Список правил
-    # rex = [
-    #   /(\s|\&nbsp\;|^)(\d{0,3}\.\d{0,3}\.\d{0,3}\.\d{0,3})/i
-    # ]
+    # Список правил
+    rex = [
+      /(\s|\&nbsp\;|^)(\d{0,3}\.\d{0,3}\.\d{0,3}\.\d{0,3})/i
+    ]
 
+    for re, idx in rex
+      m = @text.match re
+      break if m
 
+    if m
+      strIp = @nowrap_ip_address m[2]
 
-    # for re, idx in rex
-    #   m = @text.match re
-    #   break if m
+      if strIp
+        @text = @text.replace m[0] , strIp
+      else
+        return false
 
-    # if m
-    #   # '$m[1]  .
-    #   # (
-    #   #   ($m[1] == ">" || $m[11] == "<") ? $m[2]." ".$m[4]." ".$m[6]."-".$m[8]."-".$m[10] :$this->tag($m[2]." ".$m[4]." ".$m[6]."-".$m[8]."-".$m[10], "span", array("class"=>"nowrap")
-    #   #     )
-    #   #   ).$m[11]',
-    #   # '$m[1]  .(($m[1] == ">" || $m[11] == "<") ? $m[2]." ".$m[4]." ".$m[6]."-".$m[8]."-".$m[10] :$this->tag($m[2]." ".$m[4]." ".$m[6]."-".$m[8]."-".$m[10], "span", array("class"=>"nowrap"))  ).$m[11]'
-    #   if idx is 0
-    #     str = m[1]
+    !!m
 
-    #   @text = @text.replace m[0] , str
-
-    # !!m
+  nowrap_ip_address:(ip)->
+    triads = ip.split '.'
+    for triad in triads
+      return false unless 0 <= parseInt( triad ) <= 255
+    @ntag triads.join('.'), 'span', class: "nowrap"
 
 module.exports = Rule
 
@@ -2511,7 +2730,7 @@ OpenQuote = require( './open_quote') unless OpenQuote
 # Правило
 ##
 class Rule extends OpenQuote
-  description: 'Обработка т.е.'
+  description: 'Привязка союзов и предлогов к предыдущим словам в случае конца предложения'
   version:'0.0.0'
   configName:'nbsp_in_the_end'
 
@@ -2519,7 +2738,7 @@ class Rule extends OpenQuote
 
     # Список правил
     rex = [
-      /([a-zа-яё0-9\-]{3,})\s(те|т\.е|т\sе|т\s\.е)\.(\s[A-ZА-ЯЁ]|$)/
+      /([a-zа-яё0-9\-]{3,})\s([a-zа-яё]{1,2})\.(\s[A-ZА-ЯЁ]|$)/
     ]
 
 
@@ -2528,8 +2747,7 @@ class Rule extends OpenQuote
       break if m
 
     if m
-      str = m[1] + @ntag( m[2], "span",  {class: "nowrap"})
-      @text = @text.replace m[0] , str
+      @text = @text.replace m[0] , "#{m[1]}&nbsp;#{m[2]}.#{m[3]}"
 
     !!m
 
@@ -2654,7 +2872,7 @@ OpenQuote = require( './open_quote') unless OpenQuote
 class Rule extends OpenQuote
   description: 'Обработка т.е.'
   version:'0.0.0'
-  configName:'nbsp_in_the_end'
+  configName:'nbsp_te'
 
   replace:->
 
@@ -2677,7 +2895,7 @@ class Rule extends OpenQuote
 module.exports = Rule
 
 if typeof window isnt 'undefined'
-  App.Rules['nbsp_in_the_end'] = Rule
+  App.Rules['nbsp_te'] = Rule
 
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
@@ -2811,6 +3029,10 @@ class NoBr extends Quote
     "nbsp_v_kak_to"
     "nbsp_before_particle"
     "nbsp_celcius"
+    "nbsp_in_the_end"
+    "phone_builder"
+    "ip_address"
+    "spaces_nobr_in_surname_abbr"
     ]
 
 module.exports = NoBr
@@ -3125,19 +3347,23 @@ class Rule extends OpenQuote
       /(\s|\&nbsp\;)([0-9]{2}\.[0-9]{2}\.([0-9]{2})?[0-9]{2})(\s|\&nbsp\;|\.(\s|\&nbsp\;|$)|$)/i
     ]
 
+    res = [
+      (m)=>
+        tag = @ntag( m[2] + " г.", "span", {class:"nowrap"} )
+        m[1] + tag + ( if m[5] is "." then "" else " ")
+    ,
+      (m)=>
+        tag = @ntag( m[2] + " г.", "span", {class:"nowrap"} )
+        m[1] + tag + m[4]
+    ]
+
 
     for re, idx in rex
       m = @text.match re
       break if m
 
     if m
-      # if idx is 0
-      #   str = m[1].$this->tag($m[2]." г.","span", array("class"=>"nowrap")).($m[5]==="."?"":" ")'
-      # else
-      #     '$m[1].$this->tag($m[2],"span", array("class"=>"nowrap")).$m[4]'
-      # # 'm[1].$this->tag($m[2]."&mdash;".$m[4]." ".$m[6],"span", array("class"=>"nowrap")).$m[7]'
-
-      @text = @text.replace m[0] , "#{m[1]}&mdash;#{m[8]}"
+      @text = @text.replace m[0] , res[idx] m
 
     !!m
 
@@ -3345,27 +3571,50 @@ class Rule extends OpenQuote
 
     # Список правил
     rex = [
-      /([^\d\+]|^)([\+]?[0-9]{1,3})( |\&nbsp\;|\&thinsp\;)([0-9]{3,4}|\([0-9]{3,4}\))( |\&nbsp\;|\&thinsp\;)([0-9]{2,3})(-|\&minus\;)([0-9]{2})(-|\&minus\;)([0-9]{2})([^\d]|$)/
-      /([^\d\+]|^)([\+]?[0-9]{1,3})( |\&nbsp\;|\&thinsp\;)([0-9]{3,4}|[0-9]{3,4})( |\&nbsp\;|\&thinsp\;)([0-9]{2,3})(-|\&minus\;)([0-9]{2})(-|\&minus\;)([0-9]{2})([^\d]|$)/
+      /(^|\>|\s)(\+)([0-9]{1})(\(|\s)([0-9]{3})(\)|\s)([0-9]{1,3})(\.|\,|\s|\-)([0-9]{2,3})(\s|\-)([0-9]{2,3})($|\<|\s)/
+      /(^|\>|\s)([0-9]{3})(\s|\-)([0-9]{2,3})(\s|\-)([0-9]{2,3})(\.|\,|$|\<|\s)/
     ]
+    res = [
+      (m)=>
+        m[4] = '('
+        m[6] = ')'
+        m[8] = '&nbsp;'
+        m[10] = '-'
+        m.splice 0, 1
 
+        @ntag m.join(''), "span", {class:"nowrap"}
+    ,
+      (m)=>
+        first = ''
+        if m[1] is '>'
+          m[1] = ''
+          first = '>'
+
+        last = ''
+        if m[7] is '<'
+          m[7] = ''
+          last = '<'
+
+        m[3] = '&nbsp;'
+        m[5] = '-'
+
+        m.splice 0, 1
+
+
+        first + @ntag( m.join(''), "span", {class:"nowrap"} ) + last
+    ]
 
 
     for re, idx in rex
       m = @text.match re
+      if m
+        m = false if m[1] is '>' and m[12] is '<'
+        m = false if m[1] is '>' and m[7] is '<'
       break if m
 
     if m
-      # '$m[1]  .
-      # (
-      #   ($m[1] == ">" || $m[11] == "<") ? $m[2]." ".$m[4]." ".$m[6]."-".$m[8]."-".$m[10] :$this->tag($m[2]." ".$m[4]." ".$m[6]."-".$m[8]."-".$m[10], "span", array("class"=>"nowrap")
-      #     )
-      #   ).$m[11]',
-      # '$m[1]  .(($m[1] == ">" || $m[11] == "<") ? $m[2]." ".$m[4]." ".$m[6]."-".$m[8]."-".$m[10] :$this->tag($m[2]." ".$m[4]." ".$m[6]."-".$m[8]."-".$m[10], "span", array("class"=>"nowrap"))  ).$m[11]'
-      if idx is 0
-        str = m[1]
 
-      @text = @text.replace m[0] , str
+      @text = @text.replace re , res[idx] m
 
     !!m
 
@@ -3545,17 +3794,17 @@ class Space extends Quote
 
   # Порядок выполнения
   order:[
-    "nobr_twosym_abbr",
-    "remove_space_before_punctuationmarks",
-    "autospace_after_comma",
-    "autospace_after_pmarks",
-    "autospace_after_dot",
-    "autospace_after_hellips",
-    "many_spaces_to_one",
-    "clear_percent",
-    "nbsp_before_open_quote",
-    "nbsp_before_month",
-    "spaces_on_end",
+      'nobr_twosym_abbr'
+      'remove_space_before_punctuationmarks'
+      'autospace_after_comma'
+      'autospace_after_pmarks'
+      'autospace_after_dot'
+      'autospace_after_hellips'
+      'many_spaces_to_one'
+      'clear_percent'
+      'nbsp_before_open_quote'
+      'nbsp_before_month'
+      'spaces_on_end'
     ]
 
 module.exports = Space
@@ -3572,7 +3821,7 @@ OpenQuote = require( './open_quote') unless OpenQuote
 class Rule extends OpenQuote
   description: 'Пробел после года'
   version:'0.0.0'
-  configName:'simple_fraction'
+  configName:'space_posle_goda'
 
   replace:->
     # Список правил
@@ -3593,7 +3842,7 @@ class Rule extends OpenQuote
 module.exports = Rule
 
 if typeof window isnt 'undefined'
-  App.Rules['simple_fraction'] = Rule
+  App.Rules['space_posle_goda'] = Rule
 
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
@@ -3602,7 +3851,7 @@ OpenQuote = require( './open_quote') unless OpenQuote
 # Правило
 ##
 class Rule extends OpenQuote
-  description: 'Объединение IP-адресов'
+  description: 'Привязка инициалов к фамилиям'
   version:'0.0.0'
   configName:'spaces_nobr_in_surname_abbr'
 
@@ -3610,23 +3859,24 @@ class Rule extends OpenQuote
 
     # Список правил
     rex = [
-      /(\s|^|\.|\,|\;|\:|\?|\!|\&nbsp\;)([A-ZА-ЯЁ])\.?(\s|\&nbsp\;)?([A-ZА-ЯЁ])(\.(\s|\&nbsp\;)?|(\s|\&nbsp\;))([A-ZА-ЯЁ][a-zа-яё]+)(\s|$|\.|\,|\;|\:|\?|\!|\&nbsp\;)/
+      /(\s|^|\.|\,|\;|\:|\?|\!|\&nbsp\;)([A-ZА-ЯЁ])\.?(\s|\&nbsp\;)?([A-ZА-ЯЁ])(\.(\s|\&nbsp\;)?|(\s|\&nbsp\;))([A-ZА-ЯЁ][a-zа-яё]+)(\s||\.|\,|\;|\:|\?|\!|\&nbsp\;)/
       /(\s|^|\.|\,|\;|\:|\?|\!|\&nbsp\;)([A-ZА-ЯЁ][a-zа-яё]+)(\s|\&nbsp\;)([A-ZА-ЯЁ])\.?(\s|\&nbsp\;)?([A-ZА-ЯЁ])\.?(\s|$|\.|\,|\;|\:|\?|\!|\&nbsp\;)/
     ]
+    res = [
+      (m)=>
+        m[1] + @ntag(m[2] + ". " + m[4] + ". " + m[8], "span", {class:"nowrap"}) + m[9]
+    ,
+      (m)=>
+        m[1] + @ntag(m[2] + " " + m[4] + ". " + m[6] + ".", "span",  {class:"nowrap"}) + m[7]
+    ]
 
+    for re, idx in rex
+      m = @text.match re
+      break if m
 
+    if m
 
-    # for re, idx in rex
-    #   m = @text.match re
-    #   break if m
-
-    # if m
-    #   # '$m[1].$this->tag($m[2].". ".$m[4].". ".$m[8], "span",  array("class" => "nowrap")).$m[9]',
-    #   # '$m[1].$this->tag($m[2]." ".$m[4].". ".$m[6].".", "span",  array("class" => "nowrap")).$m[7]'
-    #   if idx is 0
-    #     str = m[1]
-
-    #   @text = @text.replace m[0] , str
+      @text = @text.replace m[0] , res[idx] m
 
     # !!m
 
@@ -3765,6 +4015,8 @@ class Text extends Quote
     "auto_links",
     "email",
     "no_repeat_words",
+    'paragraphs'
+    'breakline'
     ]
 
 module.exports = Text
@@ -3896,8 +4148,8 @@ class Rule extends OpenQuote
       break if m
 
     if m
-      # '$m[1] . $this->tag($m[2]."&mdash;".$m[4],"span", array("class"=>"nowrap")).$m[5]'
-      @text = @text.replace m[0] , "#{m[1]}&#769;#{m[2]}"
+      str = m[1] + @ntag(m[2] + "&mdash;" + m[4], "span", {class:"nowrap"}) + m[5]
+      @text = @text.replace m[0] , str
 
     !!m
 
@@ -4005,8 +4257,8 @@ class Rule extends OpenQuote
       break if m
 
     if m
-      # '"" . $this->tag($this->tag($m[3],"small"),"sup") . $m[4]'
-      @text = @text.replace m[0] , "#{m[1]}&#769;#{m[2]}"
+      str = @ntag( @ntag( m[3], "small"), "sup" ) + m[4]
+      @text = @text.replace m[0] , str
 
     !!m
 

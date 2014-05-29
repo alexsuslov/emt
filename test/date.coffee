@@ -23,7 +23,14 @@ tests = [
     text: ' 1999г. '
     res: " 1999&nbsp;г. "
   }
+  {
+    obj: require( '../libs/rules/nobr_year_in_date')
+    text: ' 24.03.1999 '
+    res: " <span class='nowrap'>24.03.1999 г.</span> "
+  }
 ]
+# for test in tests
+#   console.log new test.obj({}).configName
 
 describe "Правило ", ->
   describe "Даты и дни", ->

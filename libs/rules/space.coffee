@@ -19,17 +19,17 @@ class Space extends Quote
 
   # Порядок выполнения
   order:[
-    "nobr_twosym_abbr",
-    "remove_space_before_punctuationmarks",
-    "autospace_after_comma",
-    "autospace_after_pmarks",
-    "autospace_after_dot",
-    "autospace_after_hellips",
-    "many_spaces_to_one",
-    "clear_percent",
-    "nbsp_before_open_quote",
-    "nbsp_before_month",
-    "spaces_on_end",
+      'nobr_twosym_abbr'
+      'remove_space_before_punctuationmarks'
+      'autospace_after_comma'
+      'autospace_after_pmarks'
+      'autospace_after_dot'
+      'autospace_after_hellips'
+      'many_spaces_to_one'
+      'clear_percent'
+      'nbsp_before_open_quote'
+      'nbsp_before_month'
+      'spaces_on_end'
     ]
 
 module.exports = Space

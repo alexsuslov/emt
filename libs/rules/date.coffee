@@ -20,10 +20,11 @@ class EmtDate extends Quote
 
   # Порядок выполнения
   order:[
-    "years",
-    "mdash_month_interval",
-    "space_posle_goda",
-    "nbsp_posle_goda_abbr",
+      'years'
+      'mdash_month_interval'
+      'space_posle_goda'
+      'nbsp_posle_goda_abbr'
+      'nobr_year_in_date'
     ]
 
 module.exports = EmtDate

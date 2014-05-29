@@ -16,19 +16,23 @@ class Rule extends OpenQuote
       /(\s|\&nbsp\;)([0-9]{2}\.[0-9]{2}\.([0-9]{2})?[0-9]{2})(\s|\&nbsp\;|\.(\s|\&nbsp\;|$)|$)/i
     ]
 
+    res = [
+      (m)=>
+        tag = @ntag( m[2] + " г.", "span", {class:"nowrap"} )
+        m[1] + tag + ( if m[5] is "." then "" else " ")
+    ,
+      (m)=>
+        tag = @ntag( m[2] + " г.", "span", {class:"nowrap"} )
+        m[1] + tag + m[4]
+    ]
+
 
     for re, idx in rex
       m = @text.match re
       break if m
 
     if m
-      # if idx is 0
-      #   str = m[1].$this->tag($m[2]." г.","span", array("class"=>"nowrap")).($m[5]==="."?"":" ")'
-      # else
-      #     '$m[1].$this->tag($m[2],"span", array("class"=>"nowrap")).$m[4]'
-      # # 'm[1].$this->tag($m[2]."&mdash;".$m[4]." ".$m[6],"span", array("class"=>"nowrap")).$m[7]'
-
-      @text = @text.replace m[0] , "#{m[1]}&mdash;#{m[8]}"
+      @text = @text.replace m[0] , res[idx] m
 
     !!m
 

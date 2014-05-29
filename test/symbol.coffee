@@ -41,6 +41,9 @@ tests = [
 
 ]
 
+# for test in tests
+#   console.log new test.obj({}).configName
+
 describe "Правило ", ->
   describe "Специальные символы", ->
     for test in tests
