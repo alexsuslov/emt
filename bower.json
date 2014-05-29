@@ -1,0 +1,25 @@
+{
+    "name": "emt",
+    "version": "0.0.1",
+    "authors": [
+        " Alex Suslov <suslov@me.com>"
+    ],
+    "description": "Typograph",
+    "main": "dist/emt.min.js",
+    "moduleType": [
+        "globals"
+    ],
+    "keywords": [
+        "russian",
+        "typograph"
+    ],
+    "license": "MIT",
+    "homepage": "http://alexsuslov.github.io/emt/",
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests"
+    ]
+}
