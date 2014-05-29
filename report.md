@@ -1,11 +1,3 @@
-minus_between_nums
-auto_times_x
-simple_fraction
-thinsp_between_number_triads
-thinsp_between_no_and_number
-thinsp_between_sect_and_number
-numeric_sub
-numeric_sup
 # TOC
    - [Правило ](#-)
      - [Сокращения](#-)
@@ -1028,6 +1020,14 @@ return assert.equal(test.res, rule.text);
 
 <a name="------------"></a>
 ### Точка в конце текста, если её там нет
+vfvfvf .
+
+```js
+rule.text = test.text;
+rule.apply();
+return assert.equal(test.res, rule.text);
+```
+
 <a name="-"></a>
 # Правило 
 <a name="-"></a>
