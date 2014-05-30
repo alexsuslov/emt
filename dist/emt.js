@@ -44,7 +44,7 @@
             }));
           }
         }
-        this.apply();
+        this.inited = true;
         return this;
       }
     };
