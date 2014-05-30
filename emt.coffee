@@ -21,16 +21,15 @@ if isClient
       'Space'
     ]
 
-
-    apply:->
-      @text = @el.html()
-
+    tipo:(@text)->
       for rule in @rules
         rule.text = @text
         rule.apply()
         @text = rule.text
+      @text
 
-      @el.html @text
+    apply:->
+      @el.html @tipo @el.html()
       @
 
 
