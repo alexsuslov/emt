@@ -46,7 +46,7 @@ if isClient
       @apply()
       @
 
-  window.App = App
+  window.EMT = App
 
   $ ->
     $.fn.emt = (options)->

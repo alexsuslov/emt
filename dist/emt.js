@@ -45,7 +45,7 @@
         return this;
       }
     };
-    window.App = App;
+    window.EMT = App;
     $(function() {
       return $.fn.emt = function(options) {
         return App.init(options, this);
