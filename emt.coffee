@@ -41,8 +41,8 @@ if isClient
           @rules.push new @Rules[ruleName]
             Rules:  @Rules
             Lib:    @Lib
-
-      @apply()
+      @inited = true
+      # @apply()
       @
 
   window.EMT = App
