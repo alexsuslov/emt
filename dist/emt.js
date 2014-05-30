@@ -14,9 +14,9 @@
       Lib: {},
       Rules: {},
       order: ['Quote', 'Abbr', 'Numbers', 'Dash', 'EmtDate', 'Etc', 'NoBr', 'Text', 'Symbol', 'Space'],
-      apply: function() {
+      tipo: function(text) {
         var rule, _i, _len, _ref;
-        this.text = this.el.html();
+        this.text = text;
         _ref = this.rules;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           rule = _ref[_i];
@@ -24,7 +24,10 @@
           rule.apply();
           this.text = rule.text;
         }
-        this.el.html(this.text);
+        return this.text;
+      },
+      apply: function() {
+        this.el.html(this.tipo(this.el.html()));
         return this;
       },
       init: function(opt, el) {
