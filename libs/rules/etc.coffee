@@ -28,4 +28,4 @@ class Etc extends Quote
 
 module.exports = Etc
 if typeof window isnt 'undefined'
-  App.Rules['Etc'] = Etc
+  App.Rules.Etc = Etc

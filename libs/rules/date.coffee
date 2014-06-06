@@ -29,4 +29,4 @@ class EmtDate extends Quote
 
 module.exports = EmtDate
 if typeof window isnt 'undefined'
-  App.Rules['EmtDate'] = EmtDate
+  App.Rules.EmtDate = EmtDate

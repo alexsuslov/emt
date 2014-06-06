@@ -1,5 +1,5 @@
 (function() {
-  var Abbr, AcuteAccent, App, AutoComma, AutoLinks, AutoTimesX, AutospaceAfterComma, AutospaceAfterDot, AutospaceAfterHellips, AutospaceAfterPmarks, CenturyPeriod, ClearPercent, CloseQuote, CloseQuoteAdv, CopyReplace, Dash, DegreeF, DotOnEnd, EMTLib, EmtDate, Etc, FixBrackets, FixBracketsSpace, FixExclQuestMarks, FixPmarks, Hellip, MinusBetweenNums, NbspBeforeUnit, NbspBeforeWeightUnit, NbspInTheEnd, NbspMoneyAbbr, NbspOrgAbbr, NbspTe, NoBr, NobrAbbreviation, NobrAcronym, NobrBeforeUnitVolt, NobrGost, NobrLocations, NobrSmIm, NobrVtchItdItp, Numbers, OaObracketComa, OaOquote, OpenQuote, OpenQuoteAdv, PlusMinus, PsPps, Punctmark, PunctuationMarksBaseLimit, PunctuationMarksLimit, Quote, Rule, Space, Symbol, Text, chars_table, html4_char, isClient, module,
+  var Abbr, AcuteAccent, App, AutoComma, AutoLinks, AutoTimesX, AutospaceAfterComma, AutospaceAfterDot, AutospaceAfterHellips, AutospaceAfterPmarks, CenturyPeriod, ClearPercent, CloseQuote, CloseQuoteAdv, CopyReplace, Dash, DegreeF, DotOnEnd, EMTLib, Emt, EmtDate, Etc, FixBrackets, FixBracketsSpace, FixExclQuestMarks, FixPmarks, Hellip, MinusBetweenNums, NbspBeforeUnit, NbspBeforeWeightUnit, NbspInTheEnd, NbspMoneyAbbr, NbspOrgAbbr, NbspTe, NoBr, NobrAbbreviation, NobrAcronym, NobrBeforeUnitVolt, NobrGost, NobrLocations, NobrSmIm, NobrVtchItdItp, Numbers, OaObracketComa, OaOquote, OpenQuote, OpenQuoteAdv, PlusMinus, PsPps, Punctmark, PunctuationMarksBaseLimit, PunctuationMarksLimit, Quote, Rule, Space, Symbol, Text, chars_table, html4_char, isClient, module,
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -9,14 +9,27 @@
   if (isClient) {
     module = {};
     App = {
-      rules: [],
-      text: '',
       Lib: {},
-      Rules: {},
-      order: ['Symbol', 'Quote', 'Abbr', 'Numbers', 'Dash', 'EmtDate', 'Etc', 'NoBr', 'Text', 'Space'],
-      tipo: function(text) {
+      Rules: {}
+    };
+    Emt = (function() {
+      Emt.prototype.text = '';
+
+      Emt.prototype.rules = [];
+
+      Emt.prototype.order = ['Abbr', 'Symbol', 'Quote', 'Numbers', 'Dash', 'EmtDate', 'Etc', 'NoBr', 'Text', 'Space', 'Punctmark'];
+
+      Emt.prototype.tipo = function(text) {
+        this.text = text;
+        return this.simple(this.text);
+      };
+
+      Emt.prototype.simple = function(text) {
         var rule, _i, _len, _ref;
         this.text = text;
+        if (!this.text) {
+          return;
+        }
         _ref = this.rules;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           rule = _ref[_i];
@@ -25,15 +38,21 @@
           this.text = rule.text;
         }
         return this.text;
-      },
-      apply: function() {
-        this.el.html(this.tipo(this.el.html()));
+      };
+
+      Emt.prototype.apply = function() {
+        if (this.el) {
+          this.el.html(this.tipo(this.el.html()));
+        }
         return this;
-      },
-      init: function(opt, el) {
+      };
+
+      function Emt(opt, el) {
         var ruleName, _i, _len, _ref;
         this.opt = opt;
         this.el = el;
+        this.Rules = App.Rules;
+        this.Lib = App.Lib;
         _ref = this.order;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           ruleName = _ref[_i];
@@ -45,14 +64,30 @@
           }
         }
         this.inited = true;
-        return this;
+        this;
       }
-    };
-    window.EMT = App;
+
+      return Emt;
+
+    })();
+    window.EMT = Emt;
     $(function() {
       return $.fn.emt = function(options) {
-        App.init(options, this);
-        return App.apply();
+        var el, emt, _i, _len, _results;
+        if (Object.prototype.toString.call(this) === '[object Array]') {
+          window.EMTS = [];
+          _results = [];
+          for (_i = 0, _len = this.length; _i < _len; _i++) {
+            el = this[_i];
+            _results.push(window.EMTS.push(new Emt(options, el).apply()));
+          }
+          return _results;
+        } else if (this) {
+          emt = new Emt(options, this);
+          return emt.apply();
+        } else {
+          return console.log('no element');
+        }
       };
     });
   }
@@ -1038,7 +1073,6 @@
     /*
     Конструктор
     - Настраивает конфиг
-    - Замыкает на себя text
     - Создает список правил согласно прядка
     
     @param opt[object]
@@ -1061,7 +1095,7 @@
       if (this.opt.Lib) {
         this.Lib = this.opt.Lib;
       } else {
-        this.logger('error', 'No lib');
+        console.log('error', 'No lib');
       }
       if (this.opt.text) {
         this.text = this.opt.text;
@@ -1932,7 +1966,7 @@
   module.exports = Dash;
 
   if (typeof window !== 'undefined') {
-    App.Rules['Dash'] = Dash;
+    App.Rules.Dash = Dash;
   }
 
   if (!OpenQuote) {
@@ -2351,7 +2385,7 @@
   module.exports = EmtDate;
 
   if (typeof window !== 'undefined') {
-    App.Rules['EmtDate'] = EmtDate;
+    App.Rules.EmtDate = EmtDate;
   }
 
   if (!OpenQuote) {
@@ -2639,7 +2673,7 @@
   module.exports = Etc;
 
   if (typeof window !== 'undefined') {
-    App.Rules['Etc'] = Etc;
+    App.Rules.Etc = Etc;
   }
 
   if (!OpenQuote) {
@@ -3066,7 +3100,7 @@
   module.exports = NoBr;
 
   if (typeof window !== 'undefined') {
-    App.Rules['NoBr'] = NoBr;
+    App.Rules.NoBr = NoBr;
   }
 
   if (!OpenQuote) {
@@ -4322,7 +4356,7 @@
 
     Punctmark.prototype.rules = [];
 
-    Punctmark.prototype.order = ['auto_comma', 'punctuation_marks_limit', 'punctuation_marks_base_limit', 'hellip', 'fix_excl_quest_marks', 'fix_pmarks', 'fix_brackets', 'fix_brackets_space', 'dot_on_end'];
+    Punctmark.prototype.order = ['auto_comma', 'punctuation_marks_limit', 'punctuation_marks_base_limit', 'hellip', 'fix_excl_quest_marks', 'fix_pmarks', 'fix_brackets', 'fix_brackets_space'];
 
     return Punctmark;
 

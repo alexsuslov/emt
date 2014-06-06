@@ -32,4 +32,4 @@ class Dash extends Quote
 
 module.exports = Dash
 if typeof window isnt 'undefined'
-  App.Rules['Dash'] = Dash
+  App.Rules.Dash = Dash

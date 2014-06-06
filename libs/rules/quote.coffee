@@ -30,7 +30,6 @@ class Quote
   ###
   Конструктор
   - Настраивает конфиг
-  - Замыкает на себя text
   - Создает список правил согласно прядка
 
   @param opt[object]
@@ -46,7 +45,7 @@ class Quote
     if @opt.Lib
       @Lib = @opt.Lib
     else
-      @logger 'error', 'No lib'
+      console.log  'error', 'No lib'
 
     @text = @opt.text if @opt.text
 

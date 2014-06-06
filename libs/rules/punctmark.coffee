@@ -29,7 +29,7 @@ class Punctmark extends Quote
     'fix_pmarks'
     'fix_brackets'
     'fix_brackets_space'
-    'dot_on_end'
+    # 'dot_on_end'
     ]
 
 module.exports = Punctmark

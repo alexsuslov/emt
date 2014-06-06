@@ -4,14 +4,17 @@ if isClient
   module = {}
 
   App =
-    rules:[]
-    text:''
     Lib:{}
     Rules:{}
+
+
+  class Emt
+    text:''
+    rules:[]
     order:[
+      'Abbr'
       'Symbol'
       'Quote'
-      'Abbr'
       'Numbers'
       'Dash'
       'EmtDate'
@@ -19,9 +22,14 @@ if isClient
       'NoBr'
       'Text'
       'Space'
+      'Punctmark'
     ]
 
     tipo:(@text)->
+      @simple @text
+
+    simple:(@text)->
+      return unless @text
       for rule in @rules
         rule.text = @text
         rule.apply()
@@ -29,12 +37,13 @@ if isClient
       @text
 
     apply:->
-      @el.html @tipo @el.html()
+      if @el
+        @el.html @tipo @el.html()
       @
 
-
-    init: (@opt, @el)->
-
+    constructor:(@opt, @el)->
+      @Rules = App.Rules
+      @Lib = App.Lib
       # Добавляю правила в очередь
       for ruleName in @order
         if @Rules[ruleName]
@@ -44,12 +53,21 @@ if isClient
       @inited = true
       @
 
-  window.EMT = App
+  window.EMT = Emt
 
   $ ->
     $.fn.emt = (options)->
-      App.init options, @
-      App.apply()
+      if Object.prototype.toString.call(@) is '[object Array]'
+        window.EMTS = []
+        for el in @
+          window.EMTS.push new Emt( options, el).apply()
+      else if @
+        emt = new Emt options, @
+        emt.apply()
+      else
+        console.log 'no element'
+
+
 
 
 
@@ -866,7 +884,6 @@ class Quote
   ###
   Конструктор
   - Настраивает конфиг
-  - Замыкает на себя text
   - Создает список правил согласно прядка
 
   @param opt[object]
@@ -882,7 +899,7 @@ class Quote
     if @opt.Lib
       @Lib = @opt.Lib
     else
-      @logger 'error', 'No lib'
+      console.log  'error', 'No lib'
 
     @text = @opt.text if @opt.text
 
@@ -1503,7 +1520,7 @@ class Dash extends Quote
 
 module.exports = Dash
 if typeof window isnt 'undefined'
-  App.Rules['Dash'] = Dash
+  App.Rules.Dash = Dash
 
 # Зависимости
 OpenQuote = require( '../open_quote') unless OpenQuote
@@ -1820,7 +1837,7 @@ class EmtDate extends Quote
 
 module.exports = EmtDate
 if typeof window isnt 'undefined'
-  App.Rules['EmtDate'] = EmtDate
+  App.Rules.EmtDate = EmtDate
 
 # Зависимости
 OpenQuote = require( '../open_quote') unless OpenQuote
@@ -2034,7 +2051,7 @@ class Etc extends Quote
 
 module.exports = Etc
 if typeof window isnt 'undefined'
-  App.Rules['Etc'] = Etc
+  App.Rules.Etc = Etc
 
 # Зависимости
 OpenQuote = require( '../open_quote') unless OpenQuote
@@ -2367,7 +2384,7 @@ class NoBr extends Quote
 
 module.exports = NoBr
 if typeof window isnt 'undefined'
-  App.Rules['NoBr'] = NoBr
+  App.Rules.NoBr = NoBr
 
 # Зависимости
 OpenQuote = require( '../open_quote') unless OpenQuote
@@ -3325,7 +3342,7 @@ class Punctmark extends Quote
     'fix_pmarks'
     'fix_brackets'
     'fix_brackets_space'
-    'dot_on_end'
+    # 'dot_on_end'
     ]
 
 module.exports = Punctmark

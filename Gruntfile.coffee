@@ -28,18 +28,17 @@ module.exports = (grunt)->
             'libs/rules/**/*.coffee'
             '!libs/rules/quote.coffee'
             '!libs/rules/quote/open_quote.coffee'
+            '!libs/test*.coffee'
           ]
       # тесты для браузера
-      # test:
-      #   options:
-      #     bare: true
-      #     sourceMap: true
-      #   files:
-      #     'js/ems.test.js':[
-      #       'libs/*.coffee'
-      #       'emt.coffee'
-      #       'browser/*.coffee'
-      #     ]
+      test:
+        options:
+          bare: true
+          sourceMap: true
+        files:
+          'js/emt.test.js':[
+            'libs/test*.coffee'
+          ]
     codo: options:
       # undocumented: true
       title: "Emt"

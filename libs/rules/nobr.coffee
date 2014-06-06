@@ -32,4 +32,4 @@ class NoBr extends Quote
 
 module.exports = NoBr
 if typeof window isnt 'undefined'
-  App.Rules['NoBr'] = NoBr
+  App.Rules.NoBr = NoBr

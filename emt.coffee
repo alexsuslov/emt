@@ -4,14 +4,17 @@ if isClient
   module = {}
 
   App =
-    rules:[]
-    text:''
     Lib:{}
     Rules:{}
+
+
+  class Emt
+    text:''
+    rules:[]
     order:[
+      'Abbr'
       'Symbol'
       'Quote'
-      'Abbr'
       'Numbers'
       'Dash'
       'EmtDate'
@@ -19,9 +22,14 @@ if isClient
       'NoBr'
       'Text'
       'Space'
+      'Punctmark'
     ]
 
     tipo:(@text)->
+      @simple @text
+
+    simple:(@text)->
+      return unless @text
       for rule in @rules
         rule.text = @text
         rule.apply()
@@ -29,12 +37,13 @@ if isClient
       @text
 
     apply:->
-      @el.html @tipo @el.html()
+      if @el
+        @el.html @tipo @el.html()
       @
 
-
-    init: (@opt, @el)->
-
+    constructor:(@opt, @el)->
+      @Rules = App.Rules
+      @Lib = App.Lib
       # Добавляю правила в очередь
       for ruleName in @order
         if @Rules[ruleName]
@@ -44,11 +53,20 @@ if isClient
       @inited = true
       @
 
-  window.EMT = App
+  window.EMT = Emt
 
   $ ->
     $.fn.emt = (options)->
-      App.init options, @
-      App.apply()
+      if Object.prototype.toString.call(@) is '[object Array]'
+        window.EMTS = []
+        for el in @
+          window.EMTS.push new Emt( options, el).apply()
+      else if @
+        emt = new Emt options, @
+        emt.apply()
+      else
+        console.log 'no element'
+
+
 
 
