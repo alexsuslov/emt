@@ -30,22 +30,15 @@
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>libs&#47;rules&#47;nobr.coffee</td>
+          <td>libs&#47;test.coffee</td>
         </tr>
         <tr>
           <td>Inherits:</td>
           <td>
-            <a href='../class/Quote.html'>Quote</a>
+            <a href='../class/Symbol.html'>Symbol</a>
           </td>
         </tr>
       </table>
-      <h2>Overview</h2>
-      <div class='docstring'>
-  <h2 id="-">Групповой Объект правил &quot;Сокращения&quot;</h2>
-
-</div>
-<div class='tags'>
-</div>
       <h2>Variables Summary</h2>
       <dl class='constants'>
   <dt id='description-variable'>
@@ -56,76 +49,58 @@
     <pre><code class='coffeescript'>&quot;Неразрывные конструкции&quot;</code></pre>
     
   </dd>
-  <dt id='version-variable'>
-    version
+  <dt id='tests-variable'>
+    tests
     =
   </dt>
   <dd>
-    <pre><code class='coffeescript'>&#39;0.0.0&#39;</code></pre>
+    <pre><code class='coffeescript'>[
+  {
+    obj: require(&#39;..&#47;libs&#47;rules&#47;nobr&#47;super_nbsp&#39;),
+    text: &#39; к вам &#39;,
+    res: &quot; к&amp;nbsp;вам&quot;
+  }, {
+    obj: require(&#39;..&#47;libs&#47;rules&#47;nobr&#47;nbsp_v_kak_to&#39;),
+    text: &#39; как то &#39;,
+    res: &quot; как&amp;nbsp;то&quot;
+  }, {
+    obj: require(&#39;..&#47;libs&#47;rules&#47;nobr&#47;nbsp_before_particle&#39;),
+    text: &#39; вам ли &#39;,
+    res: &quot; вам&amp;nbsp;ли&quot;
+  }, {
+    obj: require(&#39;..&#47;libs&#47;rules&#47;nobr&#47;nbsp_celcius&#39;),
+    text: &#39; 10 &amp;deg;С &#39;,
+    res: &quot; 10&amp;nbsp;&amp;deg;C&quot;
+  }, {
+    obj: require(&#39;..&#47;libs&#47;rules&#47;nobr&#47;ip_address&#39;),
+    text: &#39;123.123.123.123&#39;,
+    res: &quot;&lt;span class=&#39;nowrap&#39;&gt;123.123.123.123&lt;&#47;span&gt;&quot;
+  }, {
+    obj: require(&#39;..&#47;libs&#47;rules&#47;nobr&#47;spaces_nobr_in_surname_abbr&#39;),
+    text: &#39; Ccccc A.A. &#39;,
+    res: &quot; &lt;span class=&#39;nowrap&#39;&gt;Ccccc A. A.&lt;&#47;span&gt;&quot;
+  }
+]</code></pre>
     
-  </dd>
-  <dt id='configName-variable'>
-    configName
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>&#39;NoBr&#39;</code></pre>
-    
-  </dd>
-  <dt id='config-variable'>
-    config
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>{
-  on: true,
-  log: true,
-  debug: true
-}</code></pre>
-    
-  </dd>
-  <dt id='rules-variable'>
-    rules
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>[]</code></pre>
-    <div class='docstring'>
-  <p>Очередь правил</p>
-</div>
-<div class='tags'>
-</div>
-  </dd>
-  <dt id='order-variable'>
-    order
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>[&quot;super_nbsp&quot;, &quot;nbsp_v_kak_to&quot;, &quot;nbsp_before_particle&quot;, &quot;nbsp_celcius&quot;, &quot;nbsp_in_the_end&quot;, &quot;phone_builder&quot;, &quot;ip_address&quot;, &quot;spaces_nobr_in_surname_abbr&quot;]</code></pre>
-    <div class='docstring'>
-  <p>Порядок выполнения</p>
-</div>
-<div class='tags'>
-</div>
   </dd>
 </dl>
       <h3 class='inherited'>
         Variable inherited from
-        <a href='../class/Quote.html'>Quote</a>
+        <a href='../class/Symbol.html'>Symbol</a>
       </h3>
       <p class='inherited'>
-        <a href='../class/Quote.html#description-variable'>description</a>
-        <a href='../class/Quote.html#version-variable'>version</a>
-        <a href='../class/Quote.html#configName-variable'>configName</a>
-        <a href='../class/Quote.html#config-variable'>config</a>
-        <a href='../class/Quote.html#rules-variable'>rules</a>
-        <a href='../class/Quote.html#order-variable'>order</a>
+        <a href='../class/Symbol.html#description-variable'>description</a>
+        <a href='../class/Symbol.html#version-variable'>version</a>
+        <a href='../class/Symbol.html#configName-variable'>configName</a>
+        <a href='../class/Symbol.html#config-variable'>config</a>
+        <a href='../class/Symbol.html#rules-variable'>rules</a>
+        <a href='../class/Symbol.html#order-variable'>order</a>
       </p>
       <h2>
         <small>Inherited Method Summary</small>
         <h3 class='inherited'>
           Methods inherited from
-          <a href='../class/Quote.html'>Quote</a>
+          <a href='../class/Symbol.html'>Symbol</a>
         </h3>
         <p class='inherited'>
           <a href='../class/Quote.html#apply-dynamic'>#apply</a>
@@ -133,7 +108,7 @@
       </h2>
     </div>
     <div id='footer'>
-  June 06, 14 06:50:10 by
+  June 06, 14 15:43:03 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>

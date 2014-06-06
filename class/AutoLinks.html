@@ -19,30 +19,31 @@
       Index
     </a>
     &raquo;
-    <span class='title'>EmtDate</span>
+    <span class='title'>AutoLinks</span>
   </div>
 </div>
     <div id='content'>
       <h1>
         Class:
-        EmtDate
+        AutoLinks
       </h1>
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>libs&#47;rules&#47;date.coffee</td>
+          <td>libs&#47;rules&#47;text&#47;auto_links.coffee</td>
         </tr>
         <tr>
           <td>Inherits:</td>
           <td>
-            <a href='../class/Quote.html'>Quote</a>
+            <a href='../class/OpenQuote.html'>OpenQuote</a>
           </td>
         </tr>
       </table>
       <h2>Overview</h2>
       <div class='docstring'>
-  <h2 id="-">Групповой Объект правил &quot;Сокращения&quot;</h2>
-
+  <p>#
+Правило AutoLinks
+#</p>
 </div>
 <div class='tags'>
 </div>
@@ -53,7 +54,7 @@
     =
   </dt>
   <dd>
-    <pre><code class='coffeescript'>&quot;Даты и дни&quot;</code></pre>
+    <pre><code class='coffeescript'>&#39;Выделение ссылок из текста&#39;</code></pre>
     
   </dd>
   <dt id='version-variable'>
@@ -69,71 +70,68 @@
     =
   </dt>
   <dd>
-    <pre><code class='coffeescript'>&#39;EmtDate&#39;</code></pre>
+    <pre><code class='coffeescript'>&#39;auto_links&#39;</code></pre>
     
-  </dd>
-  <dt id='config-variable'>
-    config
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>{
-  on: true,
-  log: true,
-  debug: true
-}</code></pre>
-    
-  </dd>
-  <dt id='rules-variable'>
-    rules
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>[]</code></pre>
-    <div class='docstring'>
-  <p>Очередь правил</p>
-</div>
-<div class='tags'>
-</div>
-  </dd>
-  <dt id='order-variable'>
-    order
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>[&#39;years&#39;, &#39;mdash_month_interval&#39;, &#39;space_posle_goda&#39;, &#39;nbsp_posle_goda_abbr&#39;, &#39;nobr_year_in_date&#39;]</code></pre>
-    <div class='docstring'>
-  <p>Порядок выполнения</p>
-</div>
-<div class='tags'>
-</div>
   </dd>
 </dl>
       <h3 class='inherited'>
         Variable inherited from
-        <a href='../class/Quote.html'>Quote</a>
+        <a href='../class/OpenQuote.html'>OpenQuote</a>
       </h3>
       <p class='inherited'>
-        <a href='../class/Quote.html#description-variable'>description</a>
-        <a href='../class/Quote.html#version-variable'>version</a>
-        <a href='../class/Quote.html#configName-variable'>configName</a>
-        <a href='../class/Quote.html#config-variable'>config</a>
-        <a href='../class/Quote.html#rules-variable'>rules</a>
-        <a href='../class/Quote.html#order-variable'>order</a>
+        <a href='../class/OpenQuote.html#used-variable'>used</a>
+        <a href='../class/OpenQuote.html#timer-variable'>timer</a>
+        <a href='../class/OpenQuote.html#description-variable'>description</a>
+        <a href='../class/OpenQuote.html#version-variable'>version</a>
+        <a href='../class/OpenQuote.html#configName-variable'>configName</a>
+        <a href='../class/OpenQuote.html#text-variable'>text</a>
+        <a href='../class/OpenQuote.html#config-variable'>config</a>
       </p>
+      <h2>Instance Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#replace-dynamic'>
+        #
+(void)
+<b>replace</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+    </span>
+  </li>
+</ul>
       <h2>
         <small>Inherited Method Summary</small>
         <h3 class='inherited'>
           Methods inherited from
-          <a href='../class/Quote.html'>Quote</a>
+          <a href='../class/OpenQuote.html'>OpenQuote</a>
         </h3>
         <p class='inherited'>
-          <a href='../class/Quote.html#apply-dynamic'>#apply</a>
+          <a href='../class/OpenQuote.html#logger-dynamic'>#logger</a>
+          <a href='../class/OpenQuote.html#debug-dynamic'>#debug</a>
+          <a href='../class/OpenQuote.html#multiply-dynamic'>#multiply</a>
+          <a href='../class/OpenQuote.html#apply-dynamic'>#apply</a>
+          <a href='../class/OpenQuote.html#replace-dynamic'>#replace</a>
+          <a href='../class/OpenQuote.html#tag-dynamic'>#tag</a>
+          <a href='../class/OpenQuote.html#ntag-dynamic'>#ntag</a>
         </p>
       </h2>
+      <h2>Instance Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='replace-dynamic'>
+      #
+(void)
+<b>replace</b><span>()</span>
+      <br>
+    </p>
+    
+  </div>
+</div>
     </div>
     <div id='footer'>
-  June 06, 14 06:50:10 by
+  June 06, 14 15:43:03 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>

@@ -30,22 +30,15 @@
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>libs&#47;rules&#47;dash.coffee</td>
+          <td>libs&#47;test.coffee</td>
         </tr>
         <tr>
           <td>Inherits:</td>
           <td>
-            <a href='../class/Quote.html'>Quote</a>
+            <a href='../class/Symbol.html'>Symbol</a>
           </td>
         </tr>
       </table>
-      <h2>Overview</h2>
-      <div class='docstring'>
-  <h2 id="-">Групповой Объект правил &quot;Сокращения&quot;</h2>
-
-</div>
-<div class='tags'>
-</div>
       <h2>Variables Summary</h2>
       <dl class='constants'>
   <dt id='description-variable'>
@@ -56,76 +49,59 @@
     <pre><code class='coffeescript'>&quot;Дефисы и тире&quot;</code></pre>
     
   </dd>
-  <dt id='version-variable'>
-    version
+  <dt id='tests-variable'>
+    tests
     =
   </dt>
   <dd>
-    <pre><code class='coffeescript'>&#39;0.0.0&#39;</code></pre>
+    <pre><code class='coffeescript'>[
+  {
+    text: &quot;привет - привет&quot;,
+    res: &quot;привет&amp;nbsp;&amp;mdash; привет&quot;,
+    debug: true
+  }, {
+    text: &quot; привет, - привет&quot;,
+    res: &quot; привет,&amp;nbsp;&amp;mdash; привет&quot;
+  }, {
+    text: &quot; привет\n- привет&quot;,
+    res: &quot; привет\n&amp;nbsp;&amp;mdash;привет&quot;
+  }, {
+    text: &quot; привет! - привет&quot;,
+    res: &quot; привет!&amp;nbsp;&amp;mdash;привет&quot;
+  }, {
+    text: &quot; из -за, из -под &quot;,
+    res: &quot; из &amp;mdash;за, из &amp;mdash;под&quot;
+  }, {
+    text: &quot; кто -то кто -либо кто -нибудь&quot;,
+    res: &quot; кто &amp;mdash;то кто &amp;mdash;либо кто &amp;mdash;нибудь&quot;
+  }, {
+    text: &quot;Кое -как,  кой -кого,  все -таки&quot;,
+    res: &quot;Кое &amp;mdash;как, кой &amp;mdash;кого, все &amp;mdash;таки&quot;
+  }, {
+    text: &#39;скажите ка, он де, ну кась &#39;,
+    res: &quot;скажите&amp;mdash;ка, он&amp;mdash;де, ну&amp;mdash;кась&quot;
+  }
+]</code></pre>
     
-  </dd>
-  <dt id='configName-variable'>
-    configName
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>&#39;Dash&#39;</code></pre>
-    
-  </dd>
-  <dt id='config-variable'>
-    config
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>{
-  on: true,
-  log: true,
-  debug: true
-}</code></pre>
-    
-  </dd>
-  <dt id='rules-variable'>
-    rules
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>[]</code></pre>
-    <div class='docstring'>
-  <p>Очередь правил</p>
-</div>
-<div class='tags'>
-</div>
-  </dd>
-  <dt id='order-variable'>
-    order
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>[&quot;mdash_2_html&quot;, &quot;mdash&quot;, &quot;mdash_2&quot;, &quot;mdash_3&quot;, &quot;iz_za_pod&quot;, &quot;to_libo_nibud&quot;, &quot;koe_kak&quot;, &quot;ka_de_kas&quot;]</code></pre>
-    <div class='docstring'>
-  <p>Порядок выполнения</p>
-</div>
-<div class='tags'>
-</div>
   </dd>
 </dl>
       <h3 class='inherited'>
         Variable inherited from
-        <a href='../class/Quote.html'>Quote</a>
+        <a href='../class/Symbol.html'>Symbol</a>
       </h3>
       <p class='inherited'>
-        <a href='../class/Quote.html#description-variable'>description</a>
-        <a href='../class/Quote.html#version-variable'>version</a>
-        <a href='../class/Quote.html#configName-variable'>configName</a>
-        <a href='../class/Quote.html#config-variable'>config</a>
-        <a href='../class/Quote.html#rules-variable'>rules</a>
-        <a href='../class/Quote.html#order-variable'>order</a>
+        <a href='../class/Symbol.html#description-variable'>description</a>
+        <a href='../class/Symbol.html#version-variable'>version</a>
+        <a href='../class/Symbol.html#configName-variable'>configName</a>
+        <a href='../class/Symbol.html#config-variable'>config</a>
+        <a href='../class/Symbol.html#rules-variable'>rules</a>
+        <a href='../class/Symbol.html#order-variable'>order</a>
       </p>
       <h2>
         <small>Inherited Method Summary</small>
         <h3 class='inherited'>
           Methods inherited from
-          <a href='../class/Quote.html'>Quote</a>
+          <a href='../class/Symbol.html'>Symbol</a>
         </h3>
         <p class='inherited'>
           <a href='../class/Quote.html#apply-dynamic'>#apply</a>
@@ -133,7 +109,7 @@
       </h2>
     </div>
     <div id='footer'>
-  June 06, 14 06:50:10 by
+  June 06, 14 15:43:03 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>

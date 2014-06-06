@@ -30,21 +30,15 @@
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>libs&#47;rules&#47;punctmark.coffee</td>
+          <td>libs&#47;test.coffee</td>
         </tr>
         <tr>
           <td>Inherits:</td>
           <td>
-            <a href='../class/Quote.html'>Quote</a>
+            <a href='../class/Symbol.html'>Symbol</a>
           </td>
         </tr>
       </table>
-      <h2>Overview</h2>
-      <div class='docstring'>
-  <p>Групповой Объект</p><p>Пунктуация и знаки препинания</p>
-</div>
-<div class='tags'>
-</div>
       <h2>Variables Summary</h2>
       <dl class='constants'>
   <dt id='description-variable'>
@@ -52,79 +46,64 @@
     =
   </dt>
   <dd>
-    <pre><code class='coffeescript'>&quot;Пунктуация и знаки препинания&quot;</code></pre>
+    <pre><code class='coffeescript'>&#39;Пунктуация и знаки препинания&#39;</code></pre>
     
   </dd>
-  <dt id='version-variable'>
-    version
+  <dt id='tests-variable'>
+    tests
     =
   </dt>
   <dd>
-    <pre><code class='coffeescript'>&#39;0.0.0&#39;</code></pre>
+    <pre><code class='coffeescript'>[
+  {
+    text: &#39;тест а тест но&#39;,
+    res: &quot;тест, а&amp;nbsp;тест но&quot;
+  }, {
+    text: &#39; !!!! &#39;,
+    res: &quot; !!!&quot;
+  }, {
+    text: &#39;::&#39;,
+    res: &quot;:&quot;
+  }, {
+    text: &#39; ... &#39;,
+    res: &quot; &amp;hellip;&quot;
+  }, {
+    text: &#39; test!? &#39;,
+    res: &quot; test?!&quot;
+  }, {
+    text: &#39; test!! &#39;,
+    res: &quot; test!&quot;
+  }, {
+    text: &#39; (   deijdei   ) &#39;,
+    res: &quot; (deijdei)&quot;
+  }, {
+    text: &#39;vfvfvf(   deijdei   ) &#39;,
+    res: &quot;vfvfvf (deijdei)&quot;
+  }, {
+    text: &#39;vfvfvf &#39;,
+    res: &quot;vfvfvf.&quot;
+  }
+]</code></pre>
     
-  </dd>
-  <dt id='configName-variable'>
-    configName
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>&#39;Punctmark&#39;</code></pre>
-    
-  </dd>
-  <dt id='config-variable'>
-    config
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>{
-  on: true,
-  log: true,
-  debug: true
-}</code></pre>
-    
-  </dd>
-  <dt id='rules-variable'>
-    rules
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>[]</code></pre>
-    <div class='docstring'>
-  <p>Очередь правил</p>
-</div>
-<div class='tags'>
-</div>
-  </dd>
-  <dt id='order-variable'>
-    order
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>[&#39;auto_comma&#39;, &#39;punctuation_marks_limit&#39;, &#39;punctuation_marks_base_limit&#39;, &#39;hellip&#39;, &#39;fix_excl_quest_marks&#39;, &#39;fix_pmarks&#39;, &#39;fix_brackets&#39;, &#39;fix_brackets_space&#39;, &#39;dot_on_end&#39;]</code></pre>
-    <div class='docstring'>
-  <p>Порядок выполнения</p>
-</div>
-<div class='tags'>
-</div>
   </dd>
 </dl>
       <h3 class='inherited'>
         Variable inherited from
-        <a href='../class/Quote.html'>Quote</a>
+        <a href='../class/Symbol.html'>Symbol</a>
       </h3>
       <p class='inherited'>
-        <a href='../class/Quote.html#description-variable'>description</a>
-        <a href='../class/Quote.html#version-variable'>version</a>
-        <a href='../class/Quote.html#configName-variable'>configName</a>
-        <a href='../class/Quote.html#config-variable'>config</a>
-        <a href='../class/Quote.html#rules-variable'>rules</a>
-        <a href='../class/Quote.html#order-variable'>order</a>
+        <a href='../class/Symbol.html#description-variable'>description</a>
+        <a href='../class/Symbol.html#version-variable'>version</a>
+        <a href='../class/Symbol.html#configName-variable'>configName</a>
+        <a href='../class/Symbol.html#config-variable'>config</a>
+        <a href='../class/Symbol.html#rules-variable'>rules</a>
+        <a href='../class/Symbol.html#order-variable'>order</a>
       </p>
       <h2>
         <small>Inherited Method Summary</small>
         <h3 class='inherited'>
           Methods inherited from
-          <a href='../class/Quote.html'>Quote</a>
+          <a href='../class/Symbol.html'>Symbol</a>
         </h3>
         <p class='inherited'>
           <a href='../class/Quote.html#apply-dynamic'>#apply</a>
@@ -132,7 +111,7 @@
       </h2>
     </div>
     <div id='footer'>
-  June 06, 14 06:50:10 by
+  June 06, 14 15:43:03 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>

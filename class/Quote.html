@@ -30,15 +30,15 @@
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>libs&#47;rules&#47;quote.coffee</td>
+          <td>libs&#47;test.coffee</td>
+        </tr>
+        <tr>
+          <td>Inherits:</td>
+          <td>
+            <a href='../class/Symbol.html'>Symbol</a>
+          </td>
         </tr>
       </table>
-      <h2>Overview</h2>
-      <div class='docstring'>
-  <h2 id="-">Групповой Объект правил &quot;Кавычки&quot;</h2><p>используется как объект расширения для остальных груп правил</p>
-</div>
-<div class='tags'>
-</div>
       <h2>Variables Summary</h2>
       <dl class='constants'>
   <dt id='description-variable'>
@@ -49,125 +49,50 @@
     <pre><code class='coffeescript'>&quot;Кавычки&quot;</code></pre>
     
   </dd>
-  <dt id='version-variable'>
-    version
+  <dt id='tests-variable'>
+    tests
     =
   </dt>
   <dd>
-    <pre><code class='coffeescript'>&#39;0.0.0&#39;</code></pre>
+    <pre><code class='coffeescript'>[
+  {
+    obj: require(&#39;..&#47;libs&#47;rules&#47;quote&#47;open_quote&#39;),
+    text: &quot;привет \&quot;test\&quot; привет. привет \&quot;test\&quot; привет&quot;,
+    res: &quot;привет «test» привет. привет «test» привет&quot;
+  }, {
+    obj: require(&#39;..&#47;libs&#47;rules&#47;quote&#47;close_quote&#39;),
+    text: &quot;привет \&quot;test\&quot; привет&quot;,
+    res: &quot;привет «test» привет&quot;
+  }
+]</code></pre>
     
   </dd>
-  <dt id='configName-variable'>
-    configName
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>&#39;Quote&#39;</code></pre>
-    <div class='docstring'>
-  <p>Имя конфига</p>
-</div>
-<div class='tags'>
-</div>
-  </dd>
-  <dt id='config-variable'>
-    config
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>{
-  on: true,
-  log: false,
-  debug: false
-}</code></pre>
-    <div class='docstring'>
-  <p>Конфиг для теста</p>
-</div>
-<div class='tags'>
-</div>
-  </dd>
-  <dt id='rules-variable'>
-    rules
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>[]</code></pre>
-    <div class='docstring'>
-  <p>Очередь правил</p>
-</div>
-<div class='tags'>
-</div>
-  </dd>
-  <dt id='order-variable'>
-    order
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>[&quot;quotes_outside_a&quot;, &quot;open_quote&quot;, &quot;close_quote&quot;, &quot;close_quote_adv&quot;, &quot;open_quote_adv&quot;, &quot;quotation&quot;]</code></pre>
-    <div class='docstring'>
-  <p>Порядок выполнения</p>
-</div>
-<div class='tags'>
-</div>
-  </dd>
 </dl>
-      <h2>Instance Method Summary</h2>
-      <ul class='summary'>
-  <li>
-    <span class='signature'>
-      <a href='#apply-dynamic'>
-        #
-(void)
-<b>apply</b><span>()</span>
-      </a>
-    </span>
-    <span class='desc'>
-      Применение правил @text 
-    </span>
-  </li>
-</ul>
-      <h2>Constructor Details</h2>
-      <div class='methods'>
-  <div class='method_details'>
-    <p class='signature' id='constructor-dynamic'>
-      #
-(void)
-<b>constructor</b><span>(opt)</span>
-      <br>
-    </p>
-    <div class='docstring'>
-  <p>Конструктор</p><ul>
-<li>Настраивает конфиг</li>
-<li>Замыкает на себя text</li>
-<li>Создает список правил согласно прядка</li>
-</ul><p>@param opt[object]</p><ul>
-<li>Lib[Object] обязательно</li>
-<li>text[String] строка</li>
-</ul>
-
-</div>
-<div class='tags'>
-</div>
-  </div>
-</div>
-      <h2>Instance Method Details</h2>
-      <div class='methods'>
-  <div class='method_details'>
-    <p class='signature' id='apply-dynamic'>
-      #
-(void)
-<b>apply</b><span>()</span>
-      <br>
-    </p>
-    <div class='docstring'>
-  <p>Применение правил @text</p>
-</div>
-<div class='tags'>
-</div>
-  </div>
-</div>
+      <h3 class='inherited'>
+        Variable inherited from
+        <a href='../class/Symbol.html'>Symbol</a>
+      </h3>
+      <p class='inherited'>
+        <a href='../class/Symbol.html#description-variable'>description</a>
+        <a href='../class/Symbol.html#version-variable'>version</a>
+        <a href='../class/Symbol.html#configName-variable'>configName</a>
+        <a href='../class/Symbol.html#config-variable'>config</a>
+        <a href='../class/Symbol.html#rules-variable'>rules</a>
+        <a href='../class/Symbol.html#order-variable'>order</a>
+      </p>
+      <h2>
+        <small>Inherited Method Summary</small>
+        <h3 class='inherited'>
+          Methods inherited from
+          <a href='../class/Symbol.html'>Symbol</a>
+        </h3>
+        <p class='inherited'>
+          <a href='../class/Quote.html#apply-dynamic'>#apply</a>
+        </p>
+      </h2>
     </div>
     <div id='footer'>
-  June 06, 14 06:50:10 by
+  June 06, 14 15:43:03 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>

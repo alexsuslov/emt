@@ -30,21 +30,15 @@
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>libs&#47;rules&#47;abbr.coffee</td>
+          <td>libs&#47;test.coffee</td>
         </tr>
         <tr>
           <td>Inherits:</td>
           <td>
-            <a href='../class/Quote.html'>Quote</a>
+            <a href='../class/Symbol.html'>Symbol</a>
           </td>
         </tr>
       </table>
-      <h2>Overview</h2>
-      <div class='docstring'>
-  <p>Групповой Объект правил Сокращения</p>
-</div>
-<div class='tags'>
-</div>
       <h2>Variables Summary</h2>
       <dl class='constants'>
   <dt id='description-variable'>
@@ -52,79 +46,76 @@
     =
   </dt>
   <dd>
-    <pre><code class='coffeescript'>&quot;Сокращения&quot;</code></pre>
+    <pre><code class='coffeescript'>&#39;Сокращения&#39;</code></pre>
     
   </dd>
-  <dt id='version-variable'>
-    version
+  <dt id='tests-variable'>
+    tests
     =
   </dt>
   <dd>
-    <pre><code class='coffeescript'>&#39;0.0.0&#39;</code></pre>
+    <pre><code class='coffeescript'>[
+  {
+    text: &#39; гл. 4, стр. 5, рис. 7, илл. 9, ст. 6, п. 9 &#39;,
+    res: &quot; гл&amp;nbsp;4, стр&amp;nbsp;5, рис&amp;nbsp;7, илл&amp;nbsp;9, ст&amp;nbsp;6, п&amp;nbsp;9&quot;
+  }, {
+    text: &#39; см. 2, им. 4&#39;,
+    res: &quot; см&amp;nbsp;2, им&amp;nbsp;4&quot;
+  }, {
+    text: &#39; г. Тест, пр-кт Тест,  д. 4 &#39;,
+    res: &quot; г.&amp;nbsp;Тест, пр&amp;mdash;кт&amp;nbsp;Тест, д.&amp;nbsp;4&quot;
+  }, {
+    text: &#39; 1 м2 &#39;,
+    res: &#39; 1&amp;nbsp;м&amp;sup2;&#39;
+  }, {
+    text: &#39; 1кг. &#39;,
+    res: &#39; 1&amp;nbsp;кг.&#39;
+  }, {
+    text: &#39; 10в. &#39;,
+    res: &quot; 10&amp;nbsp;В.&quot;
+  }, {
+    text: &#39; ООО Биомед &#39;,
+    res: &#39; ООО&amp;nbsp;Биомед&#39;
+  }, {
+    text: &quot; 300 dpi 150 lpi &quot;,
+    res: &quot; 300&amp;nbsp;dpi 150&amp;nbsp;lpi&quot;
+  }, {
+    text: &quot; P. S. , P.P.S. &quot;,
+    res: &quot; &lt;span class=&#39;nowrap&#39;&gt;P. S.&lt;&#47;span&gt;, &lt;span class=&#39;nowrap&#39;&gt;P. P. S.&lt;&#47;span&gt;&quot;
+  }, {
+    text: &quot; и т. д. и т. п. в т.ч.&quot;,
+    res: &quot; &lt;span class=&#39;nowrap&#39;&gt;и т. д.&lt;&#47;span&gt; &lt;span class=&#39;nowrap&#39;&gt;и т. п.&lt;&#47;span&gt; &lt;span class=&#39;nowrap&#39;&gt;и т. ч.&lt;&#47;span&gt;&quot;
+  }, {
+    text: &quot; 40 тыс. руб.&quot;,
+    res: &quot; 40&amp;nbsp;тыс.&amp;nbsp;руб.&quot;
+  }, {
+    text: &quot; ГОСТ 123-123 &quot;,
+    res: &quot; &lt;span class=&#39;nowrap&#39;&gt;ГОСТ 123&amp;ndash;123&lt;&#47;span&gt;&quot;
+  }, {
+    text: &quot; тест те.&quot;,
+    res: &quot; тест&lt;span class=&#39;nowrap&#39;&gt;те&lt;&#47;span&gt;&quot;
+  }
+]</code></pre>
     
-  </dd>
-  <dt id='configName-variable'>
-    configName
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>&#39;Abbr&#39;</code></pre>
-    
-  </dd>
-  <dt id='config-variable'>
-    config
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>{
-  on: true,
-  log: true,
-  debug: true
-}</code></pre>
-    
-  </dd>
-  <dt id='rules-variable'>
-    rules
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>[]</code></pre>
-    <div class='docstring'>
-  <p>Очередь правил</p>
-</div>
-<div class='tags'>
-</div>
-  </dd>
-  <dt id='order-variable'>
-    order
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>[&quot;nobr_acronym&quot;, &quot;nobr_sm_im&quot;, &quot;nobr_locations&quot;, &quot;nbsp_before_unit&quot;, &quot;nbsp_before_weight_unit&quot;, &quot;nobr_before_unit_volt&quot;, &quot;nbsp_org_abbr&quot;, &quot;nobr_abbreviation&quot;, &quot;ps_pps&quot;, &quot;nobr_vtch_itd_itp&quot;, &quot;nbsp_money_abbr&quot;, &quot;nobr_gost&quot;, &quot;nbsp_in_the_end&quot;, &quot;nbsp_te&quot;]</code></pre>
-    <div class='docstring'>
-  <p>Порядок выполнения</p>
-</div>
-<div class='tags'>
-</div>
   </dd>
 </dl>
       <h3 class='inherited'>
         Variable inherited from
-        <a href='../class/Quote.html'>Quote</a>
+        <a href='../class/Symbol.html'>Symbol</a>
       </h3>
       <p class='inherited'>
-        <a href='../class/Quote.html#description-variable'>description</a>
-        <a href='../class/Quote.html#version-variable'>version</a>
-        <a href='../class/Quote.html#configName-variable'>configName</a>
-        <a href='../class/Quote.html#config-variable'>config</a>
-        <a href='../class/Quote.html#rules-variable'>rules</a>
-        <a href='../class/Quote.html#order-variable'>order</a>
+        <a href='../class/Symbol.html#description-variable'>description</a>
+        <a href='../class/Symbol.html#version-variable'>version</a>
+        <a href='../class/Symbol.html#configName-variable'>configName</a>
+        <a href='../class/Symbol.html#config-variable'>config</a>
+        <a href='../class/Symbol.html#rules-variable'>rules</a>
+        <a href='../class/Symbol.html#order-variable'>order</a>
       </p>
       <h2>
         <small>Inherited Method Summary</small>
         <h3 class='inherited'>
           Methods inherited from
-          <a href='../class/Quote.html'>Quote</a>
+          <a href='../class/Symbol.html'>Symbol</a>
         </h3>
         <p class='inherited'>
           <a href='../class/Quote.html#apply-dynamic'>#apply</a>
@@ -132,7 +123,7 @@
       </h2>
     </div>
     <div id='footer'>
-  June 06, 14 06:50:10 by
+  June 06, 14 15:43:03 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>

@@ -30,7 +30,7 @@
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>libs&#47;rules&#47;text.coffee</td>
+          <td>libs&#47;test.coffee</td>
         </tr>
         <tr>
           <td>Inherits:</td>
@@ -39,13 +39,6 @@
           </td>
         </tr>
       </table>
-      <h2>Overview</h2>
-      <div class='docstring'>
-  <h2 id="-">Групповой Объект правил &quot;Сокращения&quot;</h2>
-
-</div>
-<div class='tags'>
-</div>
       <h2>Variables Summary</h2>
       <dl class='constants'>
   <dt id='description-variable'>
@@ -56,57 +49,27 @@
     <pre><code class='coffeescript'>&quot;Текст и абзацы&quot;</code></pre>
     
   </dd>
-  <dt id='version-variable'>
-    version
+  <dt id='tests-variable'>
+    tests
     =
   </dt>
   <dd>
-    <pre><code class='coffeescript'>&#39;0.0.0&#39;</code></pre>
+    <pre><code class='coffeescript'>[
+  {
+    obj: require(&#39;..&#47;libs&#47;rules&#47;text&#47;auto_links&#39;),
+    text: &quot; http:&#47;&#47;alexsuslov.github.io&#47;emt&#47; &quot;,
+    res: &quot; &lt;a href=&#39;http:&#47;&#47;alexsuslov.github.io&#47;emt&#47;&#39;&gt;alexsuslov.github.io&#47;emt&#47;&lt;&#47;a&gt;&quot;
+  }, {
+    obj: require(&#39;..&#47;libs&#47;rules&#47;text&#47;email&#39;),
+    text: &quot; alexsuslov@github.com &quot;,
+    res: &quot; &lt;a href=&#39;mailto:alexsuslov@github.com&#39;&gt;alexsuslov@github.com&lt;&#47;a&gt;&quot;
+  }, {
+    obj: require(&#39;..&#47;libs&#47;rules&#47;text&#47;no_repeat_words&#39;),
+    text: &quot; привет привет &quot;,
+    res: &quot; привет&quot;
+  }
+]</code></pre>
     
-  </dd>
-  <dt id='configName-variable'>
-    configName
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>&#39;Text&#39;</code></pre>
-    
-  </dd>
-  <dt id='config-variable'>
-    config
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>{
-  on: true,
-  log: true,
-  debug: true
-}</code></pre>
-    
-  </dd>
-  <dt id='rules-variable'>
-    rules
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>[]</code></pre>
-    <div class='docstring'>
-  <p>Очередь правил</p>
-</div>
-<div class='tags'>
-</div>
-  </dd>
-  <dt id='order-variable'>
-    order
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>[&quot;auto_links&quot;, &quot;email&quot;, &quot;no_repeat_words&quot;, &#39;paragraphs&#39;, &#39;breakline&#39;]</code></pre>
-    <div class='docstring'>
-  <p>Порядок выполнения</p>
-</div>
-<div class='tags'>
-</div>
   </dd>
 </dl>
       <h3 class='inherited'>
@@ -133,7 +96,7 @@
       </h2>
     </div>
     <div id='footer'>
-  June 06, 14 06:50:10 by
+  June 06, 14 15:43:03 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>

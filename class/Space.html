@@ -30,7 +30,7 @@
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>libs&#47;rules&#47;space.coffee</td>
+          <td>libs&#47;test.coffee</td>
         </tr>
         <tr>
           <td>Inherits:</td>
@@ -39,13 +39,6 @@
           </td>
         </tr>
       </table>
-      <h2>Overview</h2>
-      <div class='docstring'>
-  <h2 id="-">Групповой Объект</h2>
-
-</div>
-<div class='tags'>
-</div>
       <h2>Variables Summary</h2>
       <dl class='constants'>
   <dt id='description-variable'>
@@ -56,57 +49,59 @@
     <pre><code class='coffeescript'>&quot;Расстановка и удаление пробелов&quot;</code></pre>
     
   </dd>
-  <dt id='version-variable'>
-    version
+  <dt id='tests-variable'>
+    tests
     =
   </dt>
   <dd>
-    <pre><code class='coffeescript'>&#39;0.0.0&#39;</code></pre>
+    <pre><code class='coffeescript'>[
+  {
+    obj: require(&#39;..&#47;libs&#47;rules&#47;space&#47;nobr_twosym_abbr&#39;),
+    text: &quot;test test AS &quot;,
+    res: &quot;test test&amp;nbsp;AS&quot;
+  }, {
+    obj: require(&#39;..&#47;libs&#47;rules&#47;space&#47;remove_space_before_punctuationmarks&#39;),
+    text: &quot;test test ; AS ; &quot;,
+    res: &quot;test test; AS;&quot;
+  }, {
+    obj: require(&#39;..&#47;libs&#47;rules&#47;space&#47;autospace_after_comma&#39;),
+    text: &quot; ,9 9,3 &quot;,
+    res: &quot;, 9 9, 3&quot;
+  }, {
+    obj: require(&#39;..&#47;libs&#47;rules&#47;space&#47;autospace_after_pmarks&#39;),
+    text: &quot;asasa ,ddsdss  asasa .ddsdss &quot;,
+    res: &quot;asasa, ddsdss asasa. ddsdss&quot;
+  }, {
+    obj: require(&#39;..&#47;libs&#47;rules&#47;space&#47;autospace_after_dot&#39;),
+    text: &quot;  test.ru привет.привет &quot;,
+    res: &quot;  test.\\ru привет. привет&quot;
+  }, {
+    obj: require(&#39;..&#47;libs&#47;rules&#47;space&#47;autospace_after_hellips&#39;),
+    text: &quot;!..привет &quot;,
+    res: &quot;!.. привет&quot;
+  }, {
+    obj: require(&#39;..&#47;libs&#47;rules&#47;space&#47;many_spaces_to_one&#39;),
+    text: &quot;привет  привет &quot;,
+    res: &quot;привет&quot;
+  }, {
+    obj: require(&#39;..&#47;libs&#47;rules&#47;space&#47;clear_percent&#39;),
+    text: &quot; 10 % &quot;,
+    res: &quot; 10%&quot;
+  }, {
+    obj: require(&#39;..&#47;libs&#47;rules&#47;space&#47;nbsp_before_open_quote&#39;),
+    text: &quot; a &amp;laquo; &quot;,
+    res: &quot; a&amp;nbsp;&amp;laquo;&quot;
+  }, {
+    obj: require(&#39;..&#47;libs&#47;rules&#47;space&#47;nbsp_before_month&#39;),
+    text: &quot; 1 мая &quot;,
+    res: &quot; 1&amp;nbsp;мая&quot;
+  }, {
+    obj: require(&#39;..&#47;libs&#47;rules&#47;space&#47;spaces_on_end&#39;),
+    text: &quot;test &quot;,
+    res: &quot;test&quot;
+  }
+]</code></pre>
     
-  </dd>
-  <dt id='configName-variable'>
-    configName
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>&#39;Space&#39;</code></pre>
-    
-  </dd>
-  <dt id='config-variable'>
-    config
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>{
-  on: true,
-  log: true,
-  debug: true
-}</code></pre>
-    
-  </dd>
-  <dt id='rules-variable'>
-    rules
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>[]</code></pre>
-    <div class='docstring'>
-  <p>Очередь правил</p>
-</div>
-<div class='tags'>
-</div>
-  </dd>
-  <dt id='order-variable'>
-    order
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>[&#39;nobr_twosym_abbr&#39;, &#39;remove_space_before_punctuationmarks&#39;, &#39;autospace_after_comma&#39;, &#39;autospace_after_pmarks&#39;, &#39;autospace_after_dot&#39;, &#39;autospace_after_hellips&#39;, &#39;many_spaces_to_one&#39;, &#39;clear_percent&#39;, &#39;nbsp_before_open_quote&#39;, &#39;nbsp_before_month&#39;, &#39;spaces_on_end&#39;]</code></pre>
-    <div class='docstring'>
-  <p>Порядок выполнения</p>
-</div>
-<div class='tags'>
-</div>
   </dd>
 </dl>
       <h3 class='inherited'>
@@ -133,7 +128,7 @@
       </h2>
     </div>
     <div id='footer'>
-  June 06, 14 06:50:10 by
+  June 06, 14 15:43:03 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>
