@@ -22,8 +22,8 @@ class Dash extends Quote
   order:[
     "mdash_2_html",
     "mdash",
-    "mdash_2",
-    "mdash_3",
+    "mdash2",
+    "mdash3",
     "iz_za_pod",
     "to_libo_nibud",
     "koe_kak",

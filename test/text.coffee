@@ -4,17 +4,17 @@ EMTLib = require( '../libs/emt_lib').EMTLib
 # Список тестов
 tests = [
   {
-    obj: require( '../libs/rules/auto_links')
+    obj: require( '../libs/rules/text/auto_links')
     text: " http://alexsuslov.github.io/emt/ "
     res: " <a href='http://alexsuslov.github.io/emt/'>alexsuslov.github.io/emt/</a> "
   }
   {
-    obj: require( '../libs/rules/email')
+    obj: require( '../libs/rules/text/email')
     text: " alexsuslov@github.com "
     res: " <a href='mailto:alexsuslov@github.com'>alexsuslov@github.com</a> "
   }
   {
-    obj: require( '../libs/rules/no_repeat_words')
+    obj: require( '../libs/rules/text/no_repeat_words')
     text: " привет привет "
     res: " привет "
   }

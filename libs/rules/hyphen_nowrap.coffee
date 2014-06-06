@@ -24,7 +24,7 @@ class Rule extends OpenQuote
       # '$m[1] . $this->tag($m[2], "span", array("class"=>"nowrap")) . $m[4]'
       @text = @text.replace m[0] , "#{m[1]}#{m[2]}&nbsp;#{m[4]}C#{m[6]}"
 
-    # !!m
+    !!m
 
 module.exports = Rule
 

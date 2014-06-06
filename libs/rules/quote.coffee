@@ -6,7 +6,7 @@ class Quote
   description: "Кавычки"
   version:'0.0.0'
   # Имя конфига
-  configName:'Quote'
+  configName:'quote'
 
   # Конфиг для теста
   config:
@@ -24,7 +24,7 @@ class Quote
       "close_quote"
       "close_quote_adv"
       "open_quote_adv"
-      "quotation"
+      # "quotation"
     ]
 
   ###

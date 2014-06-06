@@ -9,6 +9,7 @@ if isClient
     Lib:{}
     Rules:{}
     order:[
+      'Symbol'
       'Quote'
       'Abbr'
       'Numbers'
@@ -17,7 +18,6 @@ if isClient
       'Etc'
       'NoBr'
       'Text'
-      'Symbol'
       'Space'
     ]
 

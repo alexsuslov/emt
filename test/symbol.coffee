@@ -4,39 +4,44 @@ EMTLib = require( '../libs/emt_lib').EMTLib
 # Список тестов
 tests = [
   {
-    obj: require( '../libs/rules/tm_replace')
+    obj: require( '../libs/rules/symbol/tm_replace')
     text: "(tm)"
     res: "&trade;"
   }
   {
-    obj: require( '../libs/rules/r_sign_replace')
+    obj: require( '../libs/rules/symbol/r_sign_replace')
     text: "(r)"
     res: "&reg;"
   }
   {
-    obj: require( '../libs/rules/copy_replace')
+    obj: require( '../libs/rules/symbol/copy_replace')
     text: "(c)"
     res: "&copy;"
   }
   {
-    obj: require( '../libs/rules/apostrophe')
+    obj: require( '../libs/rules/symbol/apostrophe')
     text: " тест'test"
     res: " тест&rsquo;test"
   }
   {
-    obj: require( '../libs/rules/degree_f')
+    obj: require( '../libs/rules/symbol/degree_f')
     text: " 40F "
     res: " <span class='nowrap'>40 &deg;F</span> "
   }
   {
-    obj: require( '../libs/rules/euro_symbol')
+    obj: require( '../libs/rules/symbol/euro_symbol')
     text: " € "
     res: " &euro; "
   }
   {
-    obj: require( '../libs/rules/arrows_symbols')
+    obj: require( '../libs/rules/symbol/arrows_symbols')
     text: " <- -> → ←"
     res: " &rarr; &rarr; &rarr; &larr;"
+  }
+  {
+    obj: require( '../libs/rules/symbol/plus_minus')
+    text: " +/- "
+    res: " &plusmn; "
   }
 
 ]

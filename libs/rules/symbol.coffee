@@ -20,13 +20,14 @@ class Symbol extends Quote
 
   # Порядок выполнения
   order:[
-    "tm_replace",
-    "r_sign_replace",
-    "copy_replace",
-    "apostrophe",
-    "degree_f",
-    "euro_symbol",
-    "arrows_symbols",
+    "tm_replace"
+    "r_sign_replace"
+    "copy_replace"
+    "apostrophe"
+    "degree_f"
+    "euro_symbol"
+    "arrows_symbols"
+    "plus_minus"
     ]
 
 module.exports = Symbol

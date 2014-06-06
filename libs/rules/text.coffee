@@ -7,7 +7,7 @@ Quote = require( './quote') unless Quote
 class Text extends Quote
   description: "Текст и абзацы"
   version:'0.0.0'
-  configName:'Text'
+  configName:'text'
 
 
   config:
@@ -24,7 +24,7 @@ class Text extends Quote
     "email",
     "no_repeat_words",
     'paragraphs'
-    'breakline'
+    # 'breakline'
     ]
 
 module.exports = Text

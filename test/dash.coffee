@@ -4,42 +4,42 @@ EMTLib = require( '../libs/emt_lib').EMTLib
 # Список тестов
 tests = [
   {
-    obj: require( '../libs/rules/mdash_2_html')
+    obj: require( '../libs/rules/dash/mdash_2_html')
     text: " привет - привет "
     res: " привет &mdash; привет "
   }
   {
-    obj: require( '../libs/rules/mdash')
+    obj: require( '../libs/rules/dash/mdash')
     text: "  привет, - привет"
     res: "  привет,&nbsp;&mdash; привет"
   }
   {
-    obj: require( '../libs/rules/mdash2')
+    obj: require( '../libs/rules/dash/mdash2')
     text: "  привет\n- привет"
     res: "  привет\n&nbsp;&mdash;привет"
   }
   {
-    obj: require( '../libs/rules/mdash3')
+    obj: require( '../libs/rules/dash/mdash3')
     text: "  привет! - привет"
     res: "  привет!&nbsp;&mdash;привет"
   }
   {
-    obj: require( '../libs/rules/iz_za_pod')
+    obj: require( '../libs/rules/dash/iz_za_pod')
     text: " из -за, из -под "
     res: " из-за, из-под "
   }
   {
-    obj: require( '../libs/rules/to_libo_nibud')
+    obj: require( '../libs/rules/dash/to_libo_nibud')
     text: " кто -то кто -либо кто -нибудь"
     res: " кто-то кто-либо кто-нибудь"
   }
   {
-    obj: require( '../libs/rules/koe_kak')
+    obj: require( '../libs/rules/dash/koe_kak')
     text: " Кое -как,  кой -кого,  все -таки "
     res: " Кое-как,  кой-кого,  все-таки "
   }
   {
-    obj: require( '../libs/rules/ka_de_kas')
+    obj: require( '../libs/rules/dash/ka_de_kas')
     text: ' скажите ка, он де, ну кась '
     res: " скажите-ка, он-де, ну-кась "
   }

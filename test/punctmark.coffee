@@ -4,47 +4,47 @@ EMTLib = require( '../libs/emt_lib').EMTLib
 # Список тестов
 tests = [
   {
-    obj: require( '../libs/rules/auto_comma')
+    obj: require( '../libs/rules/punctmark/auto_comma')
     text: ' тест а тест но '
     res: " тест, а тест, но "
   }
   {
-    obj: require( '../libs/rules/punctuation_marks_limit')
+    obj: require( '../libs/rules/punctmark/punctuation_marks_limit')
     text: ' !!!! '
     res: " !!! "
   }
   {
-    obj: require( '../libs/rules/punctuation_marks_base_limit')
+    obj: require( '../libs/rules/punctmark/punctuation_marks_base_limit')
     text: ' :: '
     res: " : "
   }
   {
-    obj: require( '../libs/rules/hellip')
+    obj: require( '../libs/rules/punctmark/hellip')
     text: ' ... '
     res: " &hellip; "
   }
   {
-    obj: require( '../libs/rules/fix_excl_quest_marks')
+    obj: require( '../libs/rules/punctmark/fix_excl_quest_marks')
     text: ' test!? '
     res: " test?! "
   }
   {
-    obj: require( '../libs/rules/fix_pmarks')
+    obj: require( '../libs/rules/punctmark/fix_pmarks')
     text: ' test!! '
     res: " test! "
   }
   {
-    obj: require( '../libs/rules/fix_brackets')
+    obj: require( '../libs/rules/punctmark/fix_brackets')
     text: ' (   deijdei   ) '
     res: " (deijdei) "
   }
   {
-    obj: require( '../libs/rules/fix_brackets_space')
+    obj: require( '../libs/rules/punctmark/fix_brackets_space')
     text: 'vfvfvf(   deijdei   ) '
     res: "vfvfvf (   deijdei   ) "
   }
   {
-    obj: require( '../libs/rules/dot_on_end')
+    obj: require( '../libs/rules/punctmark/dot_on_end')
     text: 'vfvfvf '
     res: "vfvfvf."
   }

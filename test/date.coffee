@@ -4,27 +4,27 @@ EMTLib = require( '../libs/emt_lib').EMTLib
 # Список тестов
 tests = [
   {
-    obj: require( '../libs/rules/years')
+    obj: require( '../libs/rules/emtdate/years')
     text: ' с 1990-2000 '
     res: " с 1990&mdash;2000 "
   }
   {
-    obj: require( '../libs/rules/mdash_month_interval')
+    obj: require( '../libs/rules/emtdate/mdash_month_interval')
     text: ' сентября-август '
     res: " сентября&mdash;август "
   }
   {
-    obj: require( '../libs/rules/space_posle_goda')
+    obj: require( '../libs/rules/emtdate/space_posle_goda')
     text: ' 1999год '
     res: " 1999 год "
   }
   {
-    obj: require( '../libs/rules/nbsp_posle_goda_abbr')
+    obj: require( '../libs/rules/emtdate/nbsp_posle_goda_abbr')
     text: ' 1999г. '
     res: " 1999&nbsp;г. "
   }
   {
-    obj: require( '../libs/rules/nobr_year_in_date')
+    obj: require( '../libs/rules/emtdate/nobr_year_in_date')
     text: ' 24.03.1999 '
     res: " <span class='nowrap'>24.03.1999 г.</span> "
   }

@@ -7,7 +7,7 @@ Quote = require( './quote') unless Quote
 class Etc extends Quote
   description: "Прочее"
   version:'0.0.0'
-  configName:'EmtDate'
+  configName:'Etc'
 
 
   config:

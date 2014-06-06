@@ -4,12 +4,12 @@ EMTLib = require( '../libs/emt_lib').EMTLib
 # Список тестов
 tests = [
   {
-    obj: require( '../libs/rules/open_quote')
+    obj: require( '../libs/rules/quote/open_quote')
     text: "привет \"test\" привет. привет \"test\" привет"
     res: "привет «test\" привет. привет «test\" привет"
   }
   {
-    obj: require( '../libs/rules/close_quote')
+    obj: require( '../libs/rules/quote/close_quote')
     text: "привет \"test\" привет"
     res: "привет \"test» привет"
   }

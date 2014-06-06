@@ -14,14 +14,8 @@
         <![endif]-->
         <div class="container">
             <textarea name="emt" rows="10" class='emt col-lg-12 col-xs-12'></textarea>
-            <p class='emt'>привет "привет" привет
-            <br>
-            300 dpi 150 lpi
-            <br>
-            x_2
-            <br>
-            x^3
-            </p>
+            <div class='emt'>
+            </div>
         </div>
 
         <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
@@ -30,7 +24,7 @@
         <script>
 
         $(function() {
-          var $p = $('p.emt');
+          var $p = $('.emt');
           var $t = $('textarea.emt');
           $t.html( $p.html());
           var emt = $p.emt();

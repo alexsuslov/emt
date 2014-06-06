@@ -1,1 +1,1 @@
-../open_quote.coffee
+../quote/open_quote.coffee
