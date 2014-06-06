@@ -1,0 +1,1 @@
+quote/open_quote.coffee
