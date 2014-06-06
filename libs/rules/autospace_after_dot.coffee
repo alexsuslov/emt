@@ -2,9 +2,9 @@
 OpenQuote = require( './open_quote') unless OpenQuote
 
 ##
-# Правило
+# Правило AutospaceAfterDot
 ##
-class Rule extends OpenQuote
+class AutospaceAfterDot extends OpenQuote
   description: 'Пробел после точки'
   version:'0.0.0'
   configName:'autospace_after_dot'
@@ -34,7 +34,7 @@ class Rule extends OpenQuote
 
     !!m
 
-module.exports = Rule
+module.exports = AutospaceAfterDot
 
 if typeof window isnt 'undefined'
-  App.Rules['autospace_after_dot'] = Rule
+  App.Rules['autospace_after_dot'] = AutospaceAfterDot

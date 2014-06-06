@@ -2,9 +2,9 @@
 OpenQuote = require( './open_quote') unless OpenQuote
 
 ##
-# Правило
+# Правило CenturyPeriod
 ##
-class Rule extends OpenQuote
+class CenturyPeriod extends OpenQuote
   description: 'Тире между диапазоном веков'
   version:'0.0.0'
   configName:'century_period'
@@ -26,8 +26,8 @@ class Rule extends OpenQuote
 
     !!m
 
-module.exports = Rule
+module.exports = CenturyPeriod
 if typeof window isnt 'undefined'
-  App.Rules['century_period'] = Rule
+  App.Rules['century_period'] = CenturyPeriod
 
 

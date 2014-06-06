@@ -2,9 +2,9 @@
 OpenQuote = require( './open_quote') unless OpenQuote
 
 ##
-# Правило
+# Правило ClearPercent
 ##
-class Rule extends OpenQuote
+class ClearPercent extends OpenQuote
   description: 'Удаление пробела перед символом процента'
   version:'0.0.0'
   configName:'clear_percent'
@@ -25,7 +25,7 @@ class Rule extends OpenQuote
 
     !!m
 
-module.exports = Rule
+module.exports = ClearPercent
 
 if typeof window isnt 'undefined'
-  App.Rules['clear_percent'] = Rule
+  App.Rules['clear_percent'] = ClearPercent

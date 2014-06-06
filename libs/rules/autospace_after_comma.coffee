@@ -2,9 +2,9 @@
 OpenQuote = require( './open_quote') unless OpenQuote
 
 ##
-# Правило
+# Правило AutospaceAfterComma
 ##
-class Rule extends OpenQuote
+class AutospaceAfterComma extends OpenQuote
   description: 'Пробел после запятой'
   version:'0.0.0'
   configName:'autospace_after_comma'
@@ -33,7 +33,7 @@ class Rule extends OpenQuote
 
     !!m
 
-module.exports = Rule
+module.exports = AutospaceAfterComma
 
 if typeof window isnt 'undefined'
-  App.Rules['autospace_after_comma'] = Rule
+  App.Rules['autospace_after_comma'] = AutospaceAfterComma

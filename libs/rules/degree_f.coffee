@@ -2,9 +2,9 @@
 OpenQuote = require( './open_quote') unless OpenQuote
 
 ##
-# Правило
+# Правило  DegreeF
 ##
-class Rule extends OpenQuote
+class DegreeF extends OpenQuote
   description: 'Градусы по Фаренгейту'
   version:'0.0.0'
   configName:'degree_f'
@@ -26,7 +26,7 @@ class Rule extends OpenQuote
 
     !!m
 
-module.exports = Rule
+module.exports = DegreeF
 
 if typeof window isnt 'undefined'
-  App.Rules['degree_f'] = Rule
+  App.Rules['degree_f'] = DegreeF

@@ -2,9 +2,9 @@
 OpenQuote = require( './open_quote') unless OpenQuote
 
 ##
-# Правило
+# Правило  CopyReplace
 ##
-class Rule extends OpenQuote
+class CopyReplace extends OpenQuote
   description: 'Замена (c) на символ копирайт'
   version:'0.0.0'
   configName:'copy_replace'
@@ -29,7 +29,7 @@ class Rule extends OpenQuote
 
     !!m
 
-module.exports = Rule
+module.exports = CopyReplace
 
 if typeof window isnt 'undefined'
-  App.Rules['copy_replace'] = Rule
+  App.Rules['copy_replace'] = CopyReplace

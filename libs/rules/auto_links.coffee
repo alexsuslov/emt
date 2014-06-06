@@ -2,9 +2,9 @@
 OpenQuote = require( './open_quote') unless OpenQuote
 
 ##
-# Правило
+# Правило AutoLinks
 ##
-class Rule extends OpenQuote
+class AutoLinks extends OpenQuote
   description: 'Выделение ссылок из текста'
   version:'0.0.0'
   configName:'auto_links'
@@ -31,7 +31,7 @@ class Rule extends OpenQuote
 
     !!m
 
-module.exports = Rule
+module.exports = AutoLinks
 
 if typeof window isnt 'undefined'
-  App.Rules['auto_links'] = Rule
+  App.Rules['auto_links'] = AutoLinks

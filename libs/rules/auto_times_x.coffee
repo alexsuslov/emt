@@ -2,9 +2,9 @@
 OpenQuote = require( './open_quote') unless OpenQuote
 
 ##
-# Правило
+# Правило AutoTimesX
 ##
-class Rule extends OpenQuote
+class AutoTimesX extends OpenQuote
   description: 'Замена x на символ × в размерных единицах'
   version:'0.0.0'
   configName:'auto_times_x'
@@ -28,9 +28,9 @@ class Rule extends OpenQuote
 
     !!m
 
-module.exports = Rule
+module.exports = AutoTimesX
 
 if typeof window isnt 'undefined'
-  App.Rules['auto_times_x'] = Rule
+  App.Rules['auto_times_x'] = AutoTimesX
 
 

@@ -2,9 +2,9 @@
 OpenQuote = require( './open_quote') unless OpenQuote
 
 ##
-# Правило
+# Правило AutospaceAfterHellips
 ##
-class Rule extends OpenQuote
+class AutospaceAfterHellips extends OpenQuote
   description: 'Пробел после знаков троеточий с вопросительным или восклицательными знаками'
   version:'0.0.0'
   configName:'autospace_after_hellips'
@@ -25,7 +25,7 @@ class Rule extends OpenQuote
 
     !!m
 
-module.exports = Rule
+module.exports = AutospaceAfterHellips
 
 if typeof window isnt 'undefined'
-  App.Rules['autospace_after_hellips'] = Rule
+  App.Rules['autospace_after_hellips'] = AutospaceAfterHellips

@@ -2,9 +2,9 @@
 OpenQuote = require( './open_quote') unless OpenQuote
 
 ##
-# Правило
+# Правило AutospaceAfterPmarks
 ##
-class Rule extends OpenQuote
+class AutospaceAfterPmarks extends OpenQuote
   description: 'Пробел после знаков пунктуации, кроме точки'
   version:'0.0.0'
   configName:'autospace_after_pmarks'
@@ -25,7 +25,7 @@ class Rule extends OpenQuote
 
     !!m
 
-module.exports = Rule
+module.exports = AutospaceAfterPmarks
 
 if typeof window isnt 'undefined'
-  App.Rules['autospace_after_pmarks'] = Rule
+  App.Rules['autospace_after_pmarks'] = AutospaceAfterPmarks
