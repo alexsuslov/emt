@@ -100,7 +100,7 @@ module.exports = (grunt)->
           'coffee'
           'codo'
           'mochaTest:spec'
-          # 'uglify'
+          'uglify'
           # 'concat'
         ]
 

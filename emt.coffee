@@ -42,7 +42,6 @@ if isClient
             Rules:  @Rules
             Lib:    @Lib
       @inited = true
-      # @apply()
       @
 
   window.EMT = App
@@ -50,4 +49,6 @@ if isClient
   $ ->
     $.fn.emt = (options)->
       App.init options, @
+      App.apply()
+
 

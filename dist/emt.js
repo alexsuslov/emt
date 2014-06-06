@@ -1,5 +1,5 @@
 (function() {
-  var Abbr, AcuteAccent, App, AutoComma, Dash, DotOnEnd, EMTLib, EmtDate, Etc, FixBrackets, FixBracketsSpace, FixExclQuestMarks, FixPmarks, Hellip, MinusBetweenNums, NbspBeforeUnit, NbspBeforeWeightUnit, NbspInTheEnd, NbspMoneyAbbr, NbspOrgAbbr, NbspTe, NoBr, NobrAbbreviation, NobrAcronym, NobrBeforeUnitVolt, NobrGost, NobrLocations, NobrSmIm, NobrVtchItdItp, Numbers, OaObracketComa, OaOquote, OpenQuote, OpenQuoteAdv, PsPps, Punctmark, PunctuationMarksBaseLimit, PunctuationMarksLimit, Quote, Rule, Space, Symbol, Text, chars_table, html4_char, isClient, module,
+  var Abbr, AcuteAccent, App, AutoComma, Dash, DotOnEnd, EMTLib, EmtDate, Etc, FixBrackets, FixBracketsSpace, FixExclQuestMarks, FixPmarks, Hellip, MinusBetweenNums, NbspBeforeUnit, NbspBeforeWeightUnit, NbspInTheEnd, NbspMoneyAbbr, NbspOrgAbbr, NbspTe, NoBr, NobrAbbreviation, NobrAcronym, NobrBeforeUnitVolt, NobrGost, NobrLocations, NobrSmIm, NobrVtchItdItp, Numbers, OaObracketComa, OaOquote, OpenQuote, OpenQuoteAdv, PlusMinus, PsPps, Punctmark, PunctuationMarksBaseLimit, PunctuationMarksLimit, Quote, Rule, Space, Symbol, Text, chars_table, html4_char, isClient, module,
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -51,7 +51,8 @@
     window.EMT = App;
     $(function() {
       return $.fn.emt = function(options) {
-        return App.init(options, this);
+        App.init(options, this);
+        return App.apply();
       };
     });
   }
@@ -4763,6 +4764,54 @@
 
   if (typeof window !== 'undefined') {
     App.Rules.Numbers = Numbers;
+  }
+
+  if (!OpenQuote) {
+    OpenQuote = require('./open_quote');
+  }
+
+
+  /*
+  Правило Акцент AcuteAccent
+   */
+
+  PlusMinus = (function(_super) {
+    __extends(PlusMinus, _super);
+
+    function PlusMinus() {
+      return PlusMinus.__super__.constructor.apply(this, arguments);
+    }
+
+    PlusMinus.prototype.description = 'Замена +/- на символ &plusmn;';
+
+    PlusMinus.prototype.version = '0.0.0';
+
+    PlusMinus.prototype.configName = 'numeric_plus_minus';
+
+    PlusMinus.prototype.replace = function() {
+      var idx, m, re, rex, _i, _len;
+      rex = [/\+\/\-/];
+      for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
+        re = rex[idx];
+        m = this.text.match(re);
+        if (m) {
+          break;
+        }
+      }
+      if (m) {
+        this.text = this.text.replace(re, "&plusmn;");
+      }
+      return !!m;
+    };
+
+    return PlusMinus;
+
+  })(OpenQuote);
+
+  module.exports = PlusMinus;
+
+  if (typeof window !== 'undefined') {
+    App.Rules['numeric_plus_minus'] = PlusMinus;
   }
 
   if (!OpenQuote) {

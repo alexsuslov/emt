@@ -42,7 +42,6 @@ if isClient
             Rules:  @Rules
             Lib:    @Lib
       @inited = true
-      # @apply()
       @
 
   window.EMT = App
@@ -50,6 +49,8 @@ if isClient
   $ ->
     $.fn.emt = (options)->
       App.init options, @
+      App.apply()
+
 
 
 chars_table =
@@ -3667,6 +3668,36 @@ module.exports = Numbers
 
 if typeof window isnt 'undefined'
   App.Rules.Numbers = Numbers
+
+# Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+###
+Правило Акцент AcuteAccent
+###
+class PlusMinus extends OpenQuote
+  description: 'Замена +/- на символ &plusmn;'
+  version:'0.0.0'
+  configName:'numeric_plus_minus'
+
+  replace:->
+    # Список правил
+    rex = [
+     /\+\/\-/
+    ]
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+      @text = @text.replace re , "&plusmn;"
+
+    !!m
+
+module.exports = PlusMinus
+
+if typeof window isnt 'undefined'
+  App.Rules['numeric_plus_minus'] = PlusMinus
 
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote

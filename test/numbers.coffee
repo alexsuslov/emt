@@ -43,6 +43,11 @@ tests = [
     text: " test^3 "
     res: " test<sup><small>3</small></sup> "
   }
+  {
+    obj: require( '../libs/rules/numeric_plus_minus')
+    text: " +/- "
+    res: " &plusmn; "
+  }
 
 
 ]
