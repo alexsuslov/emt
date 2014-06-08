@@ -43,6 +43,11 @@ tests = [
     text: ' Ccccc A.A. '
     res: " <span class='nowrap'>Ccccc A. A.</span> "
   }
+  # {
+  #   obj: require( '../libs/rules/nobr/hyphen_nowrap')
+  #   text: ' C-cccc '
+  #   res: " <span class='nowrap'>Ccccc A. A.</span> "
+  # }
 ]
 
 # for test in tests

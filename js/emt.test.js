@@ -77,7 +77,7 @@ Symbol = (function() {
     this.unTest = new UnTest({
       emt: this.emt
     });
-    this.el.append("<tr><th colspan='4'>" + this.description + "</th><tr>");
+    this.el.append("<tr><th colspan='5'>" + this.description + "</th><tr>");
     this;
   }
 
@@ -92,16 +92,16 @@ Symbol = (function() {
   };
 
   Symbol.prototype.display = function() {
-    var paint, report, _i, _len, _ref, _results;
+    var idx, paint, report, _i, _len, _ref, _results;
     _ref = this.report;
     _results = [];
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      report = _ref[_i];
+    for (idx = _i = 0, _len = _ref.length; _i < _len; idx = ++_i) {
+      report = _ref[idx];
       paint = 'success';
       if (report[2] !== 'ok') {
         paint = 'danger';
       }
-      _results.push(this.el.append($("<tr class='" + paint + "'></tr>").append("<td>" + report[0] + "</td>").append("<td>" + report[1] + "</td>").append($("<td></td>").text(report[3])).append($("<td></td>").text(report[1]))));
+      _results.push(this.el.append($("<tr class='" + paint + "'></tr>").append("<td>" + idx + "</td>").append("<td>" + report[0] + "</td>").append("<td>" + report[1] + "</td>").append($("<td></td>").text(report[3])).append($("<td></td>").text(report[1]))));
     }
     return _results;
   };

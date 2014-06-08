@@ -68,7 +68,7 @@ class Symbol
 
     @unTest = new UnTest
       emt: @emt
-    @el.append "<tr><th colspan='4'>#{@description}</th><tr>"
+    @el.append "<tr><th colspan='5'>#{@description}</th><tr>"
     @
   test:()->
     for data in @tests
@@ -76,11 +76,12 @@ class Symbol
     @report
 
   display:->
-    for report in @report
+    for report, idx in @report
       paint = 'success'
       paint = 'danger' unless report[2] is 'ok'
       @el.append(
         $("<tr class='#{paint}'></tr>")
+          .append( "<td>#{idx}</td>")
           .append( "<td>#{report[0]}</td>")
           .append( "<td>#{report[1]}</td>")
           .append( $( "<td></td>").text( report[3]))

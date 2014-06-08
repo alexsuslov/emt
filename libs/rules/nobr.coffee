@@ -28,6 +28,7 @@ class NoBr extends Quote
     "phone_builder"
     "ip_address"
     "spaces_nobr_in_surname_abbr"
+    # 'hyphen_nowrap'
     ]
 
 module.exports = NoBr

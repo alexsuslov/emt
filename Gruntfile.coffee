@@ -65,10 +65,20 @@ module.exports = (grunt)->
 
 
     uglify:
-      translate:
+      main:
         files:
           'dist/emt.min.js':[
             'dist/emt.js'
+          ]
+      test:
+        files:
+          '../emt_pages/js/emt.min.js':[
+            'dist/emt.js'
+          ]
+      test1:
+        files:
+          '../emt_pages/js/emt.test.min.js':[
+            'js/emt.test.js'
           ]
     # concat:
     #   options:

@@ -1873,6 +1873,41 @@ if typeof window isnt 'undefined'
   App.Rules['mdash_month_interval'] = Rule
 
 # Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Расстановка тире и объединение в неразрывные периоды дней'
+  version:'0.0.0'
+  configName:'nbsp_and_dash_month_interval'
+
+  replace:->
+    # Список правил
+    rex = [
+      /([^\>]|^)(\d+)(\-|\&minus\;|\&mdash\;)(\d+)( |\&nbsp\;)(января|февраля|марта|апреля|мая|июня|июля|августа|сентября|октября|ноября|декабря)([^\<]|$)/i
+    ]
+
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+
+      # 'm[1].$this->tag($m[2]."&mdash;".$m[4]." ".$m[6],"span", array("class"=>"nowrap")).$m[7]'
+
+      @text = @text.replace m[0] , "#{m[1]}&mdash;#{m[8]}"
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['nbsp_and_dash_month_interval'] = Rule
+
+# Зависимости
 OpenQuote = require( '../open_quote') unless OpenQuote
 
 ##
@@ -2118,6 +2153,40 @@ if typeof window isnt 'undefined'
 
 
 # Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Удаление nbsp в nobr/nowrap тэгах'
+  version:'0.0.0'
+  configName:'expand_no_nbsp_in_nobr'
+
+  replace:->
+    # @todo function
+    # # Список правил
+    # rex = [
+    #   /([^\d\>]|^)([\d]{1,2}\:[\d]{2})(-|\&mdash\;|\&minus\;)([\d]{1,2}\:[\d]{2})([^\d\<]|$)/i
+    # ]
+
+
+    # for re, idx in rex
+    #   m = @text.match re
+    #   break if m
+
+    # if m
+
+    #   @text = @text.replace m[0] , "#{m[1]}&#769;#{m[2]}"
+
+    # !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['expand_no_nbsp_in_nobr'] = Rule
+
+# Зависимости
 OpenQuote = require( '../open_quote') unless OpenQuote
 
 ##
@@ -2184,47 +2253,50 @@ if typeof window isnt 'undefined'
   App.Rules['word_sup'] = Rule
 
 # Зависимости
-OpenQuote = require( './open_quote') unless OpenQuote
+Quote = require( './quote') unless Quote
 
-##
-# Правило
-##
-class Rule extends OpenQuote
-  description: 'Удаление nbsp в nobr/nowrap тэгах'
+###
+## Групповой Объект правил "Сокращения"
+###
+class NoBr extends Quote
+  description: "Неразрывные конструкции"
   version:'0.0.0'
-  configName:'expand_no_nbsp_in_nobr'
-
-  replace:->
-    # @todo function
-    # # Список правил
-    # rex = [
-    #   /([^\d\>]|^)([\d]{1,2}\:[\d]{2})(-|\&mdash\;|\&minus\;)([\d]{1,2}\:[\d]{2})([^\d\<]|$)/i
-    # ]
+  configName:'NoBr'
 
 
-    # for re, idx in rex
-    #   m = @text.match re
-    #   break if m
+  config:
+    on: true
+    log: true
+    debug:true
 
-    # if m
+  # Очередь правил
+  rules:[]
 
-    #   @text = @text.replace m[0] , "#{m[1]}&#769;#{m[2]}"
+  # Порядок выполнения
+  order:[
+    "super_nbsp"
+    "nbsp_v_kak_to"
+    "nbsp_before_particle"
+    "nbsp_celcius"
+    # "nbsp_in_the_end"
+    "phone_builder"
+    "ip_address"
+    "spaces_nobr_in_surname_abbr"
+    # 'hyphen_nowrap'
+    ]
 
-    # !!m
-
-module.exports = Rule
-
+module.exports = NoBr
 if typeof window isnt 'undefined'
-  App.Rules['expand_no_nbsp_in_nobr'] = Rule
+  App.Rules.NoBr = NoBr
 
 # Зависимости
-OpenQuote = require( './open_quote') unless OpenQuote
+OpenQuote = require( '../open_quote') unless OpenQuote
 
 ##
-# Правило
+# Правило HyphenNowrap
 ##
-class Rule extends OpenQuote
-  description: 'Обрамление пятисимвольных слов разделенных дефисом в неразрывные блоки'
+class HyphenNowrap extends OpenQuote
+  description: 'Отмена переноса слова с дефисом'
   version:'0.0.0'
   configName:'hyphen_nowrap'
 
@@ -2232,7 +2304,7 @@ class Rule extends OpenQuote
 
     # Список правил
     rex = [
-      /(\&nbsp\;|\s|\>|^)([a-zа-яё]{1}\-[a-zа-яё]{4}|[a-zа-яё]{2}\-[a-zа-яё]{3}|[a-zа-яё]{3}\-[a-zа-яё]{2}|[a-zа-яё]{4}\-[a-zа-яё]{1}|когда\-то|кое\-как|кой\-кого|вс[её]\-таки|[а-яё]+\-(кась|ка|де))(\s|\.|\,|\!|\?|\&nbsp\;|\&hellip\;|$)/i
+      /iuie/
     ]
 
     for re, idx in rex
@@ -2240,15 +2312,14 @@ class Rule extends OpenQuote
       break if m
 
     if m
-      # '$m[1] . $this->tag($m[2], "span", array("class"=>"nowrap")) . $m[4]'
-      @text = @text.replace m[0] , "#{m[1]}#{m[2]}&nbsp;#{m[4]}C#{m[6]}"
+      @text = @text.replace m[0] , m[1] + @ntag( m[2] + m[3], "span", class:"nowrap") + m[6]
 
     !!m
 
-module.exports = Rule
+module.exports = HyphenNowrap
 
 if typeof window isnt 'undefined'
-  App.Rules['hyphen_nowrap'] = Rule
+  App.Rules['hyphen_nowrap'] = HyphenNowrap
 
 # Зависимости
 OpenQuote = require( './open_quote') unless OpenQuote
@@ -2282,109 +2353,6 @@ module.exports = Rule
 
 if typeof window isnt 'undefined'
   App.Rules['nbsp_celcius'] = Rule
-
-# Зависимости
-OpenQuote = require( './open_quote') unless OpenQuote
-
-##
-# Правило
-##
-class Rule extends OpenQuote
-  description: 'Расстановка тире и объединение в неразрывные периоды дней'
-  version:'0.0.0'
-  configName:'nbsp_and_dash_month_interval'
-
-  replace:->
-    # Список правил
-    rex = [
-      /([^\>]|^)(\d+)(\-|\&minus\;|\&mdash\;)(\d+)( |\&nbsp\;)(января|февраля|марта|апреля|мая|июня|июля|августа|сентября|октября|ноября|декабря)([^\<]|$)/i
-    ]
-
-
-    for re, idx in rex
-      m = @text.match re
-      break if m
-
-    if m
-
-      # 'm[1].$this->tag($m[2]."&mdash;".$m[4]." ".$m[6],"span", array("class"=>"nowrap")).$m[7]'
-
-      @text = @text.replace m[0] , "#{m[1]}&mdash;#{m[8]}"
-
-    !!m
-
-module.exports = Rule
-
-if typeof window isnt 'undefined'
-  App.Rules['nbsp_and_dash_month_interval'] = Rule
-
-# Зависимости
-OpenQuote = require( './open_quote') unless OpenQuote
-
-##
-# Правило
-##
-class Rule extends OpenQuote
-  description: 'Отсутствие пробела после троеточия после открывающей кавычки'
-  version:'0.0.0'
-  configName:'no_space_posle_hellip'
-
-  replace:->
-
-    # Список правил
-    rex = [
-      /(\&laquo\;|\&bdquo\;)(\s|\&nbsp\;)?\&hellip\;(\s|\&nbsp\;)?([a-zа-яё])/i
-    ]
-
-    for re, idx in rex
-      m = @text.match re
-      break if m
-
-    if m
-      @text = @text.replace m[1] ,  "#{m[1]}&hellip;#{m[4]}"
-
-    !!m
-
-module.exports = Rule
-
-if typeof window isnt 'undefined'
-  App.Rules['no_space_posle_hellip'] = Rule
-
-# Зависимости
-Quote = require( './quote') unless Quote
-
-###
-## Групповой Объект правил "Сокращения"
-###
-class NoBr extends Quote
-  description: "Неразрывные конструкции"
-  version:'0.0.0'
-  configName:'NoBr'
-
-
-  config:
-    on: true
-    log: true
-    debug:true
-
-  # Очередь правил
-  rules:[]
-
-  # Порядок выполнения
-  order:[
-    "super_nbsp"
-    "nbsp_v_kak_to"
-    "nbsp_before_particle"
-    "nbsp_celcius"
-    # "nbsp_in_the_end"
-    "phone_builder"
-    "ip_address"
-    "spaces_nobr_in_surname_abbr"
-    ]
-
-module.exports = NoBr
-if typeof window isnt 'undefined'
-  App.Rules.NoBr = NoBr
 
 # Зависимости
 OpenQuote = require( '../open_quote') unless OpenQuote
@@ -4136,6 +4104,38 @@ if typeof window isnt 'undefined'
   App.Rules['nbsp_before_open_quote'] = Rule
 
 # Зависимости
+OpenQuote = require( './open_quote') unless OpenQuote
+
+##
+# Правило
+##
+class Rule extends OpenQuote
+  description: 'Отсутствие пробела после троеточия после открывающей кавычки'
+  version:'0.0.0'
+  configName:'no_space_posle_hellip'
+
+  replace:->
+
+    # Список правил
+    rex = [
+      /(\&laquo\;|\&bdquo\;)(\s|\&nbsp\;)?\&hellip\;(\s|\&nbsp\;)?([a-zа-яё])/i
+    ]
+
+    for re, idx in rex
+      m = @text.match re
+      break if m
+
+    if m
+      @text = @text.replace m[1] ,  "#{m[1]}&hellip;#{m[4]}"
+
+    !!m
+
+module.exports = Rule
+
+if typeof window isnt 'undefined'
+  App.Rules['no_space_posle_hellip'] = Rule
+
+# Зависимости
 OpenQuote = require( '../open_quote') unless OpenQuote
 
 ##
@@ -4307,7 +4307,7 @@ OpenQuote = require( '../open_quote') unless OpenQuote
 ##
 # Правило
 ##
-class Rule extends OpenQuote
+class ArrowsSymbols extends OpenQuote
   description: 'Замена стрелок вправо-влево на html коды'
   version:'0.0.0'
   configName:'arrows_symbols'
@@ -4326,7 +4326,7 @@ class Rule extends OpenQuote
         "#{m[1]}&rarr;#{m[2]}"
     ,
       (m)->
-        "#{m[1]}&rarr;#{m[2]}"
+        "#{m[1]}&larr;#{m[2]}"
     ,
       (m)->
         '&rarr;'
@@ -4344,10 +4344,10 @@ class Rule extends OpenQuote
 
     !!m
 
-module.exports = Rule
+module.exports = ArrowsSymbols
 
 if typeof window isnt 'undefined'
-  App.Rules['arrows_symbols'] = Rule
+  App.Rules['arrows_symbols'] = ArrowsSymbols
 
 # Зависимости
 OpenQuote = require( '../open_quote') unless OpenQuote

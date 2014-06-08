@@ -4,7 +4,7 @@ OpenQuote = require( '../open_quote') unless OpenQuote
 ##
 # Правило
 ##
-class Rule extends OpenQuote
+class ArrowsSymbols extends OpenQuote
   description: 'Замена стрелок вправо-влево на html коды'
   version:'0.0.0'
   configName:'arrows_symbols'
@@ -23,7 +23,7 @@ class Rule extends OpenQuote
         "#{m[1]}&rarr;#{m[2]}"
     ,
       (m)->
-        "#{m[1]}&rarr;#{m[2]}"
+        "#{m[1]}&larr;#{m[2]}"
     ,
       (m)->
         '&rarr;'
@@ -41,7 +41,7 @@ class Rule extends OpenQuote
 
     !!m
 
-module.exports = Rule
+module.exports = ArrowsSymbols
 
 if typeof window isnt 'undefined'
-  App.Rules['arrows_symbols'] = Rule
+  App.Rules['arrows_symbols'] = ArrowsSymbols

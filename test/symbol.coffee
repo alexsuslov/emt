@@ -36,7 +36,7 @@ tests = [
   {
     obj: require( '../libs/rules/symbol/arrows_symbols')
     text: " <- -> → ←"
-    res: " &rarr; &rarr; &rarr; &larr;"
+    res: " &larr; &rarr; &rarr; &larr;"
   }
   {
     obj: require( '../libs/rules/symbol/plus_minus')
