@@ -11,10 +11,11 @@ class NbspBeforeUnit extends OpenQuote
   replace:->
     # Список правил
     rex = [
-      /(\s|^|\>|\&nbsp\;|\,)(\d+)(\s)?(м|мм|см|дм|км|гм|km|dm|cm|mm)(\s|\.|\!|\?|\,|$|\&plusmn\;|\;)/i
-      /(\s|^|\>|\&nbsp\;|\,)(\d+)(\s)?(м|мм|см|дм|км|гм|km|dm|cm|mm)([32]|&sup3;|&sup2;)(\s|\.|\!|\?|\,|$|\&plusmn\;|\;)/i
+      new RegExp @re.prefix + /(\d+)(\s)?/.source + @re.ed + @re.sufix, 'i'
+      new RegExp @re.prefix + /(\d+)(\s)?/.source +
+      @re.ed + /([32]|&sup3;|&sup2;)/.source + @re.sufix , 'i'
     ]
-
+    # console.log rex[1]
     strs = [
       (m)->
         m[1] + m[2] + '&nbsp;' + m[4] + m[5]

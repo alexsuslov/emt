@@ -9,6 +9,7 @@ class Rule extends OpenQuote
   version:'0.0.0'
   configName:'apostrophe'
 
+
   replace:->
 
     # Список правил

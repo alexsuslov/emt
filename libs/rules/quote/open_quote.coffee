@@ -8,6 +8,7 @@ class OpenQuote
   description: "Открывающая кавычка"
   version:'0.0.0'
   configName:'open_quote'
+
   text:''
   config:
     on: on
@@ -75,6 +76,17 @@ class OpenQuote
     return unless @config.on
     @multiply()
 
+  re:
+    # ^ ( \s > - ,
+    prefix: /(^|\(|\s|\>|-|\&nbsp\;|\,)/.source
+    # ! ? ; , . &plusmn; \s <
+    sufix: /(\!|\?|\;|\,|\.|\&plusmn\;|\s|\<|$)/.source
+    # единицы длинны площади объема
+    ed: /(м|мм|см|дм|км|гм|km|dm|cm|mm)/.source
+    # единицы массы
+    wed: /(г|кг|мг|т)/.source
+
+
   # Правило для строки
   # функция не должна править строку так чтобы повторно срабатывать
   # @return false если правило не сработало
@@ -82,7 +94,7 @@ class OpenQuote
     self = @
 
     # Правило
-    re = /(^|\(|\s|\>|-)(\"|\\\")(\S+)/i
+    re = new RegExp @re.prefix + /(\"|\\\")(\S+)/.source, 'i'
     m = @text.match re
     if m
       str = m[1] + @Lib.QUOTE_FIRS_OPEN + m[3]

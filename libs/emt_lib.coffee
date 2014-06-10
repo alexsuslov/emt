@@ -70,6 +70,9 @@ class EMTLib
   encrypt_tag: (text)->
     new Buffer(text).toString('base64') + '='
 
+  reEscape: (str)->
+    str.replace(/([\s_"'<>.*+?^=!:${}()|\[\]\/\\])/g, "\\$1")
+
 
   ###
     Сохраняем содержимое тегов HTML

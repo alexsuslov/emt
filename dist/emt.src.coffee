@@ -481,6 +481,9 @@ class EMTLib
   encrypt_tag: (text)->
     new Buffer(text).toString('base64') + '='
 
+  reEscape: (str)->
+    str.replace(/([\s_"'<>.*+?^=!:${}()|\[\]\/\\])/g, "\\$1")
+
 
   ###
     Сохраняем содержимое тегов HTML
@@ -717,6 +720,7 @@ class OpenQuote
   description: "Открывающая кавычка"
   version:'0.0.0'
   configName:'open_quote'
+
   text:''
   config:
     on: on
@@ -784,6 +788,17 @@ class OpenQuote
     return unless @config.on
     @multiply()
 
+  re:
+    # ^ ( \s > - ,
+    prefix: /(^|\(|\s|\>|-|\&nbsp\;|\,)/.source
+    # ! ? ; , . &plusmn; \s <
+    sufix: /(\!|\?|\;|\,|\.|\&plusmn\;|\s|\<|$)/.source
+    # единицы длинны площади объема
+    ed: /(м|мм|см|дм|км|гм|km|dm|cm|mm)/.source
+    # единицы массы
+    wed: /(г|кг|мг|т)/.source
+
+
   # Правило для строки
   # функция не должна править строку так чтобы повторно срабатывать
   # @return false если правило не сработало
@@ -791,7 +806,7 @@ class OpenQuote
     self = @
 
     # Правило
-    re = /(^|\(|\s|\>|-)(\"|\\\")(\S+)/i
+    re = new RegExp @re.prefix + /(\"|\\\")(\S+)/.source, 'i'
     m = @text.match re
     if m
       str = m[1] + @Lib.QUOTE_FIRS_OPEN + m[3]
@@ -980,10 +995,11 @@ class NbspBeforeUnit extends OpenQuote
   replace:->
     # Список правил
     rex = [
-      /(\s|^|\>|\&nbsp\;|\,)(\d+)(\s)?(м|мм|см|дм|км|гм|km|dm|cm|mm)(\s|\.|\!|\?|\,|$|\&plusmn\;|\;)/i
-      /(\s|^|\>|\&nbsp\;|\,)(\d+)(\s)?(м|мм|см|дм|км|гм|km|dm|cm|mm)([32]|&sup3;|&sup2;)(\s|\.|\!|\?|\,|$|\&plusmn\;|\;)/i
+      new RegExp @re.prefix + /(\d+)(\s)?/.source + @re.ed + @re.sufix, 'i'
+      new RegExp @re.prefix + /(\d+)(\s)?/.source +
+      @re.ed + /([32]|&sup3;|&sup2;)/.source + @re.sufix , 'i'
     ]
-
+    # console.log rex[1]
     strs = [
       (m)->
         m[1] + m[2] + '&nbsp;' + m[4] + m[5]
@@ -1025,7 +1041,7 @@ class NbspBeforeWeightUnit extends OpenQuote
   replace:->
     # Список правил
     rex = [
-      /(\s|^|\>|\&nbsp\;|\,)(\d+)(\s)?(г|кг|мг|т)(\s|\.|\!|\?|\,|$|\&nbsp\;|\;)/i
+      new RegExp @re.prefix + /(\d+)(\s)?/.source + @re.wed + @re.sufix , 'i'
     ]
 
     for re, idx in rex
@@ -3144,6 +3160,7 @@ class OpenQuote
   description: "Открывающая кавычка"
   version:'0.0.0'
   configName:'open_quote'
+
   text:''
   config:
     on: on
@@ -3211,6 +3228,17 @@ class OpenQuote
     return unless @config.on
     @multiply()
 
+  re:
+    # ^ ( \s > - ,
+    prefix: /(^|\(|\s|\>|-|\&nbsp\;|\,)/.source
+    # ! ? ; , . &plusmn; \s <
+    sufix: /(\!|\?|\;|\,|\.|\&plusmn\;|\s|\<|$)/.source
+    # единицы длинны площади объема
+    ed: /(м|мм|см|дм|км|гм|km|dm|cm|mm)/.source
+    # единицы массы
+    wed: /(г|кг|мг|т)/.source
+
+
   # Правило для строки
   # функция не должна править строку так чтобы повторно срабатывать
   # @return false если правило не сработало
@@ -3218,7 +3246,7 @@ class OpenQuote
     self = @
 
     # Правило
-    re = /(^|\(|\s|\>|-)(\"|\\\")(\S+)/i
+    re = new RegExp @re.prefix + /(\"|\\\")(\S+)/.source, 'i'
     m = @text.match re
     if m
       str = m[1] + @Lib.QUOTE_FIRS_OPEN + m[3]
@@ -4279,6 +4307,7 @@ class Rule extends OpenQuote
   description: 'Расстановка правильного апострофа в текстах'
   version:'0.0.0'
   configName:'apostrophe'
+
 
   replace:->
 

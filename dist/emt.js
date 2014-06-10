@@ -538,6 +538,10 @@
       return new Buffer(text).toString('base64') + '=';
     };
 
+    EMTLib.prototype.reEscape = function(str) {
+      return str.replace(/([\s_"'<>.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+    };
+
 
     /*
       Сохраняем содержимое тегов HTML
@@ -952,10 +956,17 @@
       return this.multiply();
     };
 
+    OpenQuote.prototype.re = {
+      prefix: /(^|\(|\s|\>|-|\&nbsp\;|\,)/.source,
+      sufix: /(\!|\?|\;|\,|\.|\&plusmn\;|\s|\<|$)/.source,
+      ed: /(м|мм|см|дм|км|гм|km|dm|cm|mm)/.source,
+      wed: /(г|кг|мг|т)/.source
+    };
+
     OpenQuote.prototype.replace = function() {
       var m, re, self, str;
       self = this;
-      re = /(^|\(|\s|\>|-)(\"|\\\")(\S+)/i;
+      re = new RegExp(this.re.prefix + /(\"|\\\")(\S+)/.source, 'i');
       m = this.text.match(re);
       if (m) {
         str = m[1] + this.Lib.QUOTE_FIRS_OPEN + m[3];
@@ -1204,7 +1215,7 @@
 
     NbspBeforeUnit.prototype.replace = function() {
       var idx, m, re, rex, strs, _i, _len;
-      rex = [/(\s|^|\>|\&nbsp\;|\,)(\d+)(\s)?(м|мм|см|дм|км|гм|km|dm|cm|mm)(\s|\.|\!|\?|\,|$|\&plusmn\;|\;)/i, /(\s|^|\>|\&nbsp\;|\,)(\d+)(\s)?(м|мм|см|дм|км|гм|km|dm|cm|mm)([32]|&sup3;|&sup2;)(\s|\.|\!|\?|\,|$|\&plusmn\;|\;)/i];
+      rex = [new RegExp(this.re.prefix + /(\d+)(\s)?/.source + this.re.ed + this.re.sufix, 'i'), new RegExp(this.re.prefix + /(\d+)(\s)?/.source + this.re.ed + /([32]|&sup3;|&sup2;)/.source + this.re.sufix, 'i')];
       strs = [
         function(m) {
           return m[1] + m[2] + '&nbsp;' + m[4] + m[5];
@@ -1266,7 +1277,7 @@
 
     NbspBeforeWeightUnit.prototype.replace = function() {
       var idx, m, re, rex, _i, _len;
-      rex = [/(\s|^|\>|\&nbsp\;|\,)(\d+)(\s)?(г|кг|мг|т)(\s|\.|\!|\?|\,|$|\&nbsp\;|\;)/i];
+      rex = [new RegExp(this.re.prefix + /(\d+)(\s)?/.source + this.re.wed + this.re.sufix, 'i')];
       for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
         re = rex[idx];
         m = this.text.match(re);
@@ -4189,10 +4200,17 @@
       return this.multiply();
     };
 
+    OpenQuote.prototype.re = {
+      prefix: /(^|\(|\s|\>|-|\&nbsp\;|\,)/.source,
+      sufix: /(\!|\?|\;|\,|\.|\&plusmn\;|\s|\<|$)/.source,
+      ed: /(м|мм|см|дм|км|гм|km|dm|cm|mm)/.source,
+      wed: /(г|кг|мг|т)/.source
+    };
+
     OpenQuote.prototype.replace = function() {
       var m, re, self, str;
       self = this;
-      re = /(^|\(|\s|\>|-)(\"|\\\")(\S+)/i;
+      re = new RegExp(this.re.prefix + /(\"|\\\")(\S+)/.source, 'i');
       m = this.text.match(re);
       if (m) {
         str = m[1] + this.Lib.QUOTE_FIRS_OPEN + m[3];

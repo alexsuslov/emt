@@ -12,7 +12,7 @@ class NbspBeforeWeightUnit extends OpenQuote
   replace:->
     # Список правил
     rex = [
-      /(\s|^|\>|\&nbsp\;|\,)(\d+)(\s)?(г|кг|мг|т)(\s|\.|\!|\?|\,|$|\&nbsp\;|\;)/i
+      new RegExp @re.prefix + /(\d+)(\s)?/.source + @re.wed + @re.sufix , 'i'
     ]
 
     for re, idx in rex
