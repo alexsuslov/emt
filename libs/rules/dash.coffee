@@ -9,12 +9,6 @@ class Dash extends Quote
   version:'0.0.0'
   configName:'Dash'
 
-
-  config:
-    on: true
-    log: true
-    debug:true
-
   # Очередь правил
   rules:[]
 

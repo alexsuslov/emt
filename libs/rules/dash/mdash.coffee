@@ -19,11 +19,8 @@ class Rule extends OpenQuote
     m = @text.match re
     if m
       # Замена
-      @text = @text.replace re , (str)->
-        self.debug str
-        self.debug m
+      @text = @text.replace re , m[1] + '&nbsp;&mdash;' + m[5]
 
-        m[1] + '&nbsp;&mdash;' + m[5]
     !!m
 
 module.exports = Rule

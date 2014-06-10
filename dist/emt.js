@@ -19,6 +19,12 @@
 
       Emt.prototype.order = ['Abbr', 'Symbol', 'Quote', 'Numbers', 'Dash', 'EmtDate', 'Etc', 'NoBr', 'Text', 'Space', 'Punctmark'];
 
+      Emt.prototype.config = {
+        on: true,
+        log: false,
+        debug: false
+      };
+
       Emt.prototype.tipo = function(text) {
         this.text = text;
         return this.simple(this.text);
@@ -48,18 +54,22 @@
       };
 
       function Emt(opt, el) {
-        var ruleName, _i, _len, _ref;
+        var ruleName, _i, _len, _ref, _ref1;
         this.opt = opt;
         this.el = el;
+        if ((_ref = this.opt) != null ? _ref.config : void 0) {
+          this.config = this.opt.config;
+        }
         this.Rules = App.Rules;
         this.Lib = App.Lib;
-        _ref = this.order;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          ruleName = _ref[_i];
+        _ref1 = this.order;
+        for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+          ruleName = _ref1[_i];
           if (this.Rules[ruleName]) {
             this.rules.push(new this.Rules[ruleName]({
               Rules: this.Rules,
-              Lib: this.Lib
+              Lib: this.Lib,
+              config: this.config
             }));
           }
         }
@@ -887,8 +897,6 @@
       }
       if (this.opt.Lib) {
         this.Lib = this.opt.Lib;
-      } else {
-        this.logger('error', 'No lib');
       }
       if (this.opt.text) {
         this.text = this.opt.text;
@@ -896,56 +904,14 @@
       this;
     }
 
-
-    /*
-    Логер
-    @param level[string] error|warning|info| debug
-    @param message[string] сообщение
-    @param obj[obj] object ошибки
-     */
-
-    OpenQuote.prototype.logger = function(level, message, obj) {
-      if (!this.config.log) {
-        return;
-      }
-      if (level === 'error') {
-        throw new Error(message);
-      }
-      if (level === 'warning' || level === 'info') {
-        console.log(new Date(+(" " + level + ": " + message)));
-      }
-      if (level === 'debug') {
-        console.log("" + level + ": " + message, obj);
-      }
-      return this;
-    };
-
-
-    /*
-    Debug
-    @param level[string] error|warning|info
-    @param message[string] сообщение
-    @param obj[obj] object ошибки
-     */
-
-    OpenQuote.prototype.debug = function(obj) {
-      if (!this.config.debug) {
-        return;
-      }
-      this.logger('debug', this.configName, obj);
-      return this;
-    };
-
     OpenQuote.prototype.multiply = function() {
-      var start;
-      start = new Date().getTime();
       while (this.replace()) {
         this.used += 1;
         if (this.used > 4096) {
+          console.log('error бесконечный цикл');
           break;
         }
       }
-      this.profiling = new Date().getTime() - start;
       return this;
     };
 
@@ -1135,7 +1101,8 @@
         ruleName = _ref1[_i];
         if (this.Rules[ruleName]) {
           this.rules.push(new this.Rules[ruleName]({
-            Lib: this.Lib
+            Lib: this.Lib,
+            config: this.config ? this.config : void 0
           }));
         }
       }
@@ -1189,12 +1156,6 @@
     Abbr.prototype.version = '0.0.0';
 
     Abbr.prototype.configName = 'abbr';
-
-    Abbr.prototype.config = {
-      on: true,
-      log: true,
-      debug: true
-    };
 
     Abbr.prototype.rules = [];
 
@@ -1979,12 +1940,6 @@
 
     Dash.prototype.configName = 'Dash';
 
-    Dash.prototype.config = {
-      on: true,
-      log: true,
-      debug: true
-    };
-
     Dash.prototype.rules = [];
 
     Dash.prototype.order = ["mdash_2_html", "mdash", "mdash2", "mdash3", "iz_za_pod", "to_libo_nibud", "koe_kak", "ka_de_kas"];
@@ -2024,8 +1979,6 @@
       if (m) {
         this.text = this.text.replace(re, function(str) {
           var reStr;
-          self.debug(str);
-          self.debug(m);
           reStr = '';
           if (m[1] !== "&nbsp;") {
             reStr += m[1];
@@ -2179,11 +2132,7 @@
       re = /([a-zа-яё0-9]+|\,|\:|\)|\&(ra|ld)quo\;|\|\"|\>)(\040|\t)(—|\-|\&mdash\;)(\s|$|\<)/;
       m = this.text.match(re);
       if (m) {
-        this.text = this.text.replace(re, function(str) {
-          self.debug(str);
-          self.debug(m);
-          return m[1] + '&nbsp;&mdash;' + m[5];
-        });
+        this.text = this.text.replace(re, m[1] + '&nbsp;&mdash;' + m[5]);
       }
       return !!m;
     };
@@ -2221,11 +2170,7 @@
       re = /(\n|\r|^|\>)(\-|\&mdash\;)(\t|\040)/;
       m = this.text.match(re);
       if (m) {
-        this.text = this.text.replace(re, function(str) {
-          self.debug(str);
-          self.debug(m);
-          return m[1] + '&nbsp;&mdash;';
-        });
+        this.text = this.text.replace(re, m[1] + '&nbsp;&mdash;');
       }
       return !!m;
     };
@@ -2263,11 +2208,7 @@
       re = /(\.|\!|\?|\&hellip\;)(\040|\t|\&nbsp\;)(\-|\&mdash\;)(\040|\t|\&nbsp\;)/;
       m = this.text.match(re);
       if (m) {
-        this.text = this.text.replace(re, function(str) {
-          self.debug(str);
-          self.debug(m);
-          return m[1] + '&nbsp;&mdash;';
-        });
+        this.text = this.text.replace(re, m[1] + '&nbsp;&mdash;');
       }
       return !!m;
     };
@@ -2344,24 +2285,20 @@
     Rule.prototype.configName = 'to_libo_nibud';
 
     Rule.prototype.replace = function() {
-      var m, re, self;
+      var m, re, reStr, self;
       self = this;
       re = /(\s|^|\&nbsp\;|\>)(кто|кем|когда|зачем|почему|как|что|чем|где|чего|кого)\-?(\040|\t|\&nbsp\;)\-?(то|либо|нибудь)([\.\,\!\?\;]|\040|\&nbsp\;|$)/i;
       m = this.text.match(re);
       if (m) {
-        this.text = this.text.replace(re, function(str) {
-          var reStr;
-          self.debug(str);
-          self.debug(m);
-          reStr = '';
-          if (m[1] !== "&nbsp;") {
-            reStr += m[1];
-          }
-          reStr += "" + m[2] + "-" + m[4];
-          if (m[5] !== "&nbsp;") {
-            return reStr += m[5];
-          }
-        });
+        reStr = '';
+        if (m[1] !== "&nbsp;") {
+          reStr += m[1];
+        }
+        reStr += "" + m[2] + "-" + m[4];
+        if (m[5] !== "&nbsp;") {
+          reStr += m[5];
+        }
+        this.text = this.text.replace(re, reStr);
       }
       return !!m;
     };
@@ -2397,12 +2334,6 @@
     EmtDate.prototype.version = '0.0.0';
 
     EmtDate.prototype.configName = 'EmtDate';
-
-    EmtDate.prototype.config = {
-      on: true,
-      log: true,
-      debug: true
-    };
 
     EmtDate.prototype.rules = [];
 
@@ -2729,12 +2660,6 @@
 
     Etc.prototype.configName = 'Etc';
 
-    Etc.prototype.config = {
-      on: true,
-      log: true,
-      debug: true
-    };
-
     Etc.prototype.rules = [];
 
     Etc.prototype.order = ['acute_accent', 'word_sup', 'century_period', 'time_interval'];
@@ -2983,12 +2908,6 @@
     NoBr.prototype.version = '0.0.0';
 
     NoBr.prototype.configName = 'NoBr';
-
-    NoBr.prototype.config = {
-      on: true,
-      log: true,
-      debug: true
-    };
 
     NoBr.prototype.rules = [];
 
@@ -3495,12 +3414,6 @@
     Numbers.prototype.version = '0.0.0';
 
     Numbers.prototype.configName = 'Numbers';
-
-    Numbers.prototype.config = {
-      on: true,
-      log: true,
-      debug: true
-    };
 
     Numbers.prototype.rules = [];
 
@@ -4150,8 +4063,6 @@
       }
       if (this.opt.Lib) {
         this.Lib = this.opt.Lib;
-      } else {
-        this.logger('error', 'No lib');
       }
       if (this.opt.text) {
         this.text = this.opt.text;
@@ -4159,56 +4070,14 @@
       this;
     }
 
-
-    /*
-    Логер
-    @param level[string] error|warning|info| debug
-    @param message[string] сообщение
-    @param obj[obj] object ошибки
-     */
-
-    OpenQuote.prototype.logger = function(level, message, obj) {
-      if (!this.config.log) {
-        return;
-      }
-      if (level === 'error') {
-        throw new Error(message);
-      }
-      if (level === 'warning' || level === 'info') {
-        console.log(new Date(+(" " + level + ": " + message)));
-      }
-      if (level === 'debug') {
-        console.log("" + level + ": " + message, obj);
-      }
-      return this;
-    };
-
-
-    /*
-    Debug
-    @param level[string] error|warning|info
-    @param message[string] сообщение
-    @param obj[obj] object ошибки
-     */
-
-    OpenQuote.prototype.debug = function(obj) {
-      if (!this.config.debug) {
-        return;
-      }
-      this.logger('debug', this.configName, obj);
-      return this;
-    };
-
     OpenQuote.prototype.multiply = function() {
-      var start;
-      start = new Date().getTime();
       while (this.replace()) {
         this.used += 1;
         if (this.used > 4096) {
+          console.log('error бесконечный цикл');
           break;
         }
       }
-      this.profiling = new Date().getTime() - start;
       return this;
     };
 
@@ -4362,12 +4231,6 @@
     Punctmark.prototype.version = '0.0.0';
 
     Punctmark.prototype.configName = 'Punctmark';
-
-    Punctmark.prototype.config = {
-      on: true,
-      log: true,
-      debug: true
-    };
 
     Punctmark.prototype.rules = [];
 
@@ -4870,11 +4733,7 @@
       re = /([a-zа-яё0-9]|\.|\&hellip\;|\!|\?|\>|\)|\:)(\"+)(\.|\&hellip\;|\;|\:|\?|\!|\,|\s|\)|\<\/|$)/i;
       m = this.text.match(re);
       if (m) {
-        this.text = this.text.replace(re, function(str) {
-          self.debug(str);
-          self.debug(m);
-          return m[1] + self.Lib.QUOTE_FIRS_CLOSE + m[3];
-        });
+        this.text = this.text.replace(re, m[1] + self.Lib.QUOTE_FIRS_CLOSE + m[3]);
       }
       return !!m;
     };
@@ -5065,12 +4924,6 @@
     Space.prototype.version = '0.0.0';
 
     Space.prototype.configName = 'Space';
-
-    Space.prototype.config = {
-      on: true,
-      log: true,
-      debug: true
-    };
 
     Space.prototype.rules = [];
 
@@ -5641,12 +5494,6 @@
 
     Symbol.prototype.configName = 'Symbol';
 
-    Symbol.prototype.config = {
-      on: true,
-      log: true,
-      debug: true
-    };
-
     Symbol.prototype.rules = [];
 
     Symbol.prototype.order = ["tm_replace", "r_sign_replace", "copy_replace", "apostrophe", "degree_f", "euro_symbol", "arrows_symbols", "plus_minus"];
@@ -6061,12 +5908,6 @@
     Text.prototype.version = '0.0.0';
 
     Text.prototype.configName = 'text';
-
-    Text.prototype.config = {
-      on: true,
-      log: true,
-      debug: true
-    };
 
     Text.prototype.rules = [];
 

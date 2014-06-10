@@ -9,12 +9,6 @@ class Numbers extends Quote
   version:'0.0.0'
   configName:'Numbers'
 
-
-  config:
-    on: true
-    log: true
-    debug:true
-
   # Очередь правил
   rules:[]
 

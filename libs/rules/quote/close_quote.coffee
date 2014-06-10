@@ -18,11 +18,7 @@ class CloseQuote extends OpenQuote
     m = @text.match re
     if m
       # Замена
-      @text = @text.replace re , (str)->
-        self.debug str
-        self.debug m
-
-        m[1] + self.Lib.QUOTE_FIRS_CLOSE + m[3]
+      @text = @text.replace re , m[1] + self.Lib.QUOTE_FIRS_CLOSE + m[3]
 
     !!m
 

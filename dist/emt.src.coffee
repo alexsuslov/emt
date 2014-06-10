@@ -24,6 +24,11 @@ if isClient
       'Space'
       'Punctmark'
     ]
+    # Конфиг для теста
+    config:
+      on:     on
+      log:    off
+      debug:  off
 
     tipo:(@text)->
       @simple @text
@@ -42,6 +47,7 @@ if isClient
       @
 
     constructor:(@opt, @el)->
+      @config = @opt.config if @opt?.config
       @Rules = App.Rules
       @Lib = App.Lib
       # Добавляю правила в очередь
@@ -50,6 +56,7 @@ if isClient
           @rules.push new @Rules[ruleName]
             Rules:  @Rules
             Lib:    @Lib
+            config: @config
       @inited = true
       @
 
@@ -723,9 +730,9 @@ class OpenQuote
 
   text:''
   config:
-    on: on
+    on: true
     log: off
-    debug: off
+    debug:off
 
   ###
   Конструктор
@@ -735,52 +742,19 @@ class OpenQuote
   ###
   constructor:(@opt)->
     @config = @opt.config[@configName] if @opt.config?[@configName]
-    if @opt.Lib
-      @Lib = @opt.Lib
-    else
-      @logger 'error', 'No lib'
-
+    @Lib = @opt.Lib if @opt.Lib
     @text = @opt.text if @opt.text
-    @
-
-
-  ###
-  Логер
-  @param level[string] error|warning|info| debug
-  @param message[string] сообщение
-  @param obj[obj] object ошибки
-  ###
-  logger:(level, message, obj)->
-    return unless  @config.log
-
-    throw new Error message if level is 'error'
-
-    if level in ['warning','info']
-      console.log new Date +" #{level}: #{message}"
-
-    console.log "#{level}: #{message}", obj if level is 'debug'
-    @
-
-  ###
-  Debug
-  @param level[string] error|warning|info
-  @param message[string] сообщение
-  @param obj[obj] object ошибки
-  ###
-  debug:(obj)->
-    return unless  @config.debug
-    @logger 'debug', @configName, obj
     @
 
   # Цикл применения правила
   # сохраняет время работы в @profiling
   multiply:()->
-    start = new Date().getTime()
     while @replace()
       @used += 1
       # защита от бесконечного цикла
-      break if @used > 4096
-    @profiling = new Date().getTime() - start
+      if @used > 4096
+        console.log 'error бесконечный цикл'
+        break
     @
 
   # Применение правила для text
@@ -942,12 +916,12 @@ class Quote
       console.log  'error', 'No lib'
 
     @text = @opt.text if @opt.text
-
     # Добавляю правила в очередь
     for ruleName in @order
       if @Rules[ruleName]
         @rules.push new @Rules[ruleName]
           Lib: @Lib
+          config:@config if @config
     @
 
 
@@ -974,12 +948,6 @@ class Abbr extends Quote
   description: "Сокращения"
   version:'0.0.0'
   configName:'abbr'
-
-
-  config:
-    on: true
-    log: true
-    debug:true
 
   # Очередь правил
   rules:[]
@@ -1538,12 +1506,6 @@ class Dash extends Quote
   version:'0.0.0'
   configName:'Dash'
 
-
-  config:
-    on: true
-    log: true
-    debug:true
-
   # Очередь правил
   rules:[]
 
@@ -1585,9 +1547,6 @@ class Rule extends OpenQuote
     if m
       # Замена
       @text = @text.replace re , (str)->
-        self.debug str
-
-        self.debug m
         reStr = ''
         reStr += m[1] unless m[1] is "&nbsp;"
         reStr += "#{m[2]}-#{m[4]}"
@@ -1705,11 +1664,7 @@ class Rule extends OpenQuote
     m = @text.match re
     if m
       # Замена
-      @text = @text.replace re , (str)->
-        self.debug str
-        self.debug m
-
-        m[1] + '&nbsp;&mdash;' + m[5]
+      @text = @text.replace re , m[1] + '&nbsp;&mdash;' + m[5]
     !!m
 
 module.exports = Rule
@@ -1737,11 +1692,10 @@ class Rule extends OpenQuote
     m = @text.match re
     if m
       # Замена
-      @text = @text.replace re , (str)->
-        self.debug str
-        self.debug m
+      @text = @text.replace re , m[1] + '&nbsp;&mdash;'
 
-        m[1] + '&nbsp;&mdash;'
+
+
 
     !!m
 
@@ -1770,11 +1724,7 @@ class Rule extends OpenQuote
     m = @text.match re
     if m
       # Замена
-      @text = @text.replace re , (str)->
-        self.debug str
-        self.debug m
-
-        m[1] + '&nbsp;&mdash;'
+      @text = @text.replace re , m[1] + '&nbsp;&mdash;'
 
     !!m
 
@@ -1831,14 +1781,13 @@ class Rule extends OpenQuote
     m = @text.match re
     if m
       # Замена
-      @text = @text.replace re , (str)->
-        self.debug str
+      reStr = ''
+      reStr += m[1] unless m[1] is "&nbsp;"
+      reStr += "#{m[2]}-#{m[4]}"
+      reStr += m[5] unless m[5] is "&nbsp;"
 
-        self.debug m
-        reStr = ''
-        reStr += m[1] unless m[1] is "&nbsp;"
-        reStr += "#{m[2]}-#{m[4]}"
-        reStr += m[5] unless m[5] is "&nbsp;"
+      @text = @text.replace re , reStr
+
 
     !!m
 
@@ -1857,12 +1806,6 @@ class EmtDate extends Quote
   description: "Даты и дни"
   version:'0.0.0'
   configName:'EmtDate'
-
-
-  config:
-    on: true
-    log: true
-    debug:true
 
   # Очередь правил
   rules:[]
@@ -2108,12 +2051,6 @@ class Etc extends Quote
   version:'0.0.0'
   configName:'Etc'
 
-
-  config:
-    on: true
-    log: true
-    debug:true
-
   # Очередь правил
   rules:[]
 
@@ -2303,12 +2240,6 @@ class NoBr extends Quote
   description: "Неразрывные конструкции"
   version:'0.0.0'
   configName:'NoBr'
-
-
-  config:
-    on: true
-    log: true
-    debug:true
 
   # Очередь правил
   rules:[]
@@ -2695,12 +2626,6 @@ class Numbers extends Quote
   description: "Сокращения"
   version:'0.0.0'
   configName:'Numbers'
-
-
-  config:
-    on: true
-    log: true
-    debug:true
 
   # Очередь правил
   rules:[]
@@ -3188,9 +3113,9 @@ class OpenQuote
 
   text:''
   config:
-    on: on
+    on: true
     log: off
-    debug: off
+    debug:off
 
   ###
   Конструктор
@@ -3200,52 +3125,19 @@ class OpenQuote
   ###
   constructor:(@opt)->
     @config = @opt.config[@configName] if @opt.config?[@configName]
-    if @opt.Lib
-      @Lib = @opt.Lib
-    else
-      @logger 'error', 'No lib'
-
+    @Lib = @opt.Lib if @opt.Lib
     @text = @opt.text if @opt.text
-    @
-
-
-  ###
-  Логер
-  @param level[string] error|warning|info| debug
-  @param message[string] сообщение
-  @param obj[obj] object ошибки
-  ###
-  logger:(level, message, obj)->
-    return unless  @config.log
-
-    throw new Error message if level is 'error'
-
-    if level in ['warning','info']
-      console.log new Date +" #{level}: #{message}"
-
-    console.log "#{level}: #{message}", obj if level is 'debug'
-    @
-
-  ###
-  Debug
-  @param level[string] error|warning|info
-  @param message[string] сообщение
-  @param obj[obj] object ошибки
-  ###
-  debug:(obj)->
-    return unless  @config.debug
-    @logger 'debug', @configName, obj
     @
 
   # Цикл применения правила
   # сохраняет время работы в @profiling
   multiply:()->
-    start = new Date().getTime()
     while @replace()
       @used += 1
       # защита от бесконечного цикла
-      break if @used > 4096
-    @profiling = new Date().getTime() - start
+      if @used > 4096
+        console.log 'error бесконечный цикл'
+        break
     @
 
   # Применение правила для text
@@ -3368,12 +3260,6 @@ class Punctmark extends Quote
   description: "Пунктуация и знаки препинания"
   version:'0.0.0'
   configName:'Punctmark'
-
-
-  config:
-    on: true
-    log: true
-    debug:true
 
   # Очередь правил
   rules:[]
@@ -3734,11 +3620,7 @@ class CloseQuote extends OpenQuote
     m = @text.match re
     if m
       # Замена
-      @text = @text.replace re , (str)->
-        self.debug str
-        self.debug m
-
-        m[1] + self.Lib.QUOTE_FIRS_CLOSE + m[3]
+      @text = @text.replace re , m[1] + self.Lib.QUOTE_FIRS_CLOSE + m[3]
 
     !!m
 
@@ -3879,11 +3761,6 @@ class Space extends Quote
   description: "Расстановка и удаление пробелов"
   version:'0.0.0'
   configName:'Space'
-
-  config:
-    on: true
-    log: true
-    debug:true
 
   # Очередь правил
   rules:[]
@@ -4321,12 +4198,6 @@ class Symbol extends Quote
   version:'0.0.0'
   configName:'Symbol'
 
-
-  config:
-    on: true
-    log: true
-    debug:true
-
   # Очередь правил
   rules:[]
 
@@ -4640,12 +4511,6 @@ class Text extends Quote
   description: "Текст и абзацы"
   version:'0.0.0'
   configName:'text'
-
-
-  config:
-    on: true
-    log: true
-    debug:true
 
   # Очередь правил
   rules:[]

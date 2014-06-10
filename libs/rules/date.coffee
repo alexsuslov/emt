@@ -9,12 +9,6 @@ class EmtDate extends Quote
   version:'0.0.0'
   configName:'EmtDate'
 
-
-  config:
-    on: true
-    log: true
-    debug:true
-
   # Очередь правил
   rules:[]
 

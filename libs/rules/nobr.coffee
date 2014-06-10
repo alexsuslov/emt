@@ -9,12 +9,6 @@ class NoBr extends Quote
   version:'0.0.0'
   configName:'NoBr'
 
-
-  config:
-    on: true
-    log: true
-    debug:true
-
   # Очередь правил
   rules:[]
 

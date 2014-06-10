@@ -24,6 +24,11 @@ if isClient
       'Space'
       'Punctmark'
     ]
+    # Конфиг для теста
+    config:
+      on:     on
+      log:    off
+      debug:  off
 
     tipo:(@text)->
       @simple @text
@@ -42,6 +47,7 @@ if isClient
       @
 
     constructor:(@opt, @el)->
+      @config = @opt.config if @opt?.config
       @Rules = App.Rules
       @Lib = App.Lib
       # Добавляю правила в очередь
@@ -50,6 +56,7 @@ if isClient
           @rules.push new @Rules[ruleName]
             Rules:  @Rules
             Lib:    @Lib
+            config: @config
       @inited = true
       @
 

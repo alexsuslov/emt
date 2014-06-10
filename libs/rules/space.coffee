@@ -9,11 +9,6 @@ class Space extends Quote
   version:'0.0.0'
   configName:'Space'
 
-  config:
-    on: true
-    log: true
-    debug:true
-
   # Очередь правил
   rules:[]
 

@@ -11,9 +11,9 @@ class OpenQuote
 
   text:''
   config:
-    on: on
+    on: true
     log: off
-    debug: off
+    debug:off
 
   ###
   Конструктор
@@ -23,52 +23,19 @@ class OpenQuote
   ###
   constructor:(@opt)->
     @config = @opt.config[@configName] if @opt.config?[@configName]
-    if @opt.Lib
-      @Lib = @opt.Lib
-    else
-      @logger 'error', 'No lib'
-
+    @Lib = @opt.Lib if @opt.Lib
     @text = @opt.text if @opt.text
-    @
-
-
-  ###
-  Логер
-  @param level[string] error|warning|info| debug
-  @param message[string] сообщение
-  @param obj[obj] object ошибки
-  ###
-  logger:(level, message, obj)->
-    return unless  @config.log
-
-    throw new Error message if level is 'error'
-
-    if level in ['warning','info']
-      console.log new Date +" #{level}: #{message}"
-
-    console.log "#{level}: #{message}", obj if level is 'debug'
-    @
-
-  ###
-  Debug
-  @param level[string] error|warning|info
-  @param message[string] сообщение
-  @param obj[obj] object ошибки
-  ###
-  debug:(obj)->
-    return unless  @config.debug
-    @logger 'debug', @configName, obj
     @
 
   # Цикл применения правила
   # сохраняет время работы в @profiling
   multiply:()->
-    start = new Date().getTime()
     while @replace()
       @used += 1
       # защита от бесконечного цикла
-      break if @used > 4096
-    @profiling = new Date().getTime() - start
+      if @used > 4096
+        console.log 'error бесконечный цикл'
+        break
     @
 
   # Применение правила для text

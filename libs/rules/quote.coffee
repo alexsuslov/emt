@@ -48,12 +48,12 @@ class Quote
       console.log  'error', 'No lib'
 
     @text = @opt.text if @opt.text
-
     # Добавляю правила в очередь
     for ruleName in @order
       if @Rules[ruleName]
         @rules.push new @Rules[ruleName]
           Lib: @Lib
+          config:@config if @config
     @
 
 

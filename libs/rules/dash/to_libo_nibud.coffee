@@ -19,14 +19,13 @@ class Rule extends OpenQuote
     m = @text.match re
     if m
       # Замена
-      @text = @text.replace re , (str)->
-        self.debug str
+      reStr = ''
+      reStr += m[1] unless m[1] is "&nbsp;"
+      reStr += "#{m[2]}-#{m[4]}"
+      reStr += m[5] unless m[5] is "&nbsp;"
 
-        self.debug m
-        reStr = ''
-        reStr += m[1] unless m[1] is "&nbsp;"
-        reStr += "#{m[2]}-#{m[4]}"
-        reStr += m[5] unless m[5] is "&nbsp;"
+      @text = @text.replace re , reStr
+
 
     !!m
 

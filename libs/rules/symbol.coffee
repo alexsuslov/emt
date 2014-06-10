@@ -9,12 +9,6 @@ class Symbol extends Quote
   version:'0.0.0'
   configName:'Symbol'
 
-
-  config:
-    on: true
-    log: true
-    debug:true
-
   # Очередь правил
   rules:[]
 

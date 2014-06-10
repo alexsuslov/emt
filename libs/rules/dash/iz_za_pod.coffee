@@ -20,9 +20,6 @@ class Rule extends OpenQuote
     if m
       # Замена
       @text = @text.replace re , (str)->
-        self.debug str
-
-        self.debug m
         reStr = ''
         reStr += m[1] unless m[1] is "&nbsp;"
         reStr += "#{m[2]}-#{m[4]}"
