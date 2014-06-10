@@ -13,7 +13,7 @@ class AutoTimesX extends OpenQuote
 
     # Список правил
     rex = [
-      /(\d+)(x|х)(\d+)(x|х)(\d+)/i
+      /(\d+|\d+[\.\,]\d+)([xXхХ])(\d+|\d+[\.\,]\d+)([xXхХ])(\d+|\d+[\.\,]\d+)/i
     ]
 
     for re, idx in rex

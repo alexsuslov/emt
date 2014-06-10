@@ -14,7 +14,7 @@ class MinusBetweenNums extends OpenQuote
   replace:->
     # Список правил
     rex = [
-      /(\d+)\-(\d)/i
+      /(\d+)\-(\d)|(\d+)\&dash\;(\d)/i
     ]
 
     for re, idx in rex
