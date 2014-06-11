@@ -2,9 +2,9 @@
 OpenQuote = require( '../open_quote') unless OpenQuote
 
 ###
- Правило NbspMoneyAbbr
 
- Форматирование денежных сокращений (расстановка пробелов и привязка названия валюты к числу
+Правило NbspMoneyAbbr
+
 ###
 class NbspMoneyAbbr extends OpenQuote
   description: 'Форматирование денежных сокращений (расстановка пробелов и привязка названия валюты к числу)'
@@ -15,7 +15,14 @@ class NbspMoneyAbbr extends OpenQuote
 
     # Список правил
     rex = [
-      /(\d)((\040|\s)?(тыс|млн|млрд)\.?(\040|\&nbsp\;)?)?(\040|\&nbsp\;)?(руб\.|долл\.|евро|€|&euro;|\$|у[\.]? ?е[\.]?)/i
+      /(\d)(\s)?(тыс|млн|млрд)\.?(\s)?(у\.е\.|руб\.|долл\.|евро|€|&euro;|\$)/i
+      /(\d)(\s)?(руб\.|долл\.|евро|€|&euro;|\$)/i
+    ]
+    res = [
+      (m)->
+        m[1] + '&nbsp;' + m[3] + '.' + '&nbsp;' + m[5]
+      (m)->
+        m[1] + '&nbsp;' + m[3]
     ]
 
     for re, idx in rex
@@ -23,13 +30,7 @@ class NbspMoneyAbbr extends OpenQuote
       break if m
 
     if m
-      str = m[1] + (if m[4] then "&nbsp;" + m[4] + (
-          if m[4] is "тыс" then '.' else ''
-          ) else '' ) + "&nbsp;" + (
-        if m[7].match /у[\\\\.]? ?е[\\\\.]?/i then "у.е." else m[7]
-        )
-
-      @text = @text.replace m[0] , str
+      @text = @text.replace m[0] , res[idx] m
 
     !!m
 

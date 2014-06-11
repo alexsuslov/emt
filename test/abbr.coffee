@@ -45,8 +45,8 @@ tests = [
   }
   {
     obj: require( '../libs/rules/abbr/ps_pps')
-    text: " P. S. , P.P.S. "
-    res: " <span class='nowrap'>P. S.</span> , <span class='nowrap'>P. P. S.</span> "
+    text: " P. S. , P.P.S."
+    res: " <span class='nowrap'>P. S.</span> , <span class='nowrap'>P. P. S.</span>"
   }
   {
     obj: require( '../libs/rules/abbr/nobr_vtch_itd_itp')
@@ -55,8 +55,8 @@ tests = [
   }
   {
     obj: require( '../libs/rules/abbr/nbsp_money_abbr')
-    text: " 40 тыс. руб. "
-    res: " 40&nbsp;тыс.&nbsp;руб. "
+    text: " 40 тыс. руб.  40 руб."
+    res: " 40&nbsp;тыс.&nbsp;руб.  40&nbsp;руб."
   }
   {
     obj: require( '../libs/rules/abbr/nobr_gost')

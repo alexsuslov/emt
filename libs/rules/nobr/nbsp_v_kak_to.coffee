@@ -1,10 +1,12 @@
 # Зависимости
 OpenQuote = require( '../open_quote') unless OpenQuote
 
-##
-# Правило
-##
-class Rule extends OpenQuote
+###
+
+Правило NbspKakTo
+
+###
+class NbspKakTo extends OpenQuote
   description: 'Неразрывный пробел в как то'
   version:'0.0.0'
   configName:'nbsp_v_kak_to'
@@ -13,7 +15,7 @@ class Rule extends OpenQuote
 
     # Список правил
     rex = [
-      /как то/i
+      /как\sто/i
     ]
 
     for re, idx in rex
@@ -24,9 +26,9 @@ class Rule extends OpenQuote
 
       @text = @text.replace m[0] , "как&nbsp;то"
 
-    # !!m
+    !!m
 
-module.exports = Rule
+module.exports = NbspKakTo
 
 if typeof window isnt 'undefined'
-  App.Rules['nbsp_v_kak_to'] = Rule
+  App.Rules['nbsp_v_kak_to'] = NbspKakTo

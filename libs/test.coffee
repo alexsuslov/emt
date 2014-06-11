@@ -170,7 +170,7 @@ class Abbr extends Symbol
   description:'Сокращения'
   tests: [
     {
-      text: ' гл. 4, стр. 5, рис. 7, илл. 9, ст. 6, п. 9 '
+      text: ' гл. 4, стр. 5, рис. 7, илл. 9, ст. 6, п. 9'
       res: " гл&nbsp;4, стр&nbsp;5, рис&nbsp;7, илл&nbsp;9, ст&nbsp;6, п&nbsp;9"
     }
     {
@@ -178,31 +178,31 @@ class Abbr extends Symbol
       res:" см&nbsp;2, им&nbsp;4"
     }
     {
-      text: ' г. Тест, пр-кт Тест,  д. 4 '
+      text: ' г. Тест, пр-кт Тест,  д. 4'
       res: " г.&nbsp;Тест, пр&mdash;кт&nbsp;Тест, д.&nbsp;4"
     }
     {
-      text: ' 1 м2 '
+      text: ' 1 м2'
       res: ' 1&nbsp;м&sup2;'
     }
     {
-      text: ' 1кг. '
+      text: ' 1кг.'
       res: ' 1&nbsp;кг.'
     }
     {
-      text: ' 10в. '
+      text: ' 10в.'
       res: " 10&nbsp;В."
     }
     {
-      text: ' ООО Биомед '
+      text: ' ООО Биомед'
       res: ' ООО&nbsp;Биомед'
     }
     {
-      text: " 300 dpi 150 lpi "
+      text: " 300 dpi 150 lpi"
       res: " 300&nbsp;dpi 150&nbsp;lpi"
     }
     {
-      text: " P. S. , P.P.S. "
+      text: " P. S. , P.P.S."
       res: " <span class='nowrap'>P. S.</span>, <span class='nowrap'>P. P. S.</span>"
     }
     {
@@ -210,17 +210,16 @@ class Abbr extends Symbol
       res: " <span class='nowrap'>и т. д.</span> <span class='nowrap'>и т. п.</span> <span class='nowrap'>и т. ч.</span>"
     }
     {
-      text: " 40 тыс. руб."
-      res: " 40&nbsp;тыс.&nbsp;руб."
-
+      text: "40 тыс. руб. 40 руб."
+      res: "40&nbsp;тыс.&nbsp;руб. 40&nbsp;руб."
     }
     {
-      text: " ГОСТ 123-123 "
+      text: " ГОСТ 123-123"
       res: " <span class='nowrap'>ГОСТ 123&ndash;123</span>"
     }
     {
-      text: " тест те."
-      res: " тест<span class='nowrap'>те</span>"
+      text: "тест те."
+      res: "тест&nbsp;те."
     }
   ]
 
@@ -230,7 +229,7 @@ class Dash extends Symbol
     {
       text: "привет - привет"
       res: "привет&nbsp;&mdash; привет"
-      debug:true
+      # debug:true
     }
     {
       text: " привет, - привет"
@@ -245,8 +244,8 @@ class Dash extends Symbol
       res: " привет!&nbsp;&mdash;привет"
     }
     {
-      text: " из -за, из -под "
-      res: " из &mdash;за, из &mdash;под"
+      text: " из -за, из -под"
+      res: ' из&nbsp;&mdash;за, из&nbsp;&mdash;под'
     }
     {
       text: " кто -то кто -либо кто -нибудь"
@@ -320,8 +319,9 @@ class NoBr extends Symbol
     }
     {
       obj: require( '../libs/rules/nobr/nbsp_v_kak_to')
-      text: ' как то '
+      text: ' как то'
       res: " как&nbsp;то"
+      debug:true
     }
     {
       obj: require( '../libs/rules/nobr/nbsp_before_particle')
@@ -395,8 +395,8 @@ class Space extends Quote
     }
     {
       obj: require( '../libs/rules/space/autospace_after_dot')
-      text: "  test.ru привет.привет "
-      res:  "  test.\\ru привет. привет"
+      text: "http://test.ru привет.привет"
+      res:  "<a href='http://test.ru'>test.ru</a> привет. привет"
     }
     {
       obj: require( '../libs/rules/space/autospace_after_hellips')

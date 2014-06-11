@@ -14,15 +14,19 @@ if isClient
     order:[
       'Abbr'
       'Symbol'
-      'Quote'
       'Numbers'
+      'NoBr'
+
+      'Punctmark'
+      'Quote'
+
       'Dash'
       'EmtDate'
-      'Etc'
-      'NoBr'
-      'Text'
       'Space'
-      'Punctmark'
+
+      'OptAlign'
+      'Etc'
+      'Text'
     ]
     # Конфиг для теста
     config:
@@ -65,14 +69,16 @@ if isClient
   $ ->
     $.fn.emt = (options)->
       if Object.prototype.toString.call(@) is '[object Array]'
-        window.EMTS = []
+        @EMTS = []
         for el in @
-          window.EMTS.push new Emt( options, el).apply()
+          @EMTS.push new Emt( options, el).apply()
       else if @
-        emt = new Emt options, @
-        emt.apply()
+        @emt = new Emt options, @
+        @emt.apply()
       else
         console.log 'no element'
+      @
+
 
 
 

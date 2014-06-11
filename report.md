@@ -1,80 +1,3 @@
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
-Invalid Date
 # TOC
    - [Правило ](#-)
      - [Сокращения](#-)
@@ -281,7 +204,7 @@ return assert.equal(test.res, rule.text);
 
 <a name="----ps-pps"></a>
 ### Объединение сокращений P.S., P.P.S.
- P. S. , P.P.S. .
+ P. S. , P.P.S..
 
 ```js
 rule.text = test.text;
@@ -301,7 +224,7 @@ return assert.equal(test.res, rule.text);
 
 <a name="------------"></a>
 ### Форматирование денежных сокращений (расстановка пробелов и привязка названия валюты к числу)
- 40 тыс. руб. .
+ 40 тыс. руб.  40 руб..
 
 ```js
 rule.text = test.text;

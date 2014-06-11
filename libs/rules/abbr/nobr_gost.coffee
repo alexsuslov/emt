@@ -40,4 +40,4 @@ class NobrGost extends OpenQuote
 module.exports = NobrGost
 
 if typeof window isnt 'undefined'
-  App.Rules['nbsp_money_abbr'] = NobrGost
+  App.Rules['nobr_gost'] = NobrGost

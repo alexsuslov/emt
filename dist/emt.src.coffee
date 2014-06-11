@@ -14,15 +14,19 @@ if isClient
     order:[
       'Abbr'
       'Symbol'
-      'Quote'
       'Numbers'
+      'NoBr'
+
+      'Punctmark'
+      'Quote'
+
       'Dash'
       'EmtDate'
-      'Etc'
-      'NoBr'
-      'Text'
       'Space'
-      'Punctmark'
+
+      'OptAlign'
+      'Etc'
+      'Text'
     ]
     # Конфиг для теста
     config:
@@ -65,14 +69,16 @@ if isClient
   $ ->
     $.fn.emt = (options)->
       if Object.prototype.toString.call(@) is '[object Array]'
-        window.EMTS = []
+        @EMTS = []
         for el in @
-          window.EMTS.push new Emt( options, el).apply()
+          @EMTS.push new Emt( options, el).apply()
       else if @
-        emt = new Emt options, @
-        emt.apply()
+        @emt = new Emt options, @
+        @emt.apply()
       else
         console.log 'no element'
+      @
+
 
 
 
@@ -1091,9 +1097,9 @@ if typeof window isnt 'undefined'
 OpenQuote = require( '../open_quote') unless OpenQuote
 
 ###
- Правило NbspMoneyAbbr
 
- Форматирование денежных сокращений (расстановка пробелов и привязка названия валюты к числу
+Правило NbspMoneyAbbr
+
 ###
 class NbspMoneyAbbr extends OpenQuote
   description: 'Форматирование денежных сокращений (расстановка пробелов и привязка названия валюты к числу)'
@@ -1104,7 +1110,14 @@ class NbspMoneyAbbr extends OpenQuote
 
     # Список правил
     rex = [
-      /(\d)((\040|\s)?(тыс|млн|млрд)\.?(\040|\&nbsp\;)?)?(\040|\&nbsp\;)?(руб\.|долл\.|евро|€|&euro;|\$|у[\.]? ?е[\.]?)/i
+      /(\d)(\s)?(тыс|млн|млрд)\.?(\s)?(у\.е\.|руб\.|долл\.|евро|€|&euro;|\$)/i
+      /(\d)(\s)?(руб\.|долл\.|евро|€|&euro;|\$)/i
+    ]
+    res = [
+      (m)->
+        m[1] + '&nbsp;' + m[3] + '.' + '&nbsp;' + m[5]
+      (m)->
+        m[1] + '&nbsp;' + m[3]
     ]
 
     for re, idx in rex
@@ -1112,13 +1125,7 @@ class NbspMoneyAbbr extends OpenQuote
       break if m
 
     if m
-      str = m[1] + (if m[4] then "&nbsp;" + m[4] + (
-          if m[4] is "тыс" then '.' else ''
-          ) else '' ) + "&nbsp;" + (
-        if m[7].match /у[\\\\.]? ?е[\\\\.]?/i then "у.е." else m[7]
-        )
-
-      @text = @text.replace m[0] , str
+      @text = @text.replace m[0] , res[idx] m
 
     !!m
 
@@ -1340,7 +1347,7 @@ class NobrGost extends OpenQuote
 module.exports = NobrGost
 
 if typeof window isnt 'undefined'
-  App.Rules['nbsp_money_abbr'] = NobrGost
+  App.Rules['nobr_gost'] = NobrGost
 
 # Зависимости
 OpenQuote = require( '../open_quote') unless OpenQuote
@@ -1473,7 +1480,7 @@ class PsPps extends OpenQuote
   replace:->
     # Список правил
     rex = [
-      /(^|\040|\t|\>|\r|\n)(p\.\040?)(p\.\040?)?(s\.)([^\<])/i
+      /(^|\s)(p\.\s?)(p\.\s?)?(s\.)(\s|$)/i
     ]
 
 
@@ -1494,6 +1501,30 @@ module.exports = PsPps
 
 if typeof window isnt 'undefined'
   App.Rules['ps_pps'] = PsPps
+
+# Зависимости
+Quote = require( './quote') unless Quote
+
+###
+# Групповой Объект правил Чистка
+###
+class Cleaner extends Quote
+  description: "Чистка"
+  version:'0.0.0'
+  configName:'Cleaner'
+
+  # Очередь правил
+  rules:[]
+
+  # Порядок выполнения
+  order:[
+    "rm_sp"
+    ]
+
+module.exports = Cleaner
+
+if typeof window isnt 'undefined'
+  App.Rules.Cleaner = Cleaner
 
 # Зависимости
 Quote = require( './quote') unless Quote
@@ -1665,6 +1696,7 @@ class Rule extends OpenQuote
     if m
       # Замена
       @text = @text.replace re , m[1] + '&nbsp;&mdash;' + m[5]
+
     !!m
 
 module.exports = Rule
@@ -1776,7 +1808,7 @@ class Rule extends OpenQuote
     self = @
 
     # Правило
-    re = /(\s|^|\&nbsp\;|\>)(кто|кем|когда|зачем|почему|как|что|чем|где|чего|кого)\-?(\040|\t|\&nbsp\;)\-?(то|либо|нибудь)([\.\,\!\?\;]|\040|\&nbsp\;|$)/i
+    re = /(\s|^|\&nbsp\;|\>)(кто|кем|когда|зачем|почему|как|что|чем|где|чего|кого)\-?(\040|\t)\-?(то|либо|нибудь)([\.\,\!\?\;]|\040|\&nbsp\;|$)/i
 
     m = @text.match re
     if m
@@ -2441,10 +2473,12 @@ if typeof window isnt 'undefined'
 # Зависимости
 OpenQuote = require( '../open_quote') unless OpenQuote
 
-##
-# Правило
-##
-class Rule extends OpenQuote
+###
+
+Правило NbspKakTo
+
+###
+class NbspKakTo extends OpenQuote
   description: 'Неразрывный пробел в как то'
   version:'0.0.0'
   configName:'nbsp_v_kak_to'
@@ -2453,7 +2487,7 @@ class Rule extends OpenQuote
 
     # Список правил
     rex = [
-      /как то/i
+      /как\sто/i
     ]
 
     for re, idx in rex
@@ -2464,12 +2498,12 @@ class Rule extends OpenQuote
 
       @text = @text.replace m[0] , "как&nbsp;то"
 
-    # !!m
+    !!m
 
-module.exports = Rule
+module.exports = NbspKakTo
 
 if typeof window isnt 'undefined'
-  App.Rules['nbsp_v_kak_to'] = Rule
+  App.Rules['nbsp_v_kak_to'] = NbspKakTo
 
 # Зависимости
 OpenQuote = require( '../open_quote') unless OpenQuote
@@ -3251,6 +3285,40 @@ if typeof window isnt 'undefined'
 
 # Зависимости
 Quote = require( './quote') unless Quote
+
+###
+## Групповой Объект правил "Оптическое выравнивание"
+###
+class OptAlign extends Quote
+  description: "Оптическое выравнивание"
+  version:'0.0.0'
+  configName:'OptAlign'
+  classes:[
+    oa_obracket_sp_s : "margin-right:0.3em;"
+    oa_obracket_sp_b : "margin-left:-0.3em;"
+    oa_obracket_nl_b : "margin-left:-0.3em;"
+    oa_comma_b       : "margin-right:-0.2em;"
+    oa_comma_e       : "margin-left:0.2em;"
+    oa_oquote_nl     : "margin-left:-0.44em;"
+    oa_oqoute_sp_s   : "margin-right:0.44em;"
+    oa_oqoute_sp_q   : "margin-left:-0.44em;"
+  ]
+
+  # Очередь правил
+  rules:[]
+
+  # Порядок выполнения
+  order:[
+    "oa_oquote"
+    ]
+
+module.exports = OptAlign
+
+if typeof window isnt 'undefined'
+  App.Rules.OptAlign = OptAlign
+
+# Зависимости
+Quote = require( './quote') unless Quote
 ###
 Групповой Объект
 
@@ -3740,16 +3808,6 @@ module.exports = OpenQuoteAdv
 
 if typeof window isnt 'undefined'
   App.Rules['open_quote_adv'] = Rule
-
-###
-Индекс правил
-###
-# module.exports = {
-#   open_quote : require('./open_quote')
-#   close_quote: require './close_quote'
-#   mdush2html: require './mdash_2_html'
-# }
-
 
 # Зависимости
 Quote = require( './quote') unless Quote

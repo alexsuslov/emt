@@ -1,5 +1,5 @@
 (function() {
-  var Abbr, AcuteAccent, App, ArrowsSymbols, AutoComma, AutoLinks, AutoTimesX, AutospaceAfterComma, AutospaceAfterDot, AutospaceAfterHellips, AutospaceAfterPmarks, CenturyPeriod, ClearPercent, CloseQuote, CloseQuoteAdv, CopyReplace, Dash, DegreeF, DotOnEnd, EMTLib, Emt, EmtDate, Etc, FixBrackets, FixBracketsSpace, FixExclQuestMarks, FixPmarks, Hellip, HyphenNowrap, MinusBetweenNums, NbspBeforeUnit, NbspBeforeWeightUnit, NbspInTheEnd, NbspMoneyAbbr, NbspOrgAbbr, NbspTe, NoBr, NobrAbbreviation, NobrAcronym, NobrBeforeUnitVolt, NobrGost, NobrLocations, NobrSmIm, NobrVtchItdItp, Numbers, OaObracketComa, OaOquote, OpenQuote, OpenQuoteAdv, PlusMinus, PsPps, Punctmark, PunctuationMarksBaseLimit, PunctuationMarksLimit, Quote, Rule, Space, Symbol, Text, chars_table, html4_char, isClient, module,
+  var Abbr, AcuteAccent, App, ArrowsSymbols, AutoComma, AutoLinks, AutoTimesX, AutospaceAfterComma, AutospaceAfterDot, AutospaceAfterHellips, AutospaceAfterPmarks, CenturyPeriod, Cleaner, ClearPercent, CloseQuote, CloseQuoteAdv, CopyReplace, Dash, DegreeF, DotOnEnd, EMTLib, Emt, EmtDate, Etc, FixBrackets, FixBracketsSpace, FixExclQuestMarks, FixPmarks, Hellip, HyphenNowrap, MinusBetweenNums, NbspBeforeUnit, NbspBeforeWeightUnit, NbspInTheEnd, NbspKakTo, NbspMoneyAbbr, NbspOrgAbbr, NbspTe, NoBr, NobrAbbreviation, NobrAcronym, NobrBeforeUnitVolt, NobrGost, NobrLocations, NobrSmIm, NobrVtchItdItp, Numbers, OaObracketComa, OaOquote, OpenQuote, OpenQuoteAdv, OptAlign, PlusMinus, PsPps, Punctmark, PunctuationMarksBaseLimit, PunctuationMarksLimit, Quote, Rule, Space, Symbol, Text, chars_table, html4_char, isClient, module,
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -17,7 +17,7 @@
 
       Emt.prototype.rules = [];
 
-      Emt.prototype.order = ['Abbr', 'Symbol', 'Quote', 'Numbers', 'Dash', 'EmtDate', 'Etc', 'NoBr', 'Text', 'Space', 'Punctmark'];
+      Emt.prototype.order = ['Abbr', 'Symbol', 'Numbers', 'NoBr', 'Punctmark', 'Quote', 'Dash', 'EmtDate', 'Space', 'OptAlign', 'Etc', 'Text'];
 
       Emt.prototype.config = {
         on: true,
@@ -83,21 +83,20 @@
     window.EMT = Emt;
     $(function() {
       return $.fn.emt = function(options) {
-        var el, emt, _i, _len, _results;
+        var el, _i, _len;
         if (Object.prototype.toString.call(this) === '[object Array]') {
-          window.EMTS = [];
-          _results = [];
+          this.EMTS = [];
           for (_i = 0, _len = this.length; _i < _len; _i++) {
             el = this[_i];
-            _results.push(window.EMTS.push(new Emt(options, el).apply()));
+            this.EMTS.push(new Emt(options, el).apply());
           }
-          return _results;
         } else if (this) {
-          emt = new Emt(options, this);
-          return emt.apply();
+          this.emt = new Emt(options, this);
+          this.emt.apply();
         } else {
-          return console.log('no element');
+          console.log('no element');
         }
+        return this;
       };
     });
   }
@@ -1337,9 +1336,8 @@
 
 
   /*
-   Правило NbspMoneyAbbr
   
-   Форматирование денежных сокращений (расстановка пробелов и привязка названия валюты к числу
+  Правило NbspMoneyAbbr
    */
 
   NbspMoneyAbbr = (function(_super) {
@@ -1356,8 +1354,15 @@
     NbspMoneyAbbr.prototype.configName = 'nbsp_money_abbr';
 
     NbspMoneyAbbr.prototype.replace = function() {
-      var idx, m, re, rex, str, _i, _len;
-      rex = [/(\d)((\040|\s)?(тыс|млн|млрд)\.?(\040|\&nbsp\;)?)?(\040|\&nbsp\;)?(руб\.|долл\.|евро|€|&euro;|\$|у[\.]? ?е[\.]?)/i];
+      var idx, m, re, res, rex, _i, _len;
+      rex = [/(\d)(\s)?(тыс|млн|млрд)\.?(\s)?(у\.е\.|руб\.|долл\.|евро|€|&euro;|\$)/i, /(\d)(\s)?(руб\.|долл\.|евро|€|&euro;|\$)/i];
+      res = [
+        function(m) {
+          return m[1] + '&nbsp;' + m[3] + '.' + '&nbsp;' + m[5];
+        }, function(m) {
+          return m[1] + '&nbsp;' + m[3];
+        }
+      ];
       for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
         re = rex[idx];
         m = this.text.match(re);
@@ -1366,8 +1371,7 @@
         }
       }
       if (m) {
-        str = m[1] + (m[4] ? "&nbsp;" + m[4] + (m[4] === "тыс" ? '.' : '') : '') + "&nbsp;" + (m[7].match(/у[\\\\.]? ?е[\\\\.]?/i) ? "у.е." : m[7]);
-        this.text = this.text.replace(m[0], str);
+        this.text = this.text.replace(m[0], res[idx](m));
       }
       return !!m;
     };
@@ -1699,7 +1703,7 @@
   module.exports = NobrGost;
 
   if (typeof window !== 'undefined') {
-    App.Rules['nbsp_money_abbr'] = NobrGost;
+    App.Rules['nobr_gost'] = NobrGost;
   }
 
   if (!OpenQuote) {
@@ -1887,7 +1891,7 @@
 
     PsPps.prototype.replace = function() {
       var content, idx, m, re, reStr, rex, _i, _len;
-      rex = [/(^|\040|\t|\>|\r|\n)(p\.\040?)(p\.\040?)?(s\.)([^\<])/i];
+      rex = [/(^|\s)(p\.\s?)(p\.\s?)?(s\.)(\s|$)/i];
       for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
         re = rex[idx];
         m = this.text.match(re);
@@ -1916,6 +1920,42 @@
 
   if (typeof window !== 'undefined') {
     App.Rules['ps_pps'] = PsPps;
+  }
+
+  if (!Quote) {
+    Quote = require('./quote');
+  }
+
+
+  /*
+   * Групповой Объект правил Чистка
+   */
+
+  Cleaner = (function(_super) {
+    __extends(Cleaner, _super);
+
+    function Cleaner() {
+      return Cleaner.__super__.constructor.apply(this, arguments);
+    }
+
+    Cleaner.prototype.description = "Чистка";
+
+    Cleaner.prototype.version = '0.0.0';
+
+    Cleaner.prototype.configName = 'Cleaner';
+
+    Cleaner.prototype.rules = [];
+
+    Cleaner.prototype.order = ["rm_sp"];
+
+    return Cleaner;
+
+  })(Quote);
+
+  module.exports = Cleaner;
+
+  if (typeof window !== 'undefined') {
+    App.Rules.Cleaner = Cleaner;
   }
 
   if (!Quote) {
@@ -2287,7 +2327,7 @@
     Rule.prototype.replace = function() {
       var m, re, reStr, self;
       self = this;
-      re = /(\s|^|\&nbsp\;|\>)(кто|кем|когда|зачем|почему|как|что|чем|где|чего|кого)\-?(\040|\t|\&nbsp\;)\-?(то|либо|нибудь)([\.\,\!\?\;]|\040|\&nbsp\;|$)/i;
+      re = /(\s|^|\&nbsp\;|\>)(кто|кем|когда|зачем|почему|как|что|чем|где|чего|кого)\-?(\040|\t)\-?(то|либо|нибудь)([\.\,\!\?\;]|\040|\&nbsp\;|$)/i;
       m = this.text.match(re);
       if (m) {
         reStr = '';
@@ -3165,22 +3205,28 @@
     OpenQuote = require('../open_quote');
   }
 
-  Rule = (function(_super) {
-    __extends(Rule, _super);
 
-    function Rule() {
-      return Rule.__super__.constructor.apply(this, arguments);
+  /*
+  
+  Правило NbspKakTo
+   */
+
+  NbspKakTo = (function(_super) {
+    __extends(NbspKakTo, _super);
+
+    function NbspKakTo() {
+      return NbspKakTo.__super__.constructor.apply(this, arguments);
     }
 
-    Rule.prototype.description = 'Неразрывный пробел в как то';
+    NbspKakTo.prototype.description = 'Неразрывный пробел в как то';
 
-    Rule.prototype.version = '0.0.0';
+    NbspKakTo.prototype.version = '0.0.0';
 
-    Rule.prototype.configName = 'nbsp_v_kak_to';
+    NbspKakTo.prototype.configName = 'nbsp_v_kak_to';
 
-    Rule.prototype.replace = function() {
+    NbspKakTo.prototype.replace = function() {
       var idx, m, re, rex, _i, _len;
-      rex = [/как то/i];
+      rex = [/как\sто/i];
       for (idx = _i = 0, _len = rex.length; _i < _len; idx = ++_i) {
         re = rex[idx];
         m = this.text.match(re);
@@ -3189,18 +3235,19 @@
         }
       }
       if (m) {
-        return this.text = this.text.replace(m[0], "как&nbsp;то");
+        this.text = this.text.replace(m[0], "как&nbsp;то");
       }
+      return !!m;
     };
 
-    return Rule;
+    return NbspKakTo;
 
   })(OpenQuote);
 
-  module.exports = Rule;
+  module.exports = NbspKakTo;
 
   if (typeof window !== 'undefined') {
-    App.Rules['nbsp_v_kak_to'] = Rule;
+    App.Rules['nbsp_v_kak_to'] = NbspKakTo;
   }
 
   if (!OpenQuote) {
@@ -4214,6 +4261,55 @@
 
 
   /*
+   *# Групповой Объект правил "Оптическое выравнивание"
+   */
+
+  OptAlign = (function(_super) {
+    __extends(OptAlign, _super);
+
+    function OptAlign() {
+      return OptAlign.__super__.constructor.apply(this, arguments);
+    }
+
+    OptAlign.prototype.description = "Оптическое выравнивание";
+
+    OptAlign.prototype.version = '0.0.0';
+
+    OptAlign.prototype.configName = 'OptAlign';
+
+    OptAlign.prototype.classes = [
+      {
+        oa_obracket_sp_s: "margin-right:0.3em;",
+        oa_obracket_sp_b: "margin-left:-0.3em;",
+        oa_obracket_nl_b: "margin-left:-0.3em;",
+        oa_comma_b: "margin-right:-0.2em;",
+        oa_comma_e: "margin-left:0.2em;",
+        oa_oquote_nl: "margin-left:-0.44em;",
+        oa_oqoute_sp_s: "margin-right:0.44em;",
+        oa_oqoute_sp_q: "margin-left:-0.44em;"
+      }
+    ];
+
+    OptAlign.prototype.rules = [];
+
+    OptAlign.prototype.order = ["oa_oquote"];
+
+    return OptAlign;
+
+  })(Quote);
+
+  module.exports = OptAlign;
+
+  if (typeof window !== 'undefined') {
+    App.Rules.OptAlign = OptAlign;
+  }
+
+  if (!Quote) {
+    Quote = require('./quote');
+  }
+
+
+  /*
   Групповой Объект
   
   Пунктуация и знаки препинания
@@ -4897,11 +4993,6 @@
   if (typeof window !== 'undefined') {
     App.Rules['open_quote_adv'] = Rule;
   }
-
-
-  /*
-  Индекс правил
-   */
 
   if (!Quote) {
     Quote = require('./quote');

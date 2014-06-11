@@ -14,7 +14,7 @@ class PsPps extends OpenQuote
   replace:->
     # Список правил
     rex = [
-      /(^|\040|\t|\>|\r|\n)(p\.\040?)(p\.\040?)?(s\.)([^\<])/i
+      /(^|\s)(p\.\s?)(p\.\s?)?(s\.)(\s|$)/i
     ]
 
 
