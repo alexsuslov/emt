@@ -25,6 +25,7 @@ class OptAlign extends Quote
   # Порядок выполнения
   order:[
     "oa_oquote"
+    # 'oa_obracket_coma'
     ]
 
 module.exports = OptAlign

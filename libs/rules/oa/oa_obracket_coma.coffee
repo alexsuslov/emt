@@ -1,5 +1,5 @@
 # Зависимости
-OpenQuote = require( './open_quote') unless OpenQuote
+OpenQuote = require( '../open_quote') unless OpenQuote
 ###
 Правило OaObracketComa
 

@@ -3047,7 +3047,7 @@ if typeof window isnt 'undefined'
   App.Rules['thinsp_between_sect_and_number'] = Rule
 
 # Зависимости
-OpenQuote = require( './open_quote') unless OpenQuote
+OpenQuote = require( '../open_quote') unless OpenQuote
 ###
 Правило OaObracketComa
 
@@ -3093,7 +3093,7 @@ if typeof window isnt 'undefined'
   App.Rules['oa_obracket_coma'] = OaObracketComa
 
 # Зависимости
-OpenQuote = require( './open_quote') unless OpenQuote
+OpenQuote = require( '../open_quote') unless OpenQuote
 ###
 Правило OaOquote
 
@@ -3108,7 +3108,7 @@ class OaOquote extends OpenQuote
   replace:->
     # Список правил
     rex = [
-      /([a-zа-яё\-]{3,})(\040|\&nbsp\;|\t)(\&laquo\;)/i
+      /([a-zа-яё\-]{3,})(\s|\&nbsp\;|\t)(\&laquo\;)/i
       /(\n|\r|^)(\&laquo\;)/i
     ]
     res = [
@@ -3310,6 +3310,7 @@ class OptAlign extends Quote
   # Порядок выполнения
   order:[
     "oa_oquote"
+    # 'oa_obracket_coma'
     ]
 
 module.exports = OptAlign

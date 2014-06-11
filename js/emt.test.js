@@ -1,4 +1,4 @@
-var Abbr, Dash, EmtDate, Etc, NoBr, Number, Obj, Punctmark, Quote, Space, Symbol, Text, UnTest, require, test, _i, _len, _ref,
+var Abbr, Dash, EmtDate, Etc, NoBr, Number, OA, Obj, Punctmark, Quote, Space, Symbol, Text, UnTest, require, test, _i, _len, _ref,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -514,7 +514,32 @@ Text = (function(_super) {
 
 })(Quote);
 
-_ref = [Symbol, Number, Abbr, Dash, EmtDate, Etc, NoBr, Quote, Space, Text, Punctmark];
+OA = (function(_super) {
+  __extends(OA, _super);
+
+  function OA() {
+    return OA.__super__.constructor.apply(this, arguments);
+  }
+
+  OA.prototype.description = "Оптическое выравнивание";
+
+  OA.prototype.tests = [
+    {
+      obj: require('../libs/rules/oa/oa_oquote'),
+      text: "qqq &laquo;",
+      res: "qqq<span class='oa_oqoute_sp_s'> </span><span class='oa_oqoute_sp_q'>&laquo;</span>"
+    }, {
+      obj: require('../libs/rules/oa/oa_obracket_coma'),
+      text: " (",
+      res: "<span class='oa_obracket_sp_s'> </span><span class='oa_obracket_sp_b'>(</span>"
+    }
+  ];
+
+  return OA;
+
+})(Quote);
+
+_ref = [Symbol, Number, Abbr, Dash, EmtDate, Etc, NoBr, Quote, Space, Text, Punctmark, OA];
 for (_i = 0, _len = _ref.length; _i < _len; _i++) {
   Obj = _ref[_i];
   test = new Obj({

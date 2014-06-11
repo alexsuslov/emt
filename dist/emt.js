@@ -3928,7 +3928,7 @@
   }
 
   if (!OpenQuote) {
-    OpenQuote = require('./open_quote');
+    OpenQuote = require('../open_quote');
   }
 
 
@@ -4003,7 +4003,7 @@
   }
 
   if (!OpenQuote) {
-    OpenQuote = require('./open_quote');
+    OpenQuote = require('../open_quote');
   }
 
 
@@ -4028,7 +4028,7 @@
 
     OaOquote.prototype.replace = function() {
       var idx, m, re, res, rex, _i, _len;
-      rex = [/([a-zа-яё\-]{3,})(\040|\&nbsp\;|\t)(\&laquo\;)/i, /(\n|\r|^)(\&laquo\;)/i];
+      rex = [/([a-zа-яё\-]{3,})(\s|\&nbsp\;|\t)(\&laquo\;)/i, /(\n|\r|^)(\&laquo\;)/i];
       res = [
         (function(_this) {
           return function(m) {

@@ -452,18 +452,22 @@ class Text extends Quote
       text: " привет привет "
       res: " привет"
     }
-    # {
-    #   obj: require( '../libs/rules/paragraphs')
-    #   text: " привет привет "
-    #   res: " привет "
-    # }
-    # {
-    #   obj: require( '../libs/rules/breakline')
-    #   text: " привет привет "
-    #   res: " привет "
-    # }
   ]
-for Obj in [Symbol, Number, Abbr, Dash, EmtDate, Etc, NoBr, Quote, Space, Text, Punctmark ]
+class OA extends Quote
+  description: "Оптическое выравнивание"
+  tests : [
+    {
+      obj: require( '../libs/rules/oa/oa_oquote')
+      text: "qqq &laquo;"
+      res: "qqq<span class='oa_oqoute_sp_s'> </span><span class='oa_oqoute_sp_q'>&laquo;</span>"
+    }
+    {
+      obj: require( '../libs/rules/oa/oa_obracket_coma')
+      text: " ("
+      res: "<span class='oa_obracket_sp_s'> </span><span class='oa_obracket_sp_b'>(</span>"
+    }
+  ]
+for Obj in [Symbol, Number, Abbr, Dash, EmtDate, Etc, NoBr, Quote, Space, Text, Punctmark, OA ]
   test = new Obj
     emt: new EMT()
     el: $('.report tbody')
