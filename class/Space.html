@@ -73,8 +73,8 @@
     res: &quot;asasa, ddsdss asasa. ddsdss&quot;
   }, {
     obj: require(&#39;..&#47;libs&#47;rules&#47;space&#47;autospace_after_dot&#39;),
-    text: &quot;  test.ru привет.привет &quot;,
-    res: &quot;  test.\\ru привет. привет&quot;
+    text: &quot;http:&#47;&#47;test.ru привет.привет&quot;,
+    res: &quot;&lt;a href=&#39;http:&#47;&#47;test.ru&#39;&gt;test.ru&lt;&#47;a&gt; привет. привет&quot;
   }, {
     obj: require(&#39;..&#47;libs&#47;rules&#47;space&#47;autospace_after_hellips&#39;),
     text: &quot;!..привет &quot;,
@@ -128,7 +128,7 @@
       </h2>
     </div>
     <div id='footer'>
-  June 06, 14 19:07:36 by
+  June 11, 14 09:31:24 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>

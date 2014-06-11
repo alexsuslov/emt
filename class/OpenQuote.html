@@ -102,37 +102,89 @@
 }</code></pre>
     
   </dd>
+  <dt id='re-variable'>
+    re
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>{
+  s: &#47;(\s|\&amp;nbsp)&#47;.source,
+  gls: &#39;([уеыаоэяиюё])&#39;,
+  rim: &#39;([XIV]{1,5})&#39;,
+
+  &#47;*
+  ^ ( \s &gt; - ,
+   *&#47;
+  prefix: &#47;(^|\(|\s|\&gt;|-|\&amp;nbsp\;|\,|\t)&#47;.source,
+
+  &#47;*
+  ! ? ; , . &amp;plusmn; \s &lt;
+   *&#47;
+  sufix: &#47;(\&amp;hellip\;|\t|\!|\?|\;|\,|\.|\&amp;plusmn\;|\s|\&lt;|$)&#47;.source,
+
+  &#47;*
+  единицы длинны площади объема
+   *&#47;
+  ed: &#39;(м|мм|см|дм|км|гм|km|dm|cm|mm)&#39;,
+
+  &#47;*
+  единицы массы
+   *&#47;
+  wed: &#39;(г|кг|мг|т)&#39;,
+
+  &#47;*
+  единицы денег
+   *&#47;
+  mEd: &#47;(руб\.|долл\.|евро|€|&amp;euro;|\$|у[\.]? ?е[\.]?)&#47;.source,
+
+  &#47;*
+  (тыс|млн|млрд)\.
+   *&#47;
+  mult: &#47;(тыс|млн|млрд)\.&#47;.source,
+
+  &#47;*
+  формы собственности
+   *&#47;
+  frm: &#47;(ООО|ЗАО|ОАО|НИИ|ПБОЮЛ)\s&#47;.source,
+
+  &#47;*
+  гл., стр., рис., илл., ст., п.
+   *&#47;
+  ref: &#47;(гл|стр|рис|илл?|ст|п|с)\.&#47;.source,
+
+  &#47;*
+  (г|ул|пер|просп|пл|бул|наб|пр|ш|туп)\.
+   *&#47;
+  adr: &#47;(г|ул|пер|просп|пл|бул|наб|пр|ш|туп)\.&#47;.source,
+  adr1: &#47;(б\-р|пр\-кт)&#47;.source,
+  adr2: &#47;(д|кв|эт)\.&#47;.source,
+
+  &#47;*
+  [a-zа-яё0-9\-]
+   *&#47;
+  azn: &#39;[a-zа-яё0-9\-]&#39;,
+
+  &#47;*
+  [A-ZА-ЯЁ]
+   *&#47;
+  AZ: &#39;[A-ZА-ЯЁ]&#39;,
+
+  &#47;*
+  (кто|кем|когда|зачем|почему|как|что|чем|где|чего|кого)
+   *&#47;
+  mjd: &#39;(кто|кем|когда|зачем|почему|как|что|чем|где|чего|кого)&#39;,
+  mjd1: &#39;(то|либо|нибудь)&#39;,
+  li: &#39;(ли|бы|б|же|ж)&#39;,
+  month: &#39;((январ|феврал|сентябр|октябр|ноябр|декабр)([ьяюе]|[её]м)|(апрел|июн|июл)([ьяюе]|ем)|(март|август)([ауе]|ом)?|ма[йяюе]|маем)&#39;,
+  month1: &#39;(января|февраля|марта|апреля|мая|июня|июля|августа|сентября|октября|ноября|декабря)&#39;,
+  year: &#47;(с|по|период|середины|начала|начало|конца|конец|половины|в|между|\([cс]\)|\&amp;copy\;)&#47;.source,
+  ip: &#47;(\d{0,3}\.\d{0,3}\.\d{0,3}\.\d{0,3})&#47;.source
+}</code></pre>
+    
+  </dd>
 </dl>
       <h2>Instance Method Summary</h2>
       <ul class='summary'>
-  <li>
-    <span class='signature'>
-      <a href='#logger-dynamic'>
-        #
-(void)
-<b>logger</b><span>(level, message, obj)</span>
-      </a>
-    </span>
-    <span class='desc'>
-      <p>Логер @param level[string] error|warning|info| debug
-@param message[string] сообщение
-@param obj[obj] object ошибки</p>
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#debug-dynamic'>
-        #
-(void)
-<b>debug</b><span>(obj)</span>
-      </a>
-    </span>
-    <span class='desc'>
-      <p>Debug @param level[string] error|warning|info
-@param message[string] сообщение
-@param obj[obj] object ошибки</p>
-    </span>
-  </li>
   <li>
     <span class='signature'>
       <a href='#multiply-dynamic'>
@@ -219,38 +271,6 @@
 </div>
       <h2>Instance Method Details</h2>
       <div class='methods'>
-  <div class='method_details'>
-    <p class='signature' id='logger-dynamic'>
-      #
-(void)
-<b>logger</b><span>(level, message, obj)</span>
-      <br>
-    </p>
-    <div class='docstring'>
-  <p>Логер
-@param level[string] error|warning|info| debug
-@param message[string] сообщение
-@param obj[obj] object ошибки</p>
-</div>
-<div class='tags'>
-</div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='debug-dynamic'>
-      #
-(void)
-<b>debug</b><span>(obj)</span>
-      <br>
-    </p>
-    <div class='docstring'>
-  <p>Debug
-@param level[string] error|warning|info
-@param message[string] сообщение
-@param obj[obj] object ошибки</p>
-</div>
-<div class='tags'>
-</div>
-  </div>
   <div class='method_details'>
     <p class='signature' id='multiply-dynamic'>
       #
@@ -412,7 +432,7 @@
 </div>
     </div>
     <div id='footer'>
-  June 06, 14 19:07:36 by
+  June 11, 14 09:31:24 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>
