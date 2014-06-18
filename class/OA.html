@@ -19,33 +19,26 @@
       Index
     </a>
     &raquo;
-    <span class='title'>NobrSmIm</span>
+    <span class='title'>OA</span>
   </div>
 </div>
     <div id='content'>
       <h1>
         Class:
-        NobrSmIm
+        OA
       </h1>
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>libs&#47;rules&#47;abbr&#47;nobr_sm_im.coffee</td>
+          <td>libs&#47;test.coffee</td>
         </tr>
         <tr>
           <td>Inherits:</td>
           <td>
-            <a href='../class/OpenQuote.html'>OpenQuote</a>
+            <a href='../class/Quote.html'>Quote</a>
           </td>
         </tr>
       </table>
-      <h2>Overview</h2>
-      <div class='docstring'>
-  <p>Правило NobrSmIm
-Расстановка пробелов перед сокращениями см., им.</p>
-</div>
-<div class='tags'>
-</div>
       <h2>Variables Summary</h2>
       <dl class='constants'>
   <dt id='description-variable'>
@@ -53,80 +46,50 @@
     =
   </dt>
   <dd>
-    <pre><code class='coffeescript'>&#39;Расстановка пробелов перед сокращениями см., им.&#39;</code></pre>
+    <pre><code class='coffeescript'>&quot;Оптическое выравнивание&quot;</code></pre>
     
   </dd>
-  <dt id='version-variable'>
-    version
+  <dt id='tests-variable'>
+    tests
     =
   </dt>
   <dd>
-    <pre><code class='coffeescript'>&#39;0.0.0&#39;</code></pre>
-    
-  </dd>
-  <dt id='configName-variable'>
-    configName
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>&#39;nobr_sm_im&#39;</code></pre>
+    <pre><code class='coffeescript'>[
+  {
+    obj: require(&#39;..&#47;libs&#47;rules&#47;oa&#47;oa_oquote&#39;),
+    text: &quot;qqq &amp;laquo;&quot;,
+    res: &quot;qqq&lt;span class=&#39;oa_oqoute_sp_s&#39;&gt; &lt;&#47;span&gt;&lt;span class=&#39;oa_oqoute_sp_q&#39;&gt;&amp;laquo;&lt;&#47;span&gt;&quot;
+  }, {
+    obj: require(&#39;..&#47;libs&#47;rules&#47;oa&#47;oa_obracket_coma&#39;),
+    text: &quot; (&quot;,
+    res: &quot;&lt;span class=&#39;oa_obracket_sp_s&#39;&gt; &lt;&#47;span&gt;&lt;span class=&#39;oa_obracket_sp_b&#39;&gt;(&lt;&#47;span&gt;&quot;
+  }
+]</code></pre>
     
   </dd>
 </dl>
       <h3 class='inherited'>
         Variable inherited from
-        <a href='../class/OpenQuote.html'>OpenQuote</a>
+        <a href='../class/Quote.html'>Quote</a>
       </h3>
       <p class='inherited'>
-        <a href='../class/OpenQuote.html#used-variable'>used</a>
-        <a href='../class/OpenQuote.html#timer-variable'>timer</a>
-        <a href='../class/OpenQuote.html#description-variable'>description</a>
-        <a href='../class/OpenQuote.html#version-variable'>version</a>
-        <a href='../class/OpenQuote.html#configName-variable'>configName</a>
-        <a href='../class/OpenQuote.html#text-variable'>text</a>
-        <a href='../class/OpenQuote.html#config-variable'>config</a>
-        <a href='../class/OpenQuote.html#re-variable'>re</a>
+        <a href='../class/Quote.html#description-variable'>description</a>
+        <a href='../class/Quote.html#version-variable'>version</a>
+        <a href='../class/Quote.html#configName-variable'>configName</a>
+        <a href='../class/Quote.html#config-variable'>config</a>
+        <a href='../class/Quote.html#rules-variable'>rules</a>
+        <a href='../class/Quote.html#order-variable'>order</a>
       </p>
-      <h2>Instance Method Summary</h2>
-      <ul class='summary'>
-  <li>
-    <span class='signature'>
-      <a href='#replace-dynamic'>
-        #
-(void)
-<b>replace</b><span>()</span>
-      </a>
-    </span>
-    <span class='desc'>
-    </span>
-  </li>
-</ul>
       <h2>
         <small>Inherited Method Summary</small>
         <h3 class='inherited'>
           Methods inherited from
-          <a href='../class/OpenQuote.html'>OpenQuote</a>
+          <a href='../class/Quote.html'>Quote</a>
         </h3>
         <p class='inherited'>
-          <a href='../class/OpenQuote.html#multiply-dynamic'>#multiply</a>
-          <a href='../class/OpenQuote.html#apply-dynamic'>#apply</a>
-          <a href='../class/OpenQuote.html#replace-dynamic'>#replace</a>
-          <a href='../class/OpenQuote.html#tag-dynamic'>#tag</a>
-          <a href='../class/OpenQuote.html#ntag-dynamic'>#ntag</a>
+          <a href='../class/Quote.html#apply-dynamic'>#apply</a>
         </p>
       </h2>
-      <h2>Instance Method Details</h2>
-      <div class='methods'>
-  <div class='method_details'>
-    <p class='signature' id='replace-dynamic'>
-      #
-(void)
-<b>replace</b><span>()</span>
-      <br>
-    </p>
-    
-  </div>
-</div>
     </div>
     <div id='footer'>
   June 18, 14 10:18:56 by
