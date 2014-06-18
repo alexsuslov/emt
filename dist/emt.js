@@ -83,20 +83,8 @@
     window.EMT = Emt;
     $(function() {
       return $.fn.emt = function(options) {
-        var el, _i, _len;
-        if (Object.prototype.toString.call(this) === '[object Array]') {
-          this.EMTS = [];
-          for (_i = 0, _len = this.length; _i < _len; _i++) {
-            el = this[_i];
-            this.EMTS.push(new Emt(options, el).apply());
-          }
-        } else if (this) {
-          this.emt = new Emt(options, this);
-          this.emt.apply();
-        } else {
-          console.log('no element');
-        }
-        return this;
+        this.emt = new Emt(options, this);
+        return this.emt;
       };
     });
   }

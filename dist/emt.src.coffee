@@ -68,16 +68,10 @@ if isClient
 
   $ ->
     $.fn.emt = (options)->
-      if Object.prototype.toString.call(@) is '[object Array]'
-        @EMTS = []
-        for el in @
-          @EMTS.push new Emt( options, el).apply()
-      else if @
-        @emt = new Emt options, @
-        @emt.apply()
-      else
-        console.log 'no element'
-      @
+      @emt = new Emt options, @
+      @emt
+
+
 
 
 

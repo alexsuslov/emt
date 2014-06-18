@@ -13,7 +13,7 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
         <div class="container">
-            <textarea name="emt" rows="10" class='emt col-lg-12 col-xs-12'></textarea>
+            <textarea name="emt" rows="10" class='emt col-lg-12 col-xs-12'>(с)</textarea>
             <div class='emt'>
             </div>
 
@@ -43,12 +43,9 @@
         $(function() {
           var $p = $('.emt');
           var $t = $('textarea.emt');
-          $t.html( $p.html());
-          var emt = $p.emt();
+          window.Emt = $p.emt();
           $t.on('keyup' ,function(e){
-            $p.html( e.target.value);
-            emt.apply();
-          window.emt = emt;
+            $p.html( window.Emt.simple( e.target.value ) );
           });
         });
         </script>

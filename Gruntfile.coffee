@@ -97,12 +97,18 @@ module.exports = (grunt)->
           livereload: true
     watch:
       config:
+        options:
+          livereload: true
         files: ['Gruntfile.coffee']
         tasks: ['coffeelint','coffee']
       tests:
+        options:
+          livereload: true
         files: ['test/*.coffee']
         tasks: ['coffeelint','mochaTest:spec' ]
       app:
+        options:
+          livereload: true
         files: ['emt.coffee','libs/**/*.coffee']
         tasks: [
           'coffeelint'
