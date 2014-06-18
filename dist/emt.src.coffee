@@ -68,8 +68,7 @@ if isClient
 
   $ ->
     $.fn.emt = (options)->
-      @emt = new Emt options, @
-      @emt
+      new Emt options, @
 
 
 

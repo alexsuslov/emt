@@ -83,8 +83,7 @@
     window.EMT = Emt;
     $(function() {
       return $.fn.emt = function(options) {
-        this.emt = new Emt(options, this);
-        return this.emt;
+        return new Emt(options, this);
       };
     });
   }
